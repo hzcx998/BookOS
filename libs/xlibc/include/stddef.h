@@ -1,0 +1,105 @@
+#ifndef _XLIBC_STDDEF_H
+#define _XLIBC_STDDEF_H
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef _SIZE_T
+#define	_SIZE_T
+typedef unsigned long size_t;
+#endif /* _SIZE_T */
+typedef unsigned long dma_addr_t;
+
+#ifndef __cplusplus
+
+#ifndef _WCHAR_T_DEFINED   
+typedef unsigned short wchar_t;   
+#define _WCHAR_T_DEFINED   
+#endif  
+
+#endif /* __cplusplus */
+
+/*
+ *这里是define类型的
+ */
+#define write_once(var, val) \
+        (*((volatile typeof(val) *)(&(var))) = (val))
+
+/*
+ * 我只能把大名鼎鼎的container_of宏直接学习过来了。 (*^.^*)
+ */
+
+#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+
+#define container_of(ptr, type, member) ({ \
+    const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+    (type *)( (char *)__mptr - offsetof(type,member) ); \
+})
+
+/* 
+这里的__built_expect()函数是gcc(version >= 2.96)的内建函数,提供给程序员使用的，目的是将"分支转移"的信息提供给编译器，这样编译器对代码进行优化，以减少指令跳转带来的性能下降。
+__buildin_expect((x), 1)表示x的值为真的可能性更大.
+__buildin_expect((x), 0)表示x的值为假的可能性更大. 
+*/
+#define likely(x) __builtin_expect(!!(x), 1)
+#define unlikely(x) __builtin_expect(!!(x), 0)
+
+#ifndef NULL
+#ifdef __cplusplus
+        #define NULL 0
+#else
+        #define NULL ((void *)0)
+#endif
+#endif
+#include <stdbool.h>
+
+#ifndef BOOLEAN
+#ifndef __cplusplus
+    #define BOOLEAN char     
+#else
+    #define BOOLEAN _Bool       //C语言下实现Bool
+#endif
+    #ifndef TRUE
+    #define TRUE    1 
+    #endif
+
+    #ifndef FALSE
+    #define FALSE    0 
+    #endif
+#endif
+
+
+#ifndef MAX_PATH
+#define MAX_PATH    256
+#endif
+
+#define ifloor(x)		((x) > 0 ? (int)(x) : (int)((x) - 0.9999999999))
+#define iround(x)		((x) > 0 ? (int)((x) + 0.5) : (int)((x) - 0.5))
+#define iceil(x)		((x) > 0 ? (int)((x) + 0.9999999999) : (int)(x))
+#define idiv255(x)		((((int)(x) + 1) * 257) >> 16)
+
+#define max(a,b)    (((a) > (b)) ? (a) : (b))
+#define min(a,b)    (((a) < (b)) ? (a) : (b))
+#define clamp(v, a, b)	min(max(a, v), b)
+
+// This macroshould not be used.A use like abs(a++) will make a wrong result.Use abs() and labs()
+// #define abs(a)    ((a) > 0 ? (a) : -(a))
+
+/* 除后上入 */
+#define DIV_ROUND_UP(X, STEP) ((X + STEP - 1) / (STEP))
+
+/* 除后下舍 */
+#define DIV_ROUND_DOWN(X, STEP) ((X) / (STEP))
+
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof((array)[0]))
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  /* _XLIBC_STDDEF_H */
+

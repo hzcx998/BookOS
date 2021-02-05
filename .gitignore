@@ -1,0 +1,121 @@
+# Prerequisites
+*.d
+*.tmp
+
+# Object files
+*.o
+*.ko
+*.obj
+*.disasm
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Image
+*.img
+*.iso
+*.vhd
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+*.dump
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# develop
+develop/image/
+develop/local/
+
+develop/rom/bin/
+develop/rom/sbin/
+develop/rom/app/
+develop/rom/acct/
+develop/bochs/
+
+# linux fixdep
+libs/fixdep
+sbin/fixdep
+bin/fixdep
+src/fixdep
+
+# linux tools 
+tools/fatfs/fatfs
+
+# dir
+recycle
+
+# need commit to git
+!scripts/fixdep.exe
+
+# system app
+sbin/init/init
+sbin/init/initg
+sbin/login/login
+sbin/userctl/userctl
+sbin/service/service
+sbin/netserv/netserv
+sbin/testserv/testserv
+
+# /bin
+bin/cat/cat
+bin/cal/cal
+bin/cp/cp
+bin/cpuinfo/cpuinfo
+bin/date/date
+bin/echo/echo
+bin/ls/ls
+bin/mem/mem
+bin/mkdir/mkdir
+bin/mv/mv
+bin/osver/osver
+bin/ps/ps
+bin/rename/rename
+bin/rm/rm
+bin/rmdir/rmdir
+bin/sh/sh
+bin/sys/sys
+bin/test/test
+bin/touch/touch
+
+# /app
+app/gato/gato
+app/infones/infones
+app/invader/invader
+app/lua/lua
+app/xde/xde
