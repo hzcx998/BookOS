@@ -36,8 +36,10 @@ static inline int xtk_label_set_text(xtk_spirit_t *label, char *text)
 {
     if (!label)
         return -1;
+    xtk_spirit_hide(label);
     xtk_spirit_set_text(label, text);
     xtk_spirit_auto_size(label);
+    xtk_spirit_show(label);
     return 0;
 }
 

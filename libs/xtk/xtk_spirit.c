@@ -474,9 +474,10 @@ int xtk_spirit_show(xtk_spirit_t *spirit)
     
     uview_bitmap_t bmp;
     uview_bitmap_init(&bmp, attached_spirit->surface->w, attached_spirit->surface->h, (uview_color_t *) attached_spirit->surface->pixels);
-    uview_bitblt_update_ex(attached_spirit->view, attached_spirit->x + spirit->x,
+    if (uview_bitblt_update_ex(attached_spirit->view, attached_spirit->x + spirit->x,
         attached_spirit->y + spirit->y, &bmp, spirit->x, spirit->y, 
-        spirit->width, spirit->height);
+        spirit->width, spirit->height))
+        return -1;
     return 0;
 }
 
@@ -505,7 +506,8 @@ int xtk_spirit_show_all(xtk_spirit_t *spirit)
         return -1;
     if (xtk_spirit_show_children(spirit) < 0)
         return -1;
-    xtk_spirit_show(spirit);
+    if (xtk_spirit_show(spirit) < 0)
+        return -1;
     return 0;
 }
 
@@ -526,21 +528,23 @@ int xtk_spirit_hide(xtk_spirit_t *spirit)
     default:
         break;
     }
+    
     // 默认情况
     if (!spirit->attached_container)
         return -1;
     xtk_spirit_t *attached_spirit = (xtk_spirit_t *)spirit->attached_container->spirit;
     if (!attached_spirit->surface)
         return -1;
-
-    // 在精灵位置绘制一个背景色的图形
-    int sx = attached_spirit->x + spirit->x;
-    int sy = attached_spirit->y + spirit->y;
-    xtk_surface_rectfill(attached_spirit->surface, sx, sy, spirit->width, spirit->height, 
+    int start_x = spirit->x;
+    int start_y = spirit->y;
+    xtk_surface_rectfill(attached_spirit->surface, start_x, start_y, spirit->width, spirit->height, 
         attached_spirit->style.background_color);
+    if (UVIEW_BAD_ID(attached_spirit->view))
+        return -1;
     uview_bitmap_t bmp;
     uview_bitmap_init(&bmp, attached_spirit->surface->w, attached_spirit->surface->h, (uview_color_t *) attached_spirit->surface->pixels);
-    uview_bitblt_update_ex(attached_spirit->view, sx, sy, &bmp, spirit->x, spirit->y, 
+    uview_bitblt_update_ex(attached_spirit->view, attached_spirit->x + start_x,
+        attached_spirit->y + start_y, &bmp, start_x, start_y, 
         spirit->width, spirit->height);
     return 0;
 }

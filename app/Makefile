@@ -37,3 +37,4 @@ MODULE      +=  xde
 MODULE      +=  gato
 MODULE      +=  infones
 MODULE      +=  invader
+MODULE      +=  xtk

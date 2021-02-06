@@ -29,7 +29,7 @@ char *cmd_argv[MAX_ARG_NR];
 char *sh_environment[4] = {
     "/bin",
     "/sbin",
-    "/usr",
+    "/app",
     NULL
 };
 

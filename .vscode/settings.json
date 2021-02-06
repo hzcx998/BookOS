@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.C": "c",
+        "xstring": "c"
+    }
+}

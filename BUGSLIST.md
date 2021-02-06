@@ -27,3 +27,6 @@ spinning in assertion failure()
 
 ## <2021.2.1>
 1. 视图刷新时，如果配置了ALPHA计算，在调整视图大小时，如果同时调整宽度和高度，会出现调整后直接变成透明的问题。
+
+## <2021.2.6>
+1. spirit_hide时有bug
