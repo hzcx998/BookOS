@@ -67,7 +67,7 @@ SETUP_BIN 	= $(ARCH)/boot/setup.bin
 KERNEL_ELF 	= $(ARCH)/kernel.elf
 
 # 参数
-.PHONY: all clean wrdisk build debuild qemu qemudbg
+.PHONY: all clean wrdisk build debuild qemu
 
 all: 
 	$(MAKE) -s -C  $(LIBS_DIR) && \

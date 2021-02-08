@@ -1,4 +1,4 @@
-X_LIBS		+= libxlibc.a libuview.a libzlib.a libpng.a libjpeg.a libxtk.a
+X_LIBS		+= libxlibc.a libuview.a libzlib.a libpng.a libjpeg.a libxtk.a libfreetype.a
 
 NAME		:= xtk
 SRC			+= main.c

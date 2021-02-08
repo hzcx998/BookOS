@@ -18,3 +18,4 @@ MODULE		+= lvgl
 MODULE		+= uview
 MODULE		+= xtk
 MODULE		+= gato
+MODULE		+= freetype
