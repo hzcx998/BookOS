@@ -14,6 +14,14 @@ extern "C" {
 
 #define RAND_MAX 0x7fff
 
+typedef struct { int quot, rem; } div_t;
+typedef struct { long quot, rem; } ldiv_t;
+typedef struct { long long quot, rem; } lldiv_t;
+
+div_t div(int num, int den);
+ldiv_t ldiv(long num, long den);
+lldiv_t lldiv(long long num, long long den);
+
 void srand(unsigned long seed);
 int rand();
 

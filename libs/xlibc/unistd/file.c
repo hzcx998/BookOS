@@ -16,9 +16,11 @@ int open(const char *path, int flags)
     build_path(path, full_path);
     const char *p = (const char *) full_path;
     int retval = syscall2(int, SYS_OPEN, p, flags);
-    if (retval < -1) {
+    if (retval < 0) {
         _set_errno(-retval);
         retval = -1;
+    } else {
+        _set_errno(0);
     }
     return retval;
 }

@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "*.C": "c",
-        "xstring": "c"
+        "xstring": "c",
+        "assert.h": "c",
+        "xtk.h": "c"
     }
 }

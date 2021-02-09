@@ -1,0 +1,4 @@
+libs version：
+freetype    - 2.10.4
+pixman      - 0.38.4
+cairo       - 1.17.2

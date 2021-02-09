@@ -19,3 +19,5 @@ MODULE		+= uview
 MODULE		+= xtk
 MODULE		+= gato
 MODULE		+= freetype
+MODULE		+= pixman
+MODULE		+= cairo

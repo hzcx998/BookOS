@@ -15,6 +15,8 @@ X_INCDIRS	+= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/n
 				$(LIBS_DIR)/xtk \
 				$(LIBS_DIR)/gato \
 				$(LIBS_DIR)/freetype/include \
+				$(LIBS_DIR)/cairo \
+				$(LIBS_DIR)/pixman \
 				
 X_LDFLAGS	+= -no-pie -m elf_i386 -e _start -Ttext 0x00001000
 X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
@@ -27,6 +29,8 @@ X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/xtk \
 				$(LIBS_DIR)/gato \
 				$(LIBS_DIR)/freetype \
+				$(LIBS_DIR)/cairo \
+				$(LIBS_DIR)/pixman \
 				
 LD			:= ld -m elf_i386
 AS			:=	nasm

@@ -112,6 +112,7 @@ bin/sh/sh
 bin/sys/sys
 bin/test/test
 bin/touch/touch
+bin/hello/hello
 
 # /app
 app/gato/gato
@@ -119,3 +120,4 @@ app/infones/infones
 app/invader/invader
 app/lua/lua
 app/xde/xde
+app/xtk/xtk
