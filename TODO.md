@@ -14,3 +14,4 @@
 * 移植SDL图形库
 * 增强文本渲染工作
 * 移植更多标准库，支持标准libc，标准posix接口。图形移植glibc，实现gtk+图形界面。
+* 移植glib，atk，pango，gtk(太复杂)

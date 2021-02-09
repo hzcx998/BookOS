@@ -21,3 +21,4 @@ MODULE		+= gato
 MODULE		+= freetype
 MODULE		+= pixman
 MODULE		+= cairo
+MODULE		+= fribidi
