@@ -19,7 +19,7 @@ int video_test(int argc, char *argv[])
 
     int bytes_per_pixel = video_info.bits_per_pixel / 8;
     size_t fb_len = bytes_per_pixel * video_info.y_resolution * video_info.x_resolution; 
-    void *fb_buf = mmap(fb0, fb_len, 0);
+    void *fb_buf = xmmap(fb0, fb_len, 0);
     if (fb_buf == NULL) {
         printf("mmap failed!\n");
         close(fb0);
@@ -51,7 +51,7 @@ int video_test(int argc, char *argv[])
         }
     }
     printf("total fps:%d , per fps in 10s:%d\n", total_fps, total_fps / 10);
-    munmap(fb_buf, fb_len);
+    xmunmap(fb_buf, fb_len);
     close(fb0);
     printf("video test done!\n");
     return 0;

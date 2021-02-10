@@ -22,3 +22,4 @@ MODULE		+= freetype
 MODULE		+= pixman
 MODULE		+= cairo
 MODULE		+= fribidi
+MODULE		+= sdl2

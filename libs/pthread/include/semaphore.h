@@ -29,7 +29,6 @@ int sem_getvalue(sem_t *sem, int *sval);
 int sem_wait(sem_t *sem);
 int sem_trywait(sem_t *sem);
 int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);
-int sem_timedwait2(sem_t* sem, int msecs);
 int sem_post(sem_t *sem);
 
 #endif  /* _PTHREAD_SEMAPHORE_H */

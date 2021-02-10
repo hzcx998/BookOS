@@ -19,6 +19,8 @@
 
 #define HAVE_STRDUP
 
+#define HAVE_STRINGIZE 1
+
 #define HAVE_STRING_H 1
 
 #define HAVE_SYS_TIMES_H

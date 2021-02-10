@@ -13,5 +13,7 @@
 * 2021/2/6
 * 移植SDL图形库
 * 增强文本渲染工作
-* 移植更多标准库，支持标准libc，标准posix接口。图形移植glibc，实现gtk+图形界面。
-* 移植glib，atk，pango，gtk(太复杂)
+* 移植更多标准库，支持标准libc，标准posix接口。
+* 学习freetype和cairo的用法，封装到xtk里面，实现标准字体以及高级绘图。（参考xboot-xui）
+* 2021/2//11
+* SDL_Malloc大内存时对/dev/zero进行mmap，内核驱动需要做对应的操作处理
