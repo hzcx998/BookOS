@@ -13,6 +13,7 @@ int main( int argc, char* args[] )
     //窗口含有的surface
     SDL_Surface* screenSurface = NULL;
     
+    
     //初始化SDL
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {

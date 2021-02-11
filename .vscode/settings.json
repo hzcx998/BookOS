@@ -3,6 +3,14 @@
         "*.C": "c",
         "xstring": "c",
         "assert.h": "c",
-        "xtk.h": "c"
+        "xtk.h": "c",
+        "chrono": "cpp",
+        "ratio": "cpp",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xfunctional": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp",
+        "math.h": "c"
     }
 }

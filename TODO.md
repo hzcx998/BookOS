@@ -17,3 +17,4 @@
 * 学习freetype和cairo的用法，封装到xtk里面，实现标准字体以及高级绘图。（参考xboot-xui）
 * 2021/2//11
 * SDL_Malloc大内存时对/dev/zero进行mmap，内核驱动需要做对应的操作处理
+* SDL编译后没有一般符号，只有Real版本的，可能是配置和编译的问题。
