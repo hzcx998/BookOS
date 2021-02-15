@@ -3,7 +3,7 @@ sinclude ../scripts/env.mk
 LIBS_DIR	:= ../libs
 
 X_ASFLAGS	+= -f elf -I $(DIR_XLIBC)/indlude 
-X_CFLAGS    += -fno-builtin -Wall -Wunused -fno-PIE -m32 -fno-stack-protector -std=gnu99 -O3 -D__XBOOK
+X_CFLAGS    += -fno-builtin -Wall -Wunused -fno-PIE -m32 -fno-stack-protector -std=gnu99 -O3 -D__BOOKOS
 X_INCDIRS	+= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/netsocket/include \
 				$(LIBS_DIR)/zlib \
 				$(LIBS_DIR)/libpng \

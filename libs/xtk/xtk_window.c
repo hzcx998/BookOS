@@ -249,11 +249,11 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
     case UVIEW_MSG_HIDE:
         xtk_mouse_motion(spirit, -1, -1);
         xtk_spirit_hide(spirit);
-        return;
+        break;
     case UVIEW_MSG_SHOW:
         xtk_mouse_motion(spirit, -1, -1);
         xtk_spirit_show(spirit);
-        return;
+        break;
     case UVIEW_MSG_ACTIVATE:
         if (window->type == XTK_WINDOW_TOPLEVEL) {
             xtk_window_set_active(window, true);        
@@ -297,8 +297,9 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
                         xtk_window_restart_timer(window, timer_id, -1);
                     } 
                 }
+                return;
             }
-            return;
+            break;
         }
     default:
         break;
@@ -372,13 +373,14 @@ int xtk_window_quit(xtk_spirit_t *spirit)
 /**
  * 绘制窗口边框
  * @is_active: 是否为激活状态，1为激活，0为不激活
- * @redraw_bg: 是否重绘窗体背景：1为重绘，0为不重绘
+ * @win_back: 是否重绘窗体背景：1为重绘，0为不重绘
  */
 int xtk_window_draw_border(xtk_window_t *window, 
-        int is_active, int redraw_bg)
+        int is_active, int win_back)
 {
     if (!window)
         return -1;
+    // printf("draw border %d %d\n", is_active, win_back);
     uview_color_t back, border, text_c;
     if (is_active) {
         back = window->style->background_color_active;
@@ -400,7 +402,7 @@ int xtk_window_draw_border(xtk_window_t *window,
     int border_thick = window->style->border_thick;
     
     // 重绘内容区域
-    if (redraw_bg) {
+    if (win_back) {
         xtk_surface_rectfill(win_spirit->surface, border_thick, border_thick, 
             win_spirit->width - border_thick * 2, win_spirit->height - border_thick * 2, 
             spirit->style.background_color);
@@ -453,9 +455,14 @@ int xtk_window_draw_border(xtk_window_t *window,
     // TODO: 刷新所有精灵
     xtk_spirit_show_children(win_spirit);
 
-    if (redraw_bg) {
-        xtk_spirit_show_children(spirit);
-    }
+    //if (win_back) {
+    // 刷新content surface内容
+    uview_bitmap_init(&bmp, spirit->surface->w, spirit->surface->h,
+        (uview_color_t *) spirit->surface->pixels);
+    uview_bitblt_update(spirit->view, spirit->x,
+        spirit->y, &bmp);
+    xtk_spirit_show_children(spirit);
+    //}
     return 0;
 }
 
@@ -717,7 +724,7 @@ xtk_spirit_t *xtk_window_create(xtk_window_type_t type)
     window->winflgs = XTK_WINDOW_RESIZABLE;
     window->content_width = XTK_WINDOW_WIDTH_DEFAULT;
     window->content_height = XTK_WINDOW_HEIGHT_DEFAULT;
-
+    window->extension = NULL;
     xtk_surface_init(&window->mmap_surface, 0, 0, NULL);
     xtk_rect_init(&window->invalid_rect, 0, 0, 0, 0);
     xtk_rect_init(&window->backup_win_info, 0, 0, 0, 0);
@@ -1040,6 +1047,14 @@ int xtk_window_set_default_size(xtk_window_t *window, int width, int height)
     return 0;
 }
 
+/**
+ * 设置消息例程，可以让用户自己处理消息。
+ * 消息处理函数如下：
+ * typedef void (*xtk_window_routine_t) (xtk_spirit_t *, uview_msg_t *);
+ * @parma:      window：要设置消息例程的窗口
+ * @routine:    消息例程函数指针
+ * @return:     成功返回0，失败返回-1
+ */
 int xtk_window_set_routine(xtk_window_t *window, xtk_window_routine_t routine)
 {
     if (!window)
@@ -1052,7 +1067,7 @@ int xtk_window_set_active(xtk_window_t *window, bool is_active)
 {
     if (!window)
         return -1;
-    xtk_window_draw_border(window, is_active, 1);
+    xtk_window_draw_border(window, is_active, 0);
     return 0;
 }
 

@@ -57,7 +57,7 @@
 #define SDL_DYNAMIC_API 0
 #elif defined(__clang_analyzer__)
 #define SDL_DYNAMIC_API 0  /* Turn off for static analysis, so reports are more clear. */
-#elif defined(__XBOOK__)
+#elif defined(__BOOKOS__)
 #define SDL_DYNAMIC_API 0  /* Turn off for static analysis, so reports are more clear. */
 #endif
 

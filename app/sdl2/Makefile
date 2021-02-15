@@ -1,4 +1,5 @@
-X_LIBS		+= libxlibc.a libsdl2.a libpthread.a 
+X_LIBS		+= libxlibc.a libsdl2.a libpthread.a \
+			libzlib.a libpng.a libjpeg.a libuview.a libxtk.a 
 
 NAME		:= sdl2
 SRC			+= main.c

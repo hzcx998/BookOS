@@ -1,9 +1,14 @@
 X_INCDIRS	:= xlibc/include \
-				pthread/include
+			pthread/include \
+			xtk \
+			uview/include \
+			dotfont \
+			
+
 X_INCDIRS	+= sdl2/include \
-				sdl2/video/yuv2rgb
-				
-X_CFLAGS	+= -D__XBOOK__
+			sdl2/video/yuv2rgb
+
+X_CFLAGS	+= -D__BOOKOS__
 SRC	:= \
 	src/*.c \
 	src/atomic/*.c \
@@ -30,7 +35,8 @@ SRC	:= \
     src/main/dummy/*.c \
     src/thread/generic/*.c \
     src/timer/dummy/*.c \
-    src/loadso/dummy/*.c
+    src/loadso/dummy/*.c \
+    src/video/bookos/*.c
 
 TARGET_TYPE	:= static
 NAME		:= sdl2

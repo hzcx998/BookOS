@@ -117,9 +117,9 @@
 #undef __SOLARIS__
 #define __SOLARIS__ 1
 #endif
-#if (defined(XBOOK) || defined(__XBOOK) || defined(__XBOOK__))
-#undef __XBOOK__
-#define __XBOOK__   1
+#if (defined(BOOKOS) || defined(__BOOKOS) || defined(__BOOKOS__))
+#undef __BOOKOS__
+#define __BOOKOS__   1
 #endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)

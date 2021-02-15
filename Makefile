@@ -158,7 +158,7 @@ endif
 QEMU_KVM := # no virutal
 
 QEMU_ARGUMENT = -m 1024M $(QEMU_KVM) \
-		-name "XBOOK Development Platform for x86" \
+		-name "BookOS Development Platform for x86" \
 		-fda $(FLOPPYA_IMG) \
 		-hda $(HDA_IMG) -hdb $(HDB_IMG) \
 		-boot a \

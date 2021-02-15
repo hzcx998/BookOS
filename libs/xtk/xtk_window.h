@@ -66,6 +66,7 @@ typedef struct {
     xtk_rect_t invalid_rect;    // 无效区域，用PAIN消息
     list_t timer_list_head;     // 定时器
     xtk_surface_t mmap_surface;
+    void *extension;
 } xtk_window_t;
 
 #define XTK_WINDOW(spirit)  ((xtk_window_t *)(spirit))

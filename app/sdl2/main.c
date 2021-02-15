@@ -1,50 +1,47 @@
 #include <stdio.h>
 #include <SDL.h>
 
-//定义屏幕尺寸常量
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-
 int main( int argc, char* args[] )
 {
-    //将要渲染的窗口
-    SDL_Window* window = NULL;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
 
-    //窗口含有的surface
-    SDL_Surface* screenSurface = NULL;
-    
-    
-    //初始化SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-    {
-        printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-    }
-    else
-    {
-        //创建 window
-        window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-        if( window == NULL )
-        {
-            printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+    // Initialize SDL.
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+            return 1;
+
+    // Create the window where we will draw.
+    window = SDL_CreateWindow("SDL_RenderClear",
+                    SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                    512, 512,
+                    0);
+    SDL_assert(window);
+    // We must call SDL_CreateRenderer in order for draw calls to affect this window.
+    renderer = SDL_CreateRenderer(window, -1, 0);
+
+    // Select the color for drawing. It is set to red here.
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+    // Clear the entire screen to our selected color.
+    SDL_RenderClear(renderer);
+
+    // Up until now everything was drawn behind the scenes.
+    // This will show the new, red contents of the window.
+    SDL_RenderPresent(renderer);
+
+    // Give us time to see the window.
+    //SDL_Delay(5000);
+    while (1) {
+        SDL_Event event;
+        if (SDL_PollEvent(&event)) {
+            printf("sdl event %d\n", event.type);    
+            if (event.type == SDL_QUIT) {
+                break;
+            }
         }
-        else
-        {
-            //获取 window surface
-            screenSurface = SDL_GetWindowSurface( window );
-
-            //用白色填充surface
-            SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-
-            //更新surface
-            SDL_UpdateWindowSurface( window );
-
-            //延迟两秒
-            SDL_Delay( 2000 );
-        }
     }
-    //销毁 window
-    SDL_DestroyWindow( window );
-    //退出 SDL subsystems
+    printf("sdl exit\n");
+    // Always be sure to clean up
     SDL_Quit();
     return 0;
 }
