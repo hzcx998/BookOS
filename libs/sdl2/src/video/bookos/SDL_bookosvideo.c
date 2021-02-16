@@ -19,6 +19,8 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 #include "../../SDL_internal.h"
+#include "SDL_assert.h"
+#include "../SDL_sysvideo.h"
 #include "../SDL_sysvideo.h"
 #include "sdl_bookos.h"
 #include "sdl_bookosevents.h"
@@ -90,11 +92,26 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
         perror("xbook window set position failed!\n");
         goto fail;
     }
-
-    /* 初始化各种事件 */
+    /*  */
     xtk_window_paint_callback(pwin, BOOKOS_WindowPaint);
-    xtk_signal_connect(impl->window, "delete_event", XTK_CALLBACK(BOOKOS_QuitEvent), NULL);
-
+    /* close window signal handle */
+    xtk_signal_connect(impl->window, "delete_event",
+                        XTK_CALLBACK(BOOKOS_QuitEvent), NULL);
+    
+    /* mouse events */
+    xtk_signal_connect(impl->window, "enter_notify", 
+                        XTK_CALLBACK(BOOKOS_MouseEnterEvent), NULL);
+    xtk_signal_connect(impl->window, "leave_notify", 
+                        XTK_CALLBACK(BOOKOS_MouseLeaveEvent), NULL);
+    xtk_signal_connect(impl->window, "motion_notify", 
+                        XTK_CALLBACK(BOOKOS_MouseMotionEvent), NULL);
+    xtk_signal_connect(impl->window, "button_press", 
+                        XTK_CALLBACK(BOOKOS_ButtonPressEvent), NULL);
+    xtk_signal_connect(impl->window, "button_release", 
+                        XTK_CALLBACK(BOOKOS_ButtonReleaseEvent), NULL);
+    xtk_signal_connect(impl->window, "button_scroll", 
+                        XTK_CALLBACK(BOOKOS_ButtonScrollEvent), NULL);
+    
     pwin->extension = window;
     window->driverdata = impl;
     return 0;
@@ -217,7 +234,7 @@ static void
 BOOKOS_DeleteDevice(SDL_VideoDevice *device)
 {
     SDL_free(device);
-    
+
 }
 
 /**

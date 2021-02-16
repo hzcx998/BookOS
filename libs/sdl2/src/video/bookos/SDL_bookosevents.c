@@ -62,6 +62,105 @@ bool BOOKOS_QuitEvent(xtk_spirit_t *spirit, void *arg)
     return true;    // 返回TRUE，表示不会再执行后面的信号来销毁窗口操作
 }
 
+bool BOOKOS_MouseEnterEvent(xtk_spirit_t *spirit, void *arg)
+{    
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SetMouseFocus(window);
+    }
+    return true;
+}
+
+bool BOOKOS_MouseLeaveEvent(xtk_spirit_t *spirit, void *arg)
+{
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SetMouseFocus(NULL);
+    }
+    return true;
+}
+
+bool BOOKOS_MouseMotionEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
+{    
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SendMouseMotion(window, 0, 0, event->motion.x, event->motion.y);
+    }
+    return true;
+}
+
+bool BOOKOS_ButtonPressEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
+{    
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        uint32_t sdl_button;
+        switch (event->button.button) {
+        case UVIEW_BTN_LEFT:
+            sdl_button = SDL_BUTTON_LEFT;
+            break;
+        case UVIEW_BTN_MIDDLE:
+            sdl_button = SDL_BUTTON_MIDDLE;
+            break;
+        case UVIEW_BTN_RIGHT:
+            sdl_button = SDL_BUTTON_RIGHT;
+            break;
+        default:
+            return false;
+        }
+        SDL_SendMouseButton(window, 0, SDL_PRESSED, sdl_button);
+    }
+    return true;
+}
+
+bool BOOKOS_ButtonReleaseEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
+{    
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        uint32_t sdl_button;
+        switch (event->button.button) {
+        case UVIEW_BTN_LEFT:
+            sdl_button = SDL_BUTTON_LEFT;
+            break;
+        case UVIEW_BTN_MIDDLE:
+            sdl_button = SDL_BUTTON_MIDDLE;
+            break;
+        case UVIEW_BTN_RIGHT:
+            sdl_button = SDL_BUTTON_RIGHT;
+            break;
+        default:
+            return false;
+        }
+        SDL_SendMouseButton(window, 0, SDL_RELEASED, sdl_button);
+    }
+    return true;
+}
+
+bool BOOKOS_ButtonScrollEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
+{    
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        float x = 0.0f, y = 0.0f;
+        switch (event->wheel.wheel) {
+        case XTK_WHEEL_UP:
+            y = 0 - 1.0f;
+            break;
+        case XTK_WHEEL_DOWN:
+            y = 0 + 1.0f;
+            break;
+        case XTK_WHEEL_LEFT:
+            x = 0 - 1.0f;
+            break;
+        case XTK_WHEEL_RIGHT:
+            x = 0 + 1.0f;
+            break;
+        default:
+            break;
+        }
+        SDL_SendMouseWheel(window, 0, x, y, SDL_MOUSEWHEEL_NORMAL);
+    }
+    return true;
+}
+
 /**
  * Runs the main event loop.
  * @param   _THIS
@@ -70,7 +169,7 @@ void BOOKOS_PumpEvents(_THIS)
 {
     if (!xtk_poll()) {
         // 退出事件
-        // printf("SDL PumpEvents: xtk poll quit event!\n");
+        printf("SDL PumpEvents: xtk poll quit event!\n");
     }
 }
 

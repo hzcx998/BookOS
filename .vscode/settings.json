@@ -12,6 +12,8 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "math.h": "c",
-        "sdl_windowsvideo.h": "c"
+        "sdl_windowsvideo.h": "c",
+        "sdl_assert.h": "c",
+        "sdl_internal.h": "c"
     }
 }

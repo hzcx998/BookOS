@@ -338,14 +338,36 @@ void paint_callback(xtk_spirit_t *spirit, xtk_rect_t *rect)
     xtk_window_flip(XTK_WINDOW(spirit));
 }
 
+bool motion(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
+{
+    printf("motion %d, %d\n", event->motion.x, event->motion.y);
+    return true;
+}
+
+bool enter(xtk_spirit_t *spirit, void *arg)
+{
+    printf("enter\n");
+    return true;
+}
+
+bool leave(xtk_spirit_t *spirit, void *arg)
+{
+    printf("leave\n");
+    return true;
+}
+
 int main(int argc, char *argv[]) 
 {
     xtk_init(&argc, &argv);
     //xtk_spirit_t *win = xtk_window_create_simple("xtk-test", 100, 100, 320, 240);
     xtk_spirit_t *win = xtk_window_create(XTK_WINDOW_TOPLEVEL);
-
     assert(win);
     xtk_window_set_default_size(XTK_WINDOW(win), WIN_W, WIN_H);
+    xtk_signal_connect(win, "motion_notify", XTK_CALLBACK(motion), NULL);
+    xtk_signal_connect(win, "enter_notify", XTK_CALLBACK(enter), NULL);
+    xtk_signal_connect(win, "leave_notify", XTK_CALLBACK(leave), NULL);
+
+
     xtk_spirit_t *l0 = xtk_label_create("count: 0");
     assert(l0);
     assert(!xtk_container_add(XTK_CONTAINER(win), l0));

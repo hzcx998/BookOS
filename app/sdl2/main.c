@@ -5,7 +5,6 @@ int main( int argc, char* args[] )
 {
     SDL_Window* window;
     SDL_Renderer* renderer;
-
     // Initialize SDL.
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
             return 1;
@@ -31,13 +30,45 @@ int main( int argc, char* args[] )
 
     // Give us time to see the window.
     //SDL_Delay(5000);
-    while (1) {
+    int is_quit = 0;
+    while (!is_quit) {
         SDL_Event event;
         if (SDL_PollEvent(&event)) {
             printf("sdl event %d\n", event.type);    
-            if (event.type == SDL_QUIT) {
+            switch (event.type) {
+            case SDL_QUIT:
+                is_quit = 1;
+                break;
+            case SDL_MOUSEMOTION:
+                printf("SDL mouse motion: x=%d,y=%d\n", event.motion.x, event.motion.y);
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    printf("SDL button left down\n");
+                } else if (event.button.button == SDL_BUTTON_MIDDLE) {
+                    printf("SDL button middle down\n");
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    printf("SDL button right down\n");
+                }
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    printf("SDL button left up\n");
+                } else if (event.button.button == SDL_BUTTON_MIDDLE) {
+                    printf("SDL button middle up\n");
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    printf("SDL button right up\n");
+                }
+                break;
+            case SDL_MOUSEWHEEL:
+                printf("SDL wheel dir:%d\n", event.wheel.direction);
+                printf("SDL wheel x:%d, y:%d\n", event.wheel.x, event.wheel.y);
+                break;
+            default:
                 break;
             }
+
+
         }
     }
     printf("sdl exit\n");

@@ -25,9 +25,15 @@
 
 #include "sdl_bookos.h"
 
-extern void BOOKOS_WindowPaint(xtk_spirit_t *spirit, xtk_rect_t *rect);
-extern bool BOOKOS_QuitEvent(xtk_spirit_t *spirit, void *arg);
-extern void BOOKOS_PumpEvents(_THIS);
+void BOOKOS_WindowPaint(xtk_spirit_t *spirit, xtk_rect_t *rect);
+bool BOOKOS_QuitEvent(xtk_spirit_t *spirit, void *arg);
+void BOOKOS_PumpEvents(_THIS);
+bool BOOKOS_MouseEnterEvent(xtk_spirit_t *spirit, void *arg);
+bool BOOKOS_MouseLeaveEvent(xtk_spirit_t *spirit, void *arg);
+bool BOOKOS_MouseMotionEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg);
+bool BOOKOS_ButtonPressEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg);
+bool BOOKOS_ButtonReleaseEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg);
+bool BOOKOS_ButtonScrollEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg);
 
 #endif /* SDL_bookosevents_h_ */
 

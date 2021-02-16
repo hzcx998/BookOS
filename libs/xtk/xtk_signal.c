@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
-
 int xtk_signal_create(xtk_spirit_t *spirit, const char *name)
 {
     xtk_signal_t *sig = (xtk_signal_t *)  malloc(sizeof(xtk_signal_t));

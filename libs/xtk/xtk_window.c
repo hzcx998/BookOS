@@ -266,6 +266,12 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
             return;
         }
         break;
+    case UVIEW_MSG_LEAVE:
+        xtk_signal_emit_by_name(spirit, "leave_notify");
+        break;
+    case UVIEW_MSG_ENTER:
+        xtk_signal_emit_by_name(spirit, "enter_notify");
+        break;
     case UVIEW_MSG_RESIZE:
         /* 响应大小调整, width和height是视图的大小 */
         xtk_window_change_size(window, uview_msg_get_resize_width(msg),
@@ -321,6 +327,8 @@ int xtk_window_main(xtk_spirit_t *spirit, uview_msg_t *msg)
     switch (uview_msg_get_type(msg)) {
     case UVIEW_MSG_LEAVE:
     case UVIEW_MSG_ENTER:
+        xtk_mouse_motion(spirit, x, y);
+        break;
     case UVIEW_MSG_MOUSE_MOTION:
         if (!xtk_mouse_motion(spirit, x, y))
             return 0;
@@ -747,7 +755,9 @@ xtk_spirit_t *xtk_window_create(xtk_window_type_t type)
         assert(!xtk_signal_create(spirit, "button_release"));
         assert(!xtk_signal_create(spirit, "motion_notify"));        
         assert(!xtk_signal_create(spirit, "button_scroll"));
-
+        assert(!xtk_signal_create(spirit, "enter_notify"));
+        assert(!xtk_signal_create(spirit, "leave_notify"));
+        
         // keyboard
         assert(!xtk_signal_create(spirit, "key_press"));
         assert(!xtk_signal_create(spirit, "key_release"));
