@@ -257,12 +257,14 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
     case UVIEW_MSG_ACTIVATE:
         if (window->type == XTK_WINDOW_TOPLEVEL) {
             xtk_window_set_active(window, true);        
+            xtk_signal_emit_by_name(spirit, "active");    
             return;    
         }
         break;
     case UVIEW_MSG_INACTIVATE:
         if (window->type == XTK_WINDOW_TOPLEVEL) {
             xtk_window_set_active(window, false);        
+            xtk_signal_emit_by_name(spirit, "inactive");    
             return;
         }
         break;
@@ -749,7 +751,9 @@ xtk_spirit_t *xtk_window_create(xtk_window_type_t type)
         //printf("add window signal\n");
         assert(!xtk_signal_create(spirit, "delete_event"));
         assert(!xtk_signal_create(spirit, "destroy_event"));
-
+        assert(!xtk_signal_create(spirit, "active"));
+        assert(!xtk_signal_create(spirit, "inactive"));
+        
         // mouse
         assert(!xtk_signal_create(spirit, "button_press"));
         assert(!xtk_signal_create(spirit, "button_release"));
@@ -757,7 +761,7 @@ xtk_spirit_t *xtk_window_create(xtk_window_type_t type)
         assert(!xtk_signal_create(spirit, "button_scroll"));
         assert(!xtk_signal_create(spirit, "enter_notify"));
         assert(!xtk_signal_create(spirit, "leave_notify"));
-        
+
         // keyboard
         assert(!xtk_signal_create(spirit, "key_press"));
         assert(!xtk_signal_create(spirit, "key_release"));

@@ -14,6 +14,11 @@
         "math.h": "c",
         "sdl_windowsvideo.h": "c",
         "sdl_assert.h": "c",
-        "sdl_internal.h": "c"
+        "sdl_internal.h": "c",
+        "limits": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xrefwrap": "cpp",
+        "xutility": "cpp"
     }
 }

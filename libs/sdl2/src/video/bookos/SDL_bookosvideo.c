@@ -94,9 +94,13 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
     }
     /*  */
     xtk_window_paint_callback(pwin, BOOKOS_WindowPaint);
-    /* close window signal handle */
+    /* window events */
     xtk_signal_connect(impl->window, "delete_event",
                         XTK_CALLBACK(BOOKOS_QuitEvent), NULL);
+    xtk_signal_connect(impl->window, "active",
+                        XTK_CALLBACK(BOOKOS_WindowActiveEvent), NULL);
+    xtk_signal_connect(impl->window, "inactive",
+                        XTK_CALLBACK(BOOKOS_WindowInactiveEvent), NULL);
     
     /* mouse events */
     xtk_signal_connect(impl->window, "enter_notify", 
@@ -111,6 +115,12 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
                         XTK_CALLBACK(BOOKOS_ButtonReleaseEvent), NULL);
     xtk_signal_connect(impl->window, "button_scroll", 
                         XTK_CALLBACK(BOOKOS_ButtonScrollEvent), NULL);
+    
+    /* keyboard events */
+    xtk_signal_connect(impl->window, "key_press", 
+                        XTK_CALLBACK(BOOKOS_KeyPressEvent), NULL);
+    xtk_signal_connect(impl->window, "key_release", 
+                        XTK_CALLBACK(BOOKOS_KeyReleaseEvent), NULL);
     
     pwin->extension = window;
     window->driverdata = impl;

@@ -28,6 +28,7 @@ int main( int argc, char* args[] )
     // This will show the new, red contents of the window.
     SDL_RenderPresent(renderer);
 
+
     // Give us time to see the window.
     //SDL_Delay(5000);
     int is_quit = 0;
@@ -64,11 +65,15 @@ int main( int argc, char* args[] )
                 printf("SDL wheel dir:%d\n", event.wheel.direction);
                 printf("SDL wheel x:%d, y:%d\n", event.wheel.x, event.wheel.y);
                 break;
+            case SDL_KEYDOWN:
+                printf("SDL key down sym:%x(%s), mod:%x\n", event.key.keysym.sym, SDL_GetKeyName(event.key.keysym.sym), event.key.keysym.mod);
+                break;
+            case SDL_KEYUP:
+                printf("SDL key up sym:%x(%s), mod:%x\n", event.key.keysym.sym, SDL_GetKeyName(event.key.keysym.sym), event.key.keysym.mod);
+                break;
             default:
                 break;
             }
-
-
         }
     }
     printf("sdl exit\n");
