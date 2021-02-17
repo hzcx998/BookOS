@@ -25,11 +25,8 @@
 #include "../SDL_sysvideo.h"
 #include <xtk.h>
 
-typedef struct
-{
+typedef struct {
     xtk_spirit_t *window;
-} window_impl_t;
-
-
+} SDL_WindowData;
 
 #endif

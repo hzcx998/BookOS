@@ -88,4 +88,7 @@ static inline void uview_msg_reset(uview_msg_t *msg)
 
 #define uview_msg_get_timer_id(msg) ((msg)->data0)
 
+#define uview_msg_get_move_x(msg) ((msg)->data0)
+#define uview_msg_get_move_y(msg) ((msg)->data1)
+
 #endif  /* _LIB_UVIEW_MSG_H */

@@ -93,6 +93,13 @@ static int xtk_window_change_size(xtk_window_t *window, int width, int height)
 
     // 显示精灵子控件
     xtk_spirit_show_children(spirit);
+
+    // 触发窗口改变信号
+    xtk_event_t event;
+    event.type = XTK_WINRESIZE_EVENT;
+    event.winresize.w = content_width;
+    event.winresize.h = content_height;
+    xtk_signal_emit_arg(spirit, "resize_event", &event);
     return 0;
 }
 
@@ -309,6 +316,15 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
             }
             break;
         }
+    case UVIEW_MSG_MOVE:
+        {
+            xtk_event_t event;
+            event.type = XTK_WINMOVE_EVENT;
+            event.winmove.x = uview_msg_get_move_x(msg);
+            event.winmove.y = uview_msg_get_move_y(msg);
+            xtk_signal_emit_arg(spirit, "move_event", &event);
+            printf("window move to %d, %d\n", event.winmove.x, event.winmove.y);
+        }
     default:
         break;
     }
@@ -509,7 +525,7 @@ static bool xtk_window_close_button_event(xtk_spirit_t *spirit, void *data)
 static bool xtk_window_minim_button_event(xtk_spirit_t *spirit, void *data)
 {
     xtk_window_t *window = (xtk_window_t *) data;
-    xtk_spirit_hide(&window->spirit);
+    xtk_window_minim(window);
     return true;
 }
 
@@ -519,7 +535,7 @@ static bool xtk_window_maxim_button_event(xtk_spirit_t *spirit, void *data)
     /* 根据窗口当前状态进行状态变换，如果没有处于窗口最大化就进行窗口最大化
         如果已经是最大化就恢复原来的窗口大小
     */
-    xtk_window_maxim(window);
+    xtk_window_maxim2(window);
     return true;
 }
 
@@ -748,11 +764,16 @@ xtk_spirit_t *xtk_window_create(xtk_window_type_t type)
     if (!spirit) {
         free(window);
     } else {
-        //printf("add window signal\n");
+        // window
         assert(!xtk_signal_create(spirit, "delete_event"));
         assert(!xtk_signal_create(spirit, "destroy_event"));
         assert(!xtk_signal_create(spirit, "active"));
         assert(!xtk_signal_create(spirit, "inactive"));
+        assert(!xtk_signal_create(spirit, "move_event"));
+        assert(!xtk_signal_create(spirit, "maxim_notify"));
+        assert(!xtk_signal_create(spirit, "minim_notify"));
+        assert(!xtk_signal_create(spirit, "restore_notify"));
+        assert(!xtk_signal_create(spirit, "resize_event"));
         
         // mouse
         assert(!xtk_signal_create(spirit, "button_press"));
@@ -1169,47 +1190,98 @@ int xtk_window_get_position(xtk_window_t *window, int *x, int *y)
     return uview_get_pos(window->spirit.view, x, y);
 }
 
+/**
+ * maxim window
+ */
 int xtk_window_maxim(xtk_window_t *window)
 {
     if (!window)
         return -1;
     xtk_rect_t info_rect;
     if (window->winflgs & XTK_WINDOW_MAXIM) {
-        // 从备份的信息恢复原来的大小和位置
-        info_rect = window->backup_win_info;
-        window->winflgs &= ~XTK_WINDOW_MAXIM;
-
-        if (window->winflgs & XTK_WINDOW_DISABLERESIZE) {
-            xtk_window_set_resizable(window, true);
-            window->winflgs &= ~XTK_WINDOW_DISABLERESIZE; // 清除禁止调整大小标志
-        }
-    } else {
-        int wx = 0, wy = 0;
-        xtk_window_get_position(window, &wx, &wy);
-        // 备份原来的大小和位置
-        xtk_rect_init(&window->backup_win_info, wx, wy,
-            window->window_spirit.width, window->window_spirit.height);
-
-        // 设置要调整成的大小和位置
-        xtk_window_get_screen(window, (int *) &info_rect.w, (int *) &info_rect.h);
-        xtk_rect_init(&info_rect, 0, 0, info_rect.w, info_rect.h);
-
-        
-        window->winflgs |= XTK_WINDOW_MAXIM;
-        if (window->winflgs & XTK_WINDOW_RESIZABLE) {
-            // 小窗口是可以调整大小的，就要禁用大小调整
-            xtk_window_set_resizable(window, false);
-            window->winflgs |= XTK_WINDOW_DISABLERESIZE; // 记录禁止调整大小标志
-        }
+        return -1;
     }
-    // printf("xtk: window maixm: %d, %d\n", info_rect.w, info_rect.h);
+    int wx = 0, wy = 0;
+    xtk_window_get_position(window, &wx, &wy);
+    // 备份原来的大小和位置
+    xtk_rect_init(&window->backup_win_info, wx, wy,
+        window->window_spirit.width, window->window_spirit.height);
+
+    // 设置要调整成的大小和位置
+    xtk_window_get_screen(window, (int *) &info_rect.w, (int *) &info_rect.h);
+    xtk_rect_init(&info_rect, 0, 0, info_rect.w, info_rect.h);
+    
+    window->winflgs |= XTK_WINDOW_MAXIM;
+    if (window->winflgs & XTK_WINDOW_RESIZABLE) {
+        // 小窗口是可以调整大小的，就要禁用大小调整
+        xtk_window_set_resizable(window, false);
+        window->winflgs |= XTK_WINDOW_DISABLERESIZE; // 记录禁止调整大小标志
+    }
     // 需要将屏幕（视图）大小转换成窗口内容大小    
     xtk_window_calc_content_size(window, info_rect.w, info_rect.h, 
         (int *) &info_rect.w, (int *) &info_rect.h);
     // 重新设置和大小
     xtk_window_resize(window, info_rect.w, info_rect.h);
     xtk_window_set_position_absolute(window, info_rect.x, info_rect.y);
+    xtk_signal_emit_by_name(&window->spirit, "maxim_notify");    
+    return 0;
+}
+
+/**
+ * maxim window when no maxim
+ * restore window when maxim
+ */
+int xtk_window_maxim2(xtk_window_t *window)
+{
+    if (!window)
+        return -1;
+    if ((window->winflgs & XTK_WINDOW_MAXIM)) {    /* 不是最大化状态就返回错误 */
+        return xtk_window_restore(window);
+    } else {
+        return xtk_window_maxim(window);
+    }
+}
+
+/**
+ * minim window
+ */
+int xtk_window_minim(xtk_window_t *window)
+{
+    if (!window)
+        return -1;
+    if (xtk_spirit_hide(&window->spirit) < 0)
+        return -1;
+    xtk_signal_emit_by_name(&window->spirit, "minim_notify");    
+    return 0;
+}
+
+/**
+ * restore window size after maxim
+ */
+int xtk_window_restore(xtk_window_t *window)
+{
+    if (!window)
+        return -1;
+    xtk_rect_t info_rect;
+    if (!(window->winflgs & XTK_WINDOW_MAXIM)) {    /* 不是最大化状态就返回错误 */
+        return -1;
+    }
+    // 从备份的信息恢复原来的大小和位置
+    info_rect = window->backup_win_info;
+    window->winflgs &= ~XTK_WINDOW_MAXIM;
+
+    if (window->winflgs & XTK_WINDOW_DISABLERESIZE) {
+        xtk_window_set_resizable(window, true);
+        window->winflgs &= ~XTK_WINDOW_DISABLERESIZE; // 清除禁止调整大小标志
+    }
     
+    // 需要将屏幕（视图）大小转换成窗口内容大小    
+    xtk_window_calc_content_size(window, info_rect.w, info_rect.h, 
+        (int *) &info_rect.w, (int *) &info_rect.h);
+    // 重新设置和大小
+    xtk_window_resize(window, info_rect.w, info_rect.h);
+    xtk_window_set_position_absolute(window, info_rect.x, info_rect.y);    
+    xtk_signal_emit_by_name(&window->spirit, "restore_notify");    
     return 0;
 }
 

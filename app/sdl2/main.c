@@ -28,7 +28,6 @@ int main( int argc, char* args[] )
     // This will show the new, red contents of the window.
     SDL_RenderPresent(renderer);
 
-
     // Give us time to see the window.
     //SDL_Delay(5000);
     int is_quit = 0;
@@ -70,6 +69,9 @@ int main( int argc, char* args[] )
                 break;
             case SDL_KEYUP:
                 printf("SDL key up sym:%x(%s), mod:%x\n", event.key.keysym.sym, SDL_GetKeyName(event.key.keysym.sym), event.key.keysym.mod);
+                break;
+            case SDL_WINDOWEVENT:
+                printf("SDL window event %d\n", event.window.event);
                 break;
             default:
                 break;

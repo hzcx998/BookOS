@@ -1,8 +1,8 @@
 /*
-  Simple DirectMedia Layer
+  Sdatae DirectMedia Layer
   Copyright (C) 2017 BlackBerry Limited
 
-  This software is provided 'as-is', without any express or implied
+  This software is provided 'as-is', without any express or dataied
   warranty.  In no event will the authors be held liable for any damages
   arising from the use of this software.
 
@@ -68,22 +68,22 @@ BOOKOS_VideoQuit(_THIS)
 static int
 BOOKOS_CreateWindow(_THIS, SDL_Window *window)
 {
-    window_impl_t   *impl;
+    SDL_WindowData *data;
     if (window->flags & SDL_WINDOW_OPENGL) {
         perror("xbook do not support OPENGL!\n");
         return -1;
     }
     
-    impl = SDL_calloc(1, sizeof(*impl));
-    if (impl == NULL) {
+    data = SDL_calloc(1, sizeof(*data));
+    if (data == NULL) {
         return -1;
     }
 
-    impl->window = xtk_window_create(XTK_WINDOW_TOPLEVEL);
-    if (!impl->window) {
+    data->window = xtk_window_create(XTK_WINDOW_TOPLEVEL);
+    if (!data->window) {
         goto fail;
     }
-    xtk_window_t *pwin = XTK_WINDOW(impl->window);
+    xtk_window_t *pwin = XTK_WINDOW(data->window);
     if (xtk_window_set_default_size(pwin, window->w, window->h) < 0) {
         perror("xbook window size invalid!\n");
         goto fail;
@@ -95,41 +95,51 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
     /*  */
     xtk_window_paint_callback(pwin, BOOKOS_WindowPaint);
     /* window events */
-    xtk_signal_connect(impl->window, "delete_event",
+    xtk_signal_connect(data->window, "delete_event",
                         XTK_CALLBACK(BOOKOS_QuitEvent), NULL);
-    xtk_signal_connect(impl->window, "active",
+    xtk_signal_connect(data->window, "active",
                         XTK_CALLBACK(BOOKOS_WindowActiveEvent), NULL);
-    xtk_signal_connect(impl->window, "inactive",
+    xtk_signal_connect(data->window, "inactive",
                         XTK_CALLBACK(BOOKOS_WindowInactiveEvent), NULL);
+    xtk_signal_connect(data->window, "move_event",
+                        XTK_CALLBACK(BOOKOS_WindowMoveEvent), NULL);
+    xtk_signal_connect(data->window, "minim_notify",
+                        XTK_CALLBACK(BOOKOS_WindowMinimEvent), NULL);
+    xtk_signal_connect(data->window, "maxim_notify",
+                        XTK_CALLBACK(BOOKOS_WindowMaximEvent), NULL);
+    xtk_signal_connect(data->window, "restore_notify",
+                        XTK_CALLBACK(BOOKOS_WindowRestoreEvent), NULL);
+    xtk_signal_connect(data->window, "resize_event",
+                        XTK_CALLBACK(BOOKOS_WindowResizeEvent), NULL);
     
     /* mouse events */
-    xtk_signal_connect(impl->window, "enter_notify", 
+    xtk_signal_connect(data->window, "enter_notify", 
                         XTK_CALLBACK(BOOKOS_MouseEnterEvent), NULL);
-    xtk_signal_connect(impl->window, "leave_notify", 
+    xtk_signal_connect(data->window, "leave_notify", 
                         XTK_CALLBACK(BOOKOS_MouseLeaveEvent), NULL);
-    xtk_signal_connect(impl->window, "motion_notify", 
+    xtk_signal_connect(data->window, "motion_notify", 
                         XTK_CALLBACK(BOOKOS_MouseMotionEvent), NULL);
-    xtk_signal_connect(impl->window, "button_press", 
+    xtk_signal_connect(data->window, "button_press", 
                         XTK_CALLBACK(BOOKOS_ButtonPressEvent), NULL);
-    xtk_signal_connect(impl->window, "button_release", 
+    xtk_signal_connect(data->window, "button_release", 
                         XTK_CALLBACK(BOOKOS_ButtonReleaseEvent), NULL);
-    xtk_signal_connect(impl->window, "button_scroll", 
+    xtk_signal_connect(data->window, "button_scroll", 
                         XTK_CALLBACK(BOOKOS_ButtonScrollEvent), NULL);
     
     /* keyboard events */
-    xtk_signal_connect(impl->window, "key_press", 
+    xtk_signal_connect(data->window, "key_press", 
                         XTK_CALLBACK(BOOKOS_KeyPressEvent), NULL);
-    xtk_signal_connect(impl->window, "key_release", 
+    xtk_signal_connect(data->window, "key_release", 
                         XTK_CALLBACK(BOOKOS_KeyReleaseEvent), NULL);
     
     pwin->extension = window;
-    window->driverdata = impl;
+    window->driverdata = data;
     return 0;
 fail:
-    if (impl->window) {
-        xtk_spirit_destroy(impl->window);
+    if (data->window) {
+        xtk_spirit_destroy(data->window);
     }
-    SDL_free(impl);
+    SDL_free(data);
 
     return -1;
 }
@@ -148,8 +158,8 @@ static int
 BOOKOS_CreateWindowFramebuffer(_THIS, SDL_Window * window, Uint32 * format,
                         void ** pixels, int *pitch)
 {
-    window_impl_t   *impl = (window_impl_t *)window->driverdata;
-    *pixels = (void *)xtk_window_get_surface(XTK_WINDOW(impl->window))->pixels;  
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    *pixels = (void *)xtk_window_get_surface(XTK_WINDOW(data->window))->pixels;  
     *format = SDL_PIXELFORMAT_ARGB8888;
     /* Calculate pitch */
     *pitch = (((window->w * SDL_BYTESPERPIXEL(*format)) + 3) & ~3);
@@ -168,7 +178,7 @@ static int
 BOOKOS_UpdateWindowFramebuffer(_THIS, SDL_Window *window, const SDL_Rect *rects,
                         int numrects)
 {
-    window_impl_t   *impl = (window_impl_t *)window->driverdata;
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
     int x1 = rects->x, y1 = rects->y, x2 = 0, y2 = 0;
     while (--numrects >= 0) {
         x1 = SDL_min(x1, rects->x);
@@ -177,7 +187,7 @@ BOOKOS_UpdateWindowFramebuffer(_THIS, SDL_Window *window, const SDL_Rect *rects,
         y2 = SDL_max(y2, rects->y + rects->h);
         rects++;
     }
-    xtk_window_update(XTK_WINDOW(impl->window), x1, y1, x2 - x1, y2 - y1);
+    xtk_window_update(XTK_WINDOW(data->window), x1, y1, x2 - x1, y2 - y1);
     return 0;
 }
 
@@ -189,8 +199,8 @@ BOOKOS_UpdateWindowFramebuffer(_THIS, SDL_Window *window, const SDL_Rect *rects,
 static void
 BOOKOS_SetWindowSize(_THIS, SDL_Window *window)
 {
-    window_impl_t   *impl = (window_impl_t *)window->driverdata;
-    xtk_window_set_default_size(XTK_WINDOW(impl->window), window->w, window->h);
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    xtk_window_set_default_size(XTK_WINDOW(data->window), window->w, window->h);
 }
 
 /**
@@ -201,8 +211,8 @@ BOOKOS_SetWindowSize(_THIS, SDL_Window *window)
 static void
 BOOKOS_ShowWindow(_THIS, SDL_Window *window)
 {
-    window_impl_t   *impl = (window_impl_t *)window->driverdata;
-    xtk_spirit_show(impl->window);    
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    xtk_spirit_show(data->window);    
 }
 
 /**
@@ -213,8 +223,8 @@ BOOKOS_ShowWindow(_THIS, SDL_Window *window)
 static void
 BOOKOS_HideWindow(_THIS, SDL_Window *window)
 {
-    window_impl_t   *impl = (window_impl_t *)window->driverdata;
-    xtk_spirit_hide(impl->window);    
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    xtk_spirit_hide(data->window);    
 }
 
 /**
@@ -225,14 +235,74 @@ BOOKOS_HideWindow(_THIS, SDL_Window *window)
 static void
 BOOKOS_DestroyWindow(_THIS, SDL_Window *window)
 {
-    window_impl_t   *impl = (window_impl_t *)window->driverdata;
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
 
-    if (impl) {
-        xtk_spirit_destroy(impl->window);
+    if (data) {
+        xtk_spirit_destroy(data->window);
         if (window->driverdata) {
             SDL_free(window->driverdata);
         }
         window->driverdata = NULL;
+    }
+}
+
+static void 
+BOOKOS_SetWindowTitle(_THIS, SDL_Window * window)
+{
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
+    char *title_locale = NULL;
+    title_locale = SDL_iconv_utf8_locale(window->title);
+    if (!title_locale) {
+        SDL_OutOfMemory();
+        return;
+    }
+    xtk_window_set_title(XTK_WINDOW(data->window), title_locale);
+    SDL_free(title_locale);
+}
+
+static void BOOKOS_SetWindowPosition(_THIS, SDL_Window * window)
+{
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
+    xtk_window_set_position_absolute(XTK_WINDOW(data->window), window->x, window->y);
+}
+
+
+static void BOOKOS_SetWindowResizable(_THIS, SDL_Window * window, SDL_bool resizable)
+{
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    xtk_window_set_resizable(XTK_WINDOW(data->window), (bool) resizable);
+}
+
+static void
+BOOKOS_MaximizeWindow(_THIS, SDL_Window * window)
+{
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    xtk_window_maxim(XTK_WINDOW(data->window));
+}
+
+static void
+BOOKOS_MinimizeWindow(_THIS, SDL_Window * window)
+{
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    xtk_window_minim(XTK_WINDOW(data->window));
+}
+
+static void
+BOOKOS_RestoreWindow(_THIS, SDL_Window * window)
+{
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    xtk_window_restore(XTK_WINDOW(data->window));
+}
+
+static void
+BOOKOS_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display, SDL_bool fullscreen)
+{
+    SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    /* TODO: use real full screen to instead maxim&restore */
+    if (fullscreen) {
+        xtk_window_maxim(XTK_WINDOW(data->window));
+    } else {
+        xtk_window_restore(XTK_WINDOW(data->window));
     }
 }
 
@@ -268,12 +338,23 @@ BOOKOS_CreateDevice(int devindex)
     device->CreateSDLWindow = BOOKOS_CreateWindow;
     device->CreateWindowFramebuffer = BOOKOS_CreateWindowFramebuffer;
     device->UpdateWindowFramebuffer = BOOKOS_UpdateWindowFramebuffer;
+    device->SetWindowTitle = BOOKOS_SetWindowTitle;
     device->SetWindowSize = BOOKOS_SetWindowSize;
+    device->SetWindowPosition = BOOKOS_SetWindowPosition;
+    device->SetWindowResizable = BOOKOS_SetWindowResizable;
+    device->MaximizeWindow = BOOKOS_MaximizeWindow;
+    device->MinimizeWindow = BOOKOS_MinimizeWindow;
+    device->RestoreWindow = BOOKOS_RestoreWindow;
+    device->SetWindowFullscreen = BOOKOS_SetWindowFullscreen;
     device->ShowWindow = BOOKOS_ShowWindow;
     device->HideWindow = BOOKOS_HideWindow;
     device->PumpEvents = BOOKOS_PumpEvents;
     device->DestroyWindow = BOOKOS_DestroyWindow;
-
+    /* TODO: 
+    device->SetClipboardText;
+    device->GetClipboardText;
+    device->HasClipboardText;
+    */
     device->free = BOOKOS_DeleteDevice;
     return device;
 }

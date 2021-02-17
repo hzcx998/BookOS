@@ -104,6 +104,9 @@ int xtk_window_draw_no_border(xtk_window_t *window);
 
 int xtk_window_load_mouse_cursors(xtk_window_t *window, char *pathname);
 int xtk_window_maxim(xtk_window_t *window);
+int xtk_window_restore(xtk_window_t *window);
+int xtk_window_maxim2(xtk_window_t *window);
+int xtk_window_minim(xtk_window_t *window);
 
 int xtk_window_invalid_rect(xtk_window_t *window, xtk_rect_t *rect);
 int xtk_window_invalid_window(xtk_window_t *window);

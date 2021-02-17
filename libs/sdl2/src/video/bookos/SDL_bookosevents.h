@@ -31,6 +31,11 @@ void BOOKOS_WindowPaint(xtk_spirit_t *spirit, xtk_rect_t *rect);
 bool BOOKOS_QuitEvent(xtk_spirit_t *spirit, void *arg);
 bool BOOKOS_WindowInactiveEvent(xtk_spirit_t *spirit, void *arg);
 bool BOOKOS_WindowActiveEvent(xtk_spirit_t *spirit, void *arg);
+bool BOOKOS_WindowMoveEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg);
+bool BOOKOS_WindowMinimEvent(xtk_spirit_t *spirit, void *arg);
+bool BOOKOS_WindowMaximEvent(xtk_spirit_t *spirit, void *arg);
+bool BOOKOS_WindowRestoreEvent(xtk_spirit_t *spirit, void *arg);
+bool BOOKOS_WindowResizeEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg);
 
 bool BOOKOS_MouseEnterEvent(xtk_spirit_t *spirit, void *arg);
 bool BOOKOS_MouseLeaveEvent(xtk_spirit_t *spirit, void *arg);

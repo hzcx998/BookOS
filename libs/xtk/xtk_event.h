@@ -49,6 +49,19 @@ typedef struct {
     int32_t y;                  /* y偏移 */
 } xtk_mouse_button_even_t;
 
+
+typedef struct {
+    uint8_t type;               /* 窗口移动事件类型：XTK_WINMOVE_EVENT */
+    int32_t x;                  /* x位置 */
+    int32_t y;                  /* y位置 */
+} xtk_window_move_even_t;
+
+typedef struct {
+    uint8_t type;               /* 窗口调整大小事件类型：XTK_WINRESIZE_EVENT */
+    int32_t w;                  /* w宽度 */
+    int32_t h;                  /* h高度 */
+} xtk_window_resize_even_t;
+
 /* 图形的事件类型 */
 typedef enum {
     XTK_NOEVENT = 0,      /* 未使用 */
@@ -58,7 +71,9 @@ typedef enum {
     XTK_MOUSE_BUTTON_DOWN,/* 鼠标按钮按下 */
     XTK_MOUSE_BUTTON_UP,  /* 鼠标按钮弹起 */
     XTK_MOUSE_WHEEL,   /* 鼠标滚轮 */
-    XTK_TIMER_EVEN,       /* 时钟事件 */
+    XTK_TIMER_EVENT,      /* 时钟事件 */
+    XTK_WINMOVE_EVENT,    /* 窗口移动事件 */
+    XTK_WINRESIZE_EVENT,  /* 窗口调整大小事件 */
     MAX_XTK_EVENT_NR,     /* 最大的事件数量 */
 } xtk_event_type_t;
 
@@ -68,6 +83,8 @@ typedef union {
     xtk_mouse_motion_even_t motion;
     xtk_mouse_button_even_t button;
     xtk_mouse_wheel_even_t wheel;
+    xtk_window_move_even_t winmove;
+    xtk_window_resize_even_t winresize;
 } xtk_event_t;
 
 #endif /* _LIB_XTK_EVENT_H */

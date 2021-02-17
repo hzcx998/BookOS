@@ -51,22 +51,29 @@ void BOOKOS_WindowProc(xtk_spirit_t *spirit, uview_msg_t *msg)
 void BOOKOS_WindowPaint(xtk_spirit_t *spirit, xtk_rect_t *rect)
 {
     SDL_Window *window = XTK_WINDOW(spirit)->extension;
-    SDL_SendWindowEvent(window, SDL_WINDOWEVENT_EXPOSED, 0, 0);
+    if (window) {
+        SDL_SendWindowEvent(window, SDL_WINDOWEVENT_EXPOSED, 0, 0);
+    }
 }
 
 bool BOOKOS_QuitEvent(xtk_spirit_t *spirit, void *arg)
 {
     SDL_Window *window = XTK_WINDOW(spirit)->extension;
-    SDL_SendWindowEvent(window, SDL_WINDOWEVENT_CLOSE, 0, 0);
-    xtk_main_quit();
-    return true;    // 返回TRUE，表示不会再执行后面的信号来销毁窗口操作
+    if (window) {
+        SDL_SendWindowEvent(window, SDL_WINDOWEVENT_CLOSE, 0, 0);
+        xtk_main_quit();
+        return true;    // 返回TRUE，表示不会再执行后面的信号来销毁窗口操作
+    }
+    return false;
 }
 
 bool BOOKOS_WindowActiveEvent(xtk_spirit_t *spirit, void *arg)
 {
     SDL_Window *window = XTK_WINDOW(spirit)->extension;
-    if (SDL_GetKeyboardFocus() != window) {
-        SDL_SetKeyboardFocus(window);
+    if (window) {
+        if (SDL_GetKeyboardFocus() != window) {
+            SDL_SetKeyboardFocus(window);
+        }
     }
     return true;    
 }
@@ -74,10 +81,57 @@ bool BOOKOS_WindowActiveEvent(xtk_spirit_t *spirit, void *arg)
 bool BOOKOS_WindowInactiveEvent(xtk_spirit_t *spirit, void *arg)
 {
     SDL_Window *window = XTK_WINDOW(spirit)->extension;
-    if (SDL_GetKeyboardFocus() == window) {
-        SDL_SetKeyboardFocus(NULL);
+    if (window) {
+        if (SDL_GetKeyboardFocus() == window) {
+            SDL_SetKeyboardFocus(NULL);
+        }
     }
     return true;    
+}
+
+bool BOOKOS_WindowMoveEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
+{    
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SendWindowEvent(window, SDL_WINDOWEVENT_MOVED, event->winmove.x, event->winmove.y);
+    }
+    return true;
+}
+
+bool BOOKOS_WindowMinimEvent(xtk_spirit_t *spirit, void *arg)
+{
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SendWindowEvent(window, SDL_WINDOWEVENT_MINIMIZED, 0, 0);
+    }
+    return true;    
+}
+
+bool BOOKOS_WindowMaximEvent(xtk_spirit_t *spirit, void *arg)
+{
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SendWindowEvent(window, SDL_WINDOWEVENT_MAXIMIZED, 0, 0);
+    }
+    return true;    
+}
+
+bool BOOKOS_WindowRestoreEvent(xtk_spirit_t *spirit, void *arg)
+{
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SendWindowEvent(window, SDL_WINDOWEVENT_RESTORED, 0, 0);
+    }
+    return true;
+}
+
+bool BOOKOS_WindowResizeEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
+{    
+    SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    if (window) {
+        SDL_SendWindowEvent(window, SDL_WINDOWEVENT_RESIZED, event->winresize.w, event->winresize.h);
+    }
+    return true;
 }
 
 bool BOOKOS_MouseEnterEvent(xtk_spirit_t *spirit, void *arg)
