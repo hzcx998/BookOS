@@ -56,6 +56,7 @@ BOOKOS_VideoInit(_THIS)
 static void
 BOOKOS_VideoQuit(_THIS)
 {
+    xtk_exit();
 }
 
 /**

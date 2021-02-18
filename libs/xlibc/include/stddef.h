@@ -21,6 +21,8 @@ typedef unsigned short wchar_t;
 
 #endif /* __cplusplus */
 
+typedef long int ptrdiff_t;
+
 /*
  *这里是define类型的
  */

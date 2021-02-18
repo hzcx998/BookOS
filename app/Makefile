@@ -18,6 +18,8 @@ X_INCDIRS	+= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/n
 				$(LIBS_DIR)/cairo \
 				$(LIBS_DIR)/pixman \
 				$(LIBS_DIR)/sdl2/include \
+				$(LIBS_DIR)/sdl2 \
+				
 				
 X_LDFLAGS	+= -no-pie -m elf_i386 -e _start -Ttext 0x00001000
 X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
@@ -47,3 +49,4 @@ MODULE      +=  infones
 MODULE      +=  invader
 MODULE      +=  xtk
 MODULE      +=  sdl2
+MODULE      +=  lite

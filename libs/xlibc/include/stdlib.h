@@ -51,6 +51,8 @@ void atexit(void (*func)(void));
 
 int system(const char * cmd);
 
+char *realpath(const char *path, char *resolved_path);
+
 #ifdef __cplusplus
 }
 #endif

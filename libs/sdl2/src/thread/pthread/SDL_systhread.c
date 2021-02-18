@@ -117,10 +117,9 @@ SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
     }
 
     /* Create the thread and go! */
-    if (pthread_create(&thread->handle, &type, RunThread, args) != 0) {
+    if (pthread_create((pthread_t *)&thread->handle, &type, RunThread, args) != 0) {
         return SDL_SetError("Not enough resources to create thread");
     }
-
     return 0;
 }
 
@@ -205,6 +204,9 @@ SDL_SYS_SetThreadPriority(SDL_ThreadPriority priority)
         value = 0;
     }
     return SDL_LinuxSetThreadPriority(thread, value);
+#elif __BOOKOS__
+    /* FIXME: Setting thread priority does not seem to be supported in BOOKOS */
+    return 0;
 #else
     struct sched_param sched;
     int policy;

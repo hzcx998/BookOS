@@ -1,10 +1,17 @@
 #ifndef _SYS_PTHREAD_H
 #define _SYS_PTHREAD_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include <stdint.h>
 #include <arch/atomic.h>
 #include <sys/time.h>
+#include <sys/list.h>
+#include <signal.h>
+#include <stdbool.h>
 
 /* thread type */
 typedef unsigned long pthread_t;
@@ -169,5 +176,17 @@ int pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared);
 void pthread_cleanup_push(void (*routine)(void *), void *arg);
 void pthread_cleanup_pop(int execute);
 
+int pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask);
+
+typedef unsigned int pthread_key_t;
+
+int pthread_key_create (pthread_key_t *key, void (*destr) (void *));
+int pthread_key_delete (pthread_key_t key);
+void *pthread_getspecific (pthread_key_t key);
+int pthread_setspecific (pthread_key_t key, const void *value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* _SYS_PTHREAD_H */

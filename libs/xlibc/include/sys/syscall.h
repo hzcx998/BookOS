@@ -108,6 +108,7 @@ enum syscall_num {
     SYS_FASTIO,
     SYS_FASTREAD,
     SYS_FASTWRITE,
+    SYS_EXPMASK,
     SYSCALL_NR,
 };
 

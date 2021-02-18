@@ -6,6 +6,18 @@
 #include <string.h>
 #include <pthread.h>
 #include <errno.h>
+#include <assert.h>
+#include <pthread_internal.h>
+
+static list_t __pthread_struct_list;
+
+int __pthread_init_flags = 0; 
+
+static void pthread_init()
+{
+    list_init(&__pthread_struct_list);
+    __pthread_init_flags = 1;
+}
 
 /* 线程入口，启动线程后会先进入入口执行 */
 void __pthread_entry();
@@ -36,6 +48,14 @@ int pthread_create(
         return -1;
     }
 
+    if (!__pthread_init_flags)
+        pthread_init();
+
+    struct pthread *pthread = (struct pthread *) malloc(sizeof(struct pthread));
+    if (!pthread) {
+        _set_errno(ENOMEM);
+        return -1;
+    }
     pthread_attr_t default_attr;
     if (attr == NULL) {
         /* 自动分配属性 */
@@ -43,15 +63,37 @@ int pthread_create(
             return -1;
         attr = &default_attr;
     }
-    pid_t pid = syscall4(pid_t, SYS_THREAD_CREATE, attr, start_routine, arg, __pthread_entry);
-    if (pid < 0)
+    pid_t tid = syscall4(pid_t, SYS_THREAD_CREATE, attr, start_routine, arg, __pthread_entry);
+    if (tid < 0)
         return -1;
-    *thread = (pthread_t) pid;
+    *thread = (pthread_t) tid;
+    
+    pthread->pid = getpid();
+    pthread->tid = tid;
+    list_add(&pthread->list, &__pthread_struct_list);
     return 0;
+}
+
+struct pthread *pthread_find(pthread_t tid)
+{
+    struct pthread *pthread;
+    list_for_each_owner (pthread, &__pthread_struct_list, list) {
+        if (pthread->tid == tid) {
+            return pthread;
+        }
+    }
+    return NULL;
 }
 
 void pthread_exit(void *retval)
 {
+    __pthread_deallocate_tsd();
+    pid_t tid = pthread_self();
+    struct pthread *pthread = pthread_find(tid);
+    if (pthread) {
+        list_del(&pthread->list);
+        free(pthread);
+    }
     syscall1(int, SYS_THREAD_EXIT, retval);
 }
 
@@ -74,6 +116,14 @@ int pthread_join(pthread_t thread, void **thread_return)
 pthread_t pthread_self(void)
 {
     return (pthread_t) gettid();
+}
+
+struct pthread *pthread_struct_ptr()
+{
+    pid_t tid = pthread_self();
+    struct pthread *pthread = pthread_find(tid);
+    assert(pthread);
+    return pthread;
 }
 
 /**
@@ -218,4 +268,9 @@ void pthread_cleanup_push(void (*routine)(void *), void *arg)
 void pthread_cleanup_pop(int execute)
 {
     // TODO: do cleanup func
+}
+
+int pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
+{
+    return sigprocmask(how, newmask, oldmask);
 }

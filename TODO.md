@@ -15,11 +15,14 @@
 * 增强文本渲染工作
 * 移植更多标准库，支持标准libc，标准posix接口。
 * 学习freetype和cairo的用法，封装到xtk里面，实现标准字体以及高级绘图。（参考xboot-xui）
-* 2021/2/11
-* 移植SDL-video和events,mouse,keyboard. 
-* SDL退出事件获取异常【ok】
 * 2021/2/16
-* 完善窗口
-* 完成定时器
-* 完成其他子系统
-* 完成声音子系统
+* SDL完成线程子系统 (thread)
+* SDL完成声音子系统 (audio)
+* SDL完成扩展库移植 - 
+* 2021/2/18
+* 移植基于SDL2和lua的lite代码编辑器(
+    鼠标不能操控文本
+    不能编辑文件
+    文本内容索引容易出问题
+)
+* 完善SDL video驱动，mode，keyboard，mouse cursor设置。

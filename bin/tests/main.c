@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
     // exp_test(argc, argv);
     // fifo_test(argc, argv);
     //sys_test(argc, argv);
-    //pthread_test(argc, argv);
+//    pthread_test_key(argc, argv);
+    pthread_test_struct(argc, argv);
     // file_test(argc, argv);
     // perm_test(argc, argv);
     // socket_test(argc, argv);
@@ -28,6 +29,6 @@ int main(int argc, char *argv[])
     // port_comm_test(argc, argv);
     //gui_test(argc, argv);
     // view_test(argc, argv);
-    file_test3(argc, argv);
+    //file_test3(argc, argv);
     return 0;
 }

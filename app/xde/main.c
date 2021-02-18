@@ -39,7 +39,7 @@ void desktop_setup(xtk_spirit_t *spirit)
     pid_t pid = fork();
     if (!pid) {
         char *_argv[3] = {
-            "/app/sdl2",
+            "/app/lite",
             "/res/nes/mario.nes",
             NULL
         };

@@ -19,6 +19,14 @@
         "xiosbase": "cpp",
         "xlocale": "cpp",
         "xrefwrap": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "unistd.h": "c",
+        "signal.h": "c",
+        "malloc.h": "c",
+        "errno.h": "c",
+        "pthread.h": "c",
+        "pthread_internal.h": "c",
+        "windows.h": "c",
+        "stddef.h": "c"
     }
 }

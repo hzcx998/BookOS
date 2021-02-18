@@ -20,7 +20,7 @@ int xtk_init(int *argc, char **argv[])
     // TODO: init everything...    
     xtk_text_init();
     xtk_view_init();
-    atexit(xtk_exit);
+    // atexit(xtk_exit);
     __xtk_main_loop = 1;
     __xtk_has_window_close = 0;
     __xtk_init_done = 1;

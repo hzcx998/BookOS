@@ -40,6 +40,7 @@ int expraise(uint32_t code);
 int expcatch(uint32_t code, exp_hander_t handler);
 int expblock(uint32_t code);
 int expunblock(uint32_t code);
+int expmask(uint32_t *mask);
 
 #ifdef __cplusplus
 }

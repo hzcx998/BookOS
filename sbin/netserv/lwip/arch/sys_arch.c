@@ -393,8 +393,8 @@ cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex, u32_t timeout)
     usec += timeout % 1000 * 1000;
     sec += (int)(timeout / 1000) + (int)(usec / 1000000);
     usec = usec % 1000000;
-    ts.ts_nsec = usec * 1000;
-    ts.ts_sec = sec;
+    ts.tv_nsec = usec * 1000;
+    ts.tv_sec = sec;
 
     retval = pthread_cond_timedwait(cond, mutex, &ts);
 

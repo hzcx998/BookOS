@@ -23,7 +23,8 @@ SRC	:= \
     src/render/software/*.c \
     src/stdlib/*.c \
     src/thread/*.c \
-    src/timer/*.c \
+    src/thread/generic/*.c \
+	src/timer/*.c \
     src/video/*.c \
     src/video/yuv2rgb/*.c \
     src/audio/disk/*.c \
@@ -33,10 +34,10 @@ SRC	:= \
     src/haptic/dummy/*.c \
     src/joystick/dummy/*.c \
     src/main/dummy/*.c \
-    src/thread/generic/*.c \
     src/timer/dummy/*.c \
     src/loadso/dummy/*.c \
-    src/video/bookos/*.c
-
+    src/video/bookos/*.c \
+    src/timer/bookos/*.c \
+	
 TARGET_TYPE	:= static
 NAME		:= sdl2

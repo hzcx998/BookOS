@@ -77,9 +77,11 @@ int main( int argc, char* args[] )
                 break;
             }
         }
+        SDL_Delay(10);
     }
     printf("sdl exit\n");
     // Always be sure to clean up
     SDL_Quit();
     return 0;
 }
+
