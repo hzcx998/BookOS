@@ -9,7 +9,7 @@ X_INCDIRS	+= lite
 NAME		:= lite
 SRC			:= *.c
 SRC			+= lib/stb/*.c
-SRC			+= lib/lua52/*.c
+SRC			+= lib/lua54/*.c
 SRC			+= api/*.c
 
 define CUSTOM_TARGET_CMD

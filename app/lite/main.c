@@ -122,6 +122,7 @@ int main(int argc, char **argv) {
     "local core\n"
     "xpcall(function()\n"
     "  SCALE = tonumber(os.getenv(\"LITE_SCALE\")) or SCALE\n"
+    "  print(\"scale=\",SCALE)\n"
     "  PATHSEP = package.config:sub(1, 1)\n"
     "  EXEDIR = EXEFILE:match(\"^(.+)[/\\\\].*$\")\n"
     "  package.path = EXEDIR .. '/data/?.lua;' .. package.path\n"
