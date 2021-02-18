@@ -4,8 +4,7 @@ X_INCDIRS	:= xlibc/include \
 			uview/include \
 			dotfont \
 			
-
-X_INCDIRS	+= sdl2/include \
+X_INCDIRS	+= sdl2/SDL2 \
 			sdl2/video/yuv2rgb
 
 X_CFLAGS	+= -D__BOOKOS__
