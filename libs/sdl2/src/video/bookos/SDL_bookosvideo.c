@@ -27,6 +27,23 @@
 
 #include <stdio.h>
 
+int BOOKOS_GetCurrentVideoMode(SDL_DisplayMode *mode)
+{
+    xtk_spirit_t *spirit = xtk_window_create(XTK_WINDOW_POPUP);
+    if (!spirit)    /* no device */
+        return -1;
+    if (xtk_window_get_screen(XTK_WINDOW(spirit), &mode->w, &mode->h) < 0) {    
+        xtk_spirit_destroy(spirit);
+        return -1;
+    }
+    xtk_spirit_destroy(spirit);
+    mode->refresh_rate = 0;
+    mode->format = SDL_PIXELFORMAT_ARGB8888;
+    mode->driverdata = NULL;
+    // printf("BOOKOS_GetCurrentVideoMode: %dx%d@%d.%x\n", mode->w, mode->h, mode->refresh_rate, mode->format);
+    return 0;
+}
+
 /**
  * Initializes the BOOKOS video plugin.
  * Creates the Screen context and event handles used for all window operations
@@ -37,14 +54,17 @@
 static int
 BOOKOS_VideoInit(_THIS)
 {
-    SDL_VideoDisplay display;
-
     if (xtk_init(NULL, NULL)) {
         return -1;
     }
+    SDL_VideoDisplay display;
+    SDL_DisplayMode current_mode;
+    BOOKOS_GetCurrentVideoMode(&current_mode);
     
     SDL_zero(display);
-
+    display.desktop_mode = current_mode;
+    display.current_mode = current_mode;
+    display.driverdata = NULL;
     if (SDL_AddVideoDisplay(&display) < 0) {
         return -1;
     }
@@ -134,7 +154,7 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
                         XTK_CALLBACK(BOOKOS_KeyReleaseEvent), NULL);
     
     pwin->extension = window;
-    window->driverdata = data;
+    window->driverdata = data;  /* SDL_Window->driverdata -> SDL_WindowData */
     return 0;
 fail:
     if (data->window) {
@@ -307,6 +327,23 @@ BOOKOS_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * displa
     }
 }
 
+static void BOOKOS_GetDisplayModes(_THIS, SDL_VideoDisplay *display) 
+{
+    /* FIXME: get modes from hardware, only one modes now. */
+    SDL_DisplayMode mode;
+    if (!BOOKOS_GetCurrentVideoMode(&mode)) {
+        SDL_AddDisplayMode(display, &mode);
+    }
+}
+
+static int BOOKOS_SetDisplayMode(_THIS, SDL_VideoDisplay *display, SDL_DisplayMode *mode)
+{
+    // printf("BOOKOS_SetDisplayMode: %dx%d@%d.%x\n", mode->w, mode->h, mode->refresh_rate, mode->format);
+    
+    /* do not support now! */
+    return 0;
+}
+
 /**
  * Frees the plugin object created by createDevice().
  * @param   device  Plugin object to free
@@ -336,6 +373,8 @@ BOOKOS_CreateDevice(int devindex)
     device->driverdata = NULL;
     device->VideoInit = BOOKOS_VideoInit;
     device->VideoQuit = BOOKOS_VideoQuit;
+    device->SetDisplayMode = BOOKOS_SetDisplayMode;
+    device->GetDisplayModes = BOOKOS_GetDisplayModes;
     device->CreateSDLWindow = BOOKOS_CreateWindow;
     device->CreateWindowFramebuffer = BOOKOS_CreateWindowFramebuffer;
     device->UpdateWindowFramebuffer = BOOKOS_UpdateWindowFramebuffer;
