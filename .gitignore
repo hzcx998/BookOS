@@ -113,12 +113,14 @@ bin/sys/sys
 bin/test/test
 bin/touch/touch
 bin/hello/hello
+bin/lua/lua
+
 
 # /app
 app/gato/gato
 app/infones/infones
 app/invader/invader
-app/lua/lua
 app/xde/xde
 app/xtk/xtk
 app/sdl2/sdl2
+app/lite/litesdl2

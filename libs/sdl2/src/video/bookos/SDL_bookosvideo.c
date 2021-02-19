@@ -344,6 +344,29 @@ static int BOOKOS_SetDisplayMode(_THIS, SDL_VideoDisplay *display, SDL_DisplayMo
     return 0;
 }
 
+static void
+BOOKOS_StartTextInput(_THIS)
+{
+
+}
+
+static void
+BOOKOS_StopTextInput(_THIS)
+{
+#ifdef SDL_USE_IME
+    SDL_IME_Reset();
+#endif
+}
+
+
+static void
+BOOKOS_SetTextInputRect(_THIS, SDL_Rect *rect)
+{
+#ifdef SDL_USE_IME
+    SDL_IME_UpdateTextRect(rect);
+#endif
+}
+
 /**
  * Frees the plugin object created by createDevice().
  * @param   device  Plugin object to free
@@ -395,6 +418,10 @@ BOOKOS_CreateDevice(int devindex)
     device->GetClipboardText;
     device->HasClipboardText;
     */
+    device->StartTextInput = BOOKOS_StartTextInput;
+    device->StopTextInput = BOOKOS_StopTextInput;
+    device->SetTextInputRect = BOOKOS_SetTextInputRect;
+
     device->free = BOOKOS_DeleteDevice;
     return device;
 }

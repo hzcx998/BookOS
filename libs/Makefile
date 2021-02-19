@@ -23,3 +23,4 @@ MODULE		+= pixman
 MODULE		+= cairo
 MODULE		+= fribidi
 MODULE		+= sdl2
+MODULE		+= lua

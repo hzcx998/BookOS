@@ -88,6 +88,8 @@ typedef unsigned long uintptr_t;
 /* Enable the dummy filesystem driver (src/filesystem/dummy/\*.c) */
 #define SDL_FILESYSTEM_DUMMY  1
 
+#define SDL_USE_IME 1
+
 /* xbook config */
 
 #include <stdarg.h>

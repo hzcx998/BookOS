@@ -52,7 +52,6 @@ int proc_test(int argc, char *argv[]);
 
 int port_comm_test(int argc, char *argv[]);
 int gui_test(int argc, char *argv[]);
-int view_test(int argc, char *argv[]);
 int file_test3(int argc, char *argv[]);
 int pthread_test_struct(int argc, char *argv[]);
 

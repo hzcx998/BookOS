@@ -19,7 +19,8 @@ X_INCDIRS	+= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/n
 				$(LIBS_DIR)/pixman \
 				$(LIBS_DIR)/sdl2/include \
 				$(LIBS_DIR)/sdl2 \
-				
+				$(LIBS_DIR)/lua \
+					
 				
 X_LDFLAGS	+= -no-pie -m elf_i386 -e _start -Ttext 0x00001000
 X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
@@ -35,6 +36,7 @@ X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/cairo \
 				$(LIBS_DIR)/pixman \
 				$(LIBS_DIR)/sdl2 \
+				$(LIBS_DIR)/lua \
 				
 LD			:= ld -m elf_i386
 AS			:=	nasm
@@ -42,7 +44,6 @@ AS			:=	nasm
 export AS LD
 
 # bin
-MODULE      +=  lua
 MODULE      +=  xde
 MODULE      +=  gato
 MODULE      +=  infones

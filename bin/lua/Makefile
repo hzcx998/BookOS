@@ -1,10 +1,10 @@
-X_LIBS		+= libxlibc.a
+X_LIBS		+= libxlibc.a liblua.a
 
 NAME		:= lua
-SRC			+= lua-5.4.0/*.c
+SRC			:= lua.c
 
 define CUSTOM_TARGET_CMD
 echo [APP] $@; \
 $(LD) $(X_LDFLAGS) $(X_OBJS) -o $@ $(patsubst %, -L%, $(X_LIBDIRS)) --start-group $(patsubst %, -l:%, $(X_LIBS)) --end-group; \
-cp $@ $(srctree)/../develop/rom/app
+cp $@ $(srctree)/../develop/rom/bin
 endef

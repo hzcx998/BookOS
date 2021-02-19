@@ -424,6 +424,7 @@ int xtk_window_draw_border(xtk_window_t *window,
     assert(win_spirit->surface);
     assert(spirit);
 
+    win_spirit->style.background_color = back;
     spirit->style.background_color = window->style->background_color_active;
     int border_thick = window->style->border_thick;
     
@@ -459,15 +460,17 @@ int xtk_window_draw_border(xtk_window_t *window,
     
     xtk_container_t *container = win_spirit->container;
     assert(container);
-    xtk_spirit_t *btn_spirit;
+    xtk_spirit_t *navigation_spirit;
     xtk_button_t *btn;
-    list_for_each_owner (btn_spirit, &container->children_list, list) {
-        if (btn_spirit->type == XTK_SPIRIT_TYPE_BUTTON) {
-            btn = XTK_BUTTON(btn_spirit);
+    list_for_each_owner (navigation_spirit, &container->children_list, list) {
+        if (navigation_spirit->type == XTK_SPIRIT_TYPE_BUTTON) {
+            btn = XTK_BUTTON(navigation_spirit);
             btn->color_idle = back;
             btn->color_touch = XTK_RGB_SUB(back, 0x40, 0x40, 0x40);
             btn->color_click = XTK_RGB_SUB(back, 0x20, 0x20, 0x20);
-            btn_spirit->style.background_color = btn->color_idle;
+            navigation_spirit->style.background_color = btn->color_idle;
+        } else if (navigation_spirit->type == XTK_SPIRIT_TYPE_LABEL) {
+            navigation_spirit->style.background_color = back;
         }
     }
 
@@ -901,6 +904,11 @@ int xtk_window_set_title(xtk_window_t *window, char *title)
         // 第一次创建需要添加到容器中
         xtk_container_add(XTK_CONTAINER(&window->window_spirit), navigation->title);
     } else {
+        /* 背景颜色和容器颜色一致 */
+        navigation->title->style.background_color = \
+            (window->winflgs & XTK_WINDOW_ACTIVE) ? window->style->background_color_active : \
+            window->style->background_color_inactive;
+
         // 隐藏原来的数据
         xtk_spirit_hide(navigation->title);
         xtk_label_set_text(navigation->title, title);

@@ -30,3 +30,7 @@ spinning in assertion failure()
 
 ## <2021.2.6>
 1. spirit_hide时有bug
+
+## <2021.2.19>
+1. lite文本显示问题,怀疑是文本矩阵转换时导致。
+2. lite鼠标框选时跳动，鼠标点击位置不太对。

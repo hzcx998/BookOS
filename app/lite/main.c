@@ -95,7 +95,6 @@ int main(int argc, char **argv) {
   luaL_openlibs(L);
   api_load_libs(L);
 
-
   lua_newtable(L);
   for (int i = 0; i < argc; i++) {
     lua_pushstring(L, argv[i]);
@@ -117,12 +116,10 @@ int main(int argc, char **argv) {
   lua_pushstring(L, exename);
   lua_setglobal(L, "EXEFILE");
 
-
   (void) luaL_dostring(L,
     "local core\n"
     "xpcall(function()\n"
     "  SCALE = tonumber(os.getenv(\"LITE_SCALE\")) or SCALE\n"
-    "  print(\"scale=\",SCALE)\n"
     "  PATHSEP = package.config:sub(1, 1)\n"
     "  EXEDIR = EXEFILE:match(\"^(.+)[/\\\\].*$\")\n"
     "  package.path = EXEDIR .. '/data/?.lua;' .. package.path\n"

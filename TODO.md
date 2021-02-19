@@ -20,11 +20,7 @@
 * SDL完成声音子系统 (audio)
 * SDL完成扩展库移植 - 
 * 2021/2/18
-* 移植基于SDL2和lua的lite代码编辑器(
-    鼠标不能操控文本
-    不能编辑文件
-    文本内容索引容易出问题
-)
-* 完善SDL video驱动，mode，keyboard，mouse cursor设置。
-* 再使用lua54后解决了鼠标不能操作的问题，编辑文本可能需要支持SDL_INPUT才行。现在就是文本显示问题了。
-
+* 完善SDL video驱动，keyboard，mouse cursor设置。
+* 支持SDL_TEXTINPUT才行。
+* 将lua做成库，然后来链接使用 [ok]
+* xtk窗口标题显示背景bug [ok]

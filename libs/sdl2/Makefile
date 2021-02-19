@@ -37,6 +37,7 @@ SRC	:= \
     src/loadso/dummy/*.c \
     src/video/bookos/*.c \
     src/timer/bookos/*.c \
+	src/core/linux/SDL_ime.c \
 	
 TARGET_TYPE	:= static
 NAME		:= sdl2
