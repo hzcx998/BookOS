@@ -53,6 +53,10 @@ int system(const char * cmd);
 
 char *realpath(const char *path, char *resolved_path);
 
+void* bsearch (const void* key, const void* base,
+    size_t num, size_t size,
+    int (*compar)(const void*,const void*));
+
 #ifdef __cplusplus
 }
 #endif

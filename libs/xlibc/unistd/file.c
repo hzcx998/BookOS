@@ -8,8 +8,9 @@
 #include <sys/syscall.h>
 #include <sys/stat.h>
 
-int open(const char *path, int flags)
+int open(const char *path, int flags, ...)
 {
+    /* arg3:... unused */
     if (path == NULL)
         return -1;
     char full_path[MAX_PATH] = {0};
@@ -39,7 +40,7 @@ int read(int fd, void *buffer, size_t nbytes)
     return syscall3(int, SYS_READ, fd, buffer, nbytes);
 }
 
-int write(int fd, void *buffer, size_t nbytes)
+int write(int fd, const void *buffer, size_t nbytes)
 {
     if (fd < 0)
         return -1;

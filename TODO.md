@@ -18,9 +18,10 @@
 * 2021/2/16
 * SDL完成线程子系统 (thread)
 * SDL完成声音子系统 (audio)
-* SDL完成扩展库移植 - 
+* SDL完成扩展库移植 - image，
 * 2021/2/18
 * 完善SDL video驱动，keyboard，mouse cursor设置。
 * 支持SDL_TEXTINPUT才行。
 * 将lua做成库，然后来链接使用 [ok]
 * xtk窗口标题显示背景bug [ok]
+* 完善xtk鼠标光标管理系统，并实现SDL_mouse。

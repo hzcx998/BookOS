@@ -10,10 +10,12 @@ export AS LD
 MODULE		:= xlibc
 MODULE		+= xlibcpp
 MODULE		+= pthread
+MODULE		+= zlib
+MODULE		+= libtiff
+
 MODULE		+= netsocket
 MODULE		+= jpeg
 MODULE		+= libpng
-MODULE		+= zlib
 MODULE		+= lvgl
 MODULE		+= uview
 MODULE		+= xtk

@@ -27,7 +27,10 @@
         "pthread.h": "c",
         "pthread_internal.h": "c",
         "windows.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "fcntl.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

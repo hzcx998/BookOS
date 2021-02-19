@@ -5,3 +5,4 @@ cairo       - 1.17.2
 fribidi     - 1.0.10
 sdl2        - 2.0.12
 lua         - 5.4.0
+libtiff     - 4.0.9

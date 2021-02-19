@@ -127,6 +127,8 @@ int sscanf(const char * buf, const char * fmt, ...);
 
 #define vsprintf(buf, fmt, ap)  vsnprintf(buf, BUFSIZ, fmt, ap)
 
+int vfprintf(FILE *f, const char *fmt, va_list ap);
+
 void perror(const char* str);
 
 /*

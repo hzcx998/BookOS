@@ -7,6 +7,7 @@ extern "C" {
 
 #include <types.h>
 #include <stddef.h>
+#include <fcntl.h>
 
 /* 高4位是属性位 */
 #define S_IFSOCK 0x90    //scoket
@@ -37,19 +38,6 @@ extern "C" {
 #define M_IWRITE (1 << 1)    //文件可写入权限
 #define M_IEXEC  (1 << 0)     //文件可执行权限
 
-/* file open 文件打开 */
-#define O_RDONLY    0x01
-#define O_WRONLY    0x02
-#define O_RDWR      0x04
-#define O_CREAT     0x08
-#define O_TRUNC     0x10
-#define O_APPEND    0x20
-#define O_EXEC      0x80
-#define O_TEXT      0x100   // 文本模式打开        
-#define O_BINARY    0x200   // 二进制模式打开
-#define O_NONBLOCK  0x400   // 无阻塞
-#define O_NOCTTY    0x800   // 不设置为控制tty
-
 #ifndef SEEK_SET
 /* file seek */
 #define SEEK_SET 0
@@ -70,10 +58,10 @@ extern "C" {
 int brk(void *addr);
 void *sbrk(int increment);
 
-int open(const char *path, int flags);
+int open(const char *path, int flags, ...);
 int close(int fd);
 int read(int fd, void *buffer, size_t nbytes);
-int write(int fd, void *buffer, size_t nbytes);
+int write(int fd, const void *buffer, size_t nbytes);
 int lseek(int fd, off_t offset, int whence);
 int access(const char *filenpath, int mode);
 int unlink(const char *path);
