@@ -12,7 +12,7 @@ MODULE		+= xlibcpp
 MODULE		+= pthread
 MODULE		+= zlib
 MODULE		+= libtiff
-
+MODULE		+= libwebp
 MODULE		+= netsocket
 MODULE		+= jpeg
 MODULE		+= libpng
@@ -26,3 +26,4 @@ MODULE		+= cairo
 MODULE		+= fribidi
 MODULE		+= sdl2
 MODULE		+= lua
+MODULE		+= SDL2_image

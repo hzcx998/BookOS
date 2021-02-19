@@ -123,4 +123,5 @@ app/invader/invader
 app/xde/xde
 app/xtk/xtk
 app/sdl2/sdl2
-app/lite/litesdl2
+app/lite/lite
+app/showimage/showimage

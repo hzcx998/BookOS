@@ -6,3 +6,5 @@ fribidi     - 1.0.10
 sdl2        - 2.0.12
 lua         - 5.4.0
 libtiff     - 4.0.9
+libwebp     - 1.0.2
+SDL2_image  - 2.0.5

@@ -30,7 +30,8 @@
         "stddef.h": "c",
         "fcntl.h": "c",
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "sdl_image.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"
