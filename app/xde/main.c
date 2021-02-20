@@ -11,8 +11,6 @@
 #include <pthread.h>
 #include <xtk.h>
 
-void win_thread();
-
 #define MOUSE_CURSOR_DIR            "/system/cursors"
 #define BACKGROUND_IMAGE_NAME       "/system/background/picture.jpg"
 
@@ -59,7 +57,7 @@ int open_desktop()
         printf("xtk create desktop failed!\n");
         return -1;
     }
-
+    
     // 设置为固定窗口，不能移动
     xtk_window_set_fixed(XTK_WINDOW(screen_window), true);
     // 显示到屏幕上后再调整大小
