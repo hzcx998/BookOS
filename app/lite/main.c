@@ -31,10 +31,14 @@ static void get_exe_filename(char *buf, int sz) {
   int len = GetModuleFileName(NULL, buf, sz - 1);
   buf[len] = '\0';
 #elif __linux__
+  #ifndef __BOOKOS__
   char path[512];
   sprintf(path, "/proc/%d/exe", getpid());
   int len = readlink(path, buf, sz - 1);
   buf[len] = '\0';
+  #else
+  strcpy(buf, "./lite");
+  #endif
 #elif __APPLE__
   unsigned size = sz;
   _NSGetExecutablePath(buf, &size);

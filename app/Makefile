@@ -61,4 +61,3 @@ MODULE      +=  sdl2
 MODULE      +=  lite
 MODULE      +=  showfont
 MODULE      +=  showimage
-MODULE      +=  SDL2snake
