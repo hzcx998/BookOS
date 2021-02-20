@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=20.20.10.14
+Encoding=UTF-8
+Name=sdl2snake
+Comment=a simple snake game writen with C++, and render by SDL2.
+Exec=sdl2snake
+Terminal=false
+Type=Application
+Categories=Games;Entertainment;
+Icon=${SNAP}/meta/gui/icon.png

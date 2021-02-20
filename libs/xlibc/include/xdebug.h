@@ -1,5 +1,5 @@
-#ifndef _LIB_DEBUG_H
-#define _LIB_DEBUG_H
+#ifndef _LIB_XDEBUG_H
+#define _LIB_XDEBUG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,4 +23,4 @@ extern "C" {
 }
 #endif
 
-#endif  /* _LIB_DEBUG_H */
+#endif  /* _LIB_XDEBUG_H */

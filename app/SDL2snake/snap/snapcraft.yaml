@@ -1,0 +1,80 @@
+
+  # After registering a name on build.snapcraft.io, commit an uncommented line:
+  name: sdl2snake
+  version: '20.20.11' # just for humans, typically '1.2+git' or '1.3.2'
+  summary: a simple snake game writen with C++, and render by SDL2. # 79 char long summary
+  description: |
+    **available key control for pure keyboard:**
+    * Esc - Quit current scenes.
+    * Q - Same as above.
+    * 1 - Into single player mode. (Mouse click will  be working as well)
+    * 2 - Into double player mode. (Mouse click will  be working as well)
+    * W, S, A, D - For double player mode, for player1 control.
+    * up, down, left, right - For single player mode or player2 of double player mode.
+
+    _More detail please view code: < https://github.com/Joker2770/SDL2snake >. _
+
+  # icon: snap/gui/icon.png
+
+  grade: stable # must be 'stable' to release into candidate/stable channels
+  confinement: strict # use 'strict' once you have the right plugs and slots
+  base: core18
+  
+  apps:
+    sdl2snake:
+      command: usr/local/bin/SDL2snake
+      # desktop: sdl2snake.desktop
+      # plugs:
+        # - desktop
+        # - desktop-legacy
+        # - opengl
+        
+  layout:
+    /usr/local/bin/lazy.ttf:
+      bind-file: $SNAP/usr/local/bin/lazy.ttf
+    
+  parts:
+    sdl2snake:
+      # after:
+        # - desktop-glib-only
+      plugin: cmake
+      source: "https://github.com/Joker2770/SDL2snake.git"
+      source-depth: 1
+      source-branch: master
+      source-type: git
+      build-packages:
+        - gcc
+        - g++
+        - cmake
+        - make
+        - libsdl2-dev
+        - libsdl2-ttf-dev
+  
+      stage-packages:
+        - libsdl2-2.0-0
+        - libsdl2-ttf-2.0-0
+        # - libgl1-mesa-glx
+        # - libglu1-mesa
+        
+    # This part installs the glib dependencies and a `desktop-launch` script to initialise
+    # desktop-specific features such as OpenGL, fonts, themes and the XDG environment.
+    # 
+    # It is copied from the snapcraft desktop helpers project and the `source` key is
+    # changed to point to https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    # Please periodically check the desktop helpers repo for updates and copy the changes.
+    #    https://github.com/ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml
+    #
+    # desktop-glib-only:
+      # source: "https://github.com/ubuntu/snapcraft-desktop-helpers.git"
+      # source-branch: master
+      # source-type: git
+      # source-subdir: glib-only
+      # plugin: make
+      # build-packages:
+        # - libglib2.0-dev
+      # stage-packages:
+        # - libglib2.0-bin
+
+    # desktop-file:
+      # source: snap/gui
+      # plugin: dump

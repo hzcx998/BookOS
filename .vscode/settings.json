@@ -34,7 +34,10 @@
         "sdl_image.h": "c",
         "sdl_ttf.h": "c",
         "sdl.h": "c",
-        "sdl_main.h": "c"
+        "sdl_main.h": "c",
+        "sdl_keycode.h": "c",
+        "e_bullet.h": "c",
+        "new": "cpp"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

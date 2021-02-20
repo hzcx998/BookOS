@@ -5,6 +5,7 @@ LIBS_DIR	:= ../libs
 X_ASFLAGS	+= -f elf -I $(DIR_XLIBC)/indlude 
 X_CFLAGS    += -fno-builtin -Wall -Wunused -fno-PIE -m32 -fno-stack-protector -std=gnu99 -O3 -D__BOOKOS__
 X_INCDIRS	+= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/netsocket/include \
+				$(LIBS_DIR)/xlibcpp/include \
 				$(LIBS_DIR)/zlib \
 				$(LIBS_DIR)/libpng \
 				$(LIBS_DIR)/jpeg \
@@ -60,3 +61,4 @@ MODULE      +=  sdl2
 MODULE      +=  lite
 MODULE      +=  showfont
 MODULE      +=  showimage
+MODULE      +=  SDL2snake

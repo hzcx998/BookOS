@@ -125,3 +125,5 @@ app/xtk/xtk
 app/sdl2/sdl2
 app/lite/lite
 app/showimage/showimage
+app/showfont/showfont
+app/SDL2snake/SDL2snake
