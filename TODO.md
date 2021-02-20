@@ -18,7 +18,7 @@
 * 2021/2/16
 * SDL完成线程子系统 (thread)
 * SDL完成声音子系统 (audio)
-* SDL完成扩展库移植 - image，
+* SDL完成扩展库移植 - image[ok]，ttf
 * 2021/2/18
 * 完善SDL video驱动，keyboard，mouse cursor设置。
 * 支持SDL_TEXTINPUT才行。

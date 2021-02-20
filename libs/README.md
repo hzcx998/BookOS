@@ -8,3 +8,4 @@ lua         - 5.4.0
 libtiff     - 4.0.9
 libwebp     - 1.0.2
 SDL2_image  - 2.0.5
+SDL2_ttf    - 2.0.15

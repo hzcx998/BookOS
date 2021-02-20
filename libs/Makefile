@@ -27,3 +27,4 @@ MODULE		+= fribidi
 MODULE		+= sdl2
 MODULE		+= lua
 MODULE		+= SDL2_image
+MODULE		+= SDL2_ttf
