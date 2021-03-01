@@ -37,7 +37,11 @@
         "sdl_main.h": "c",
         "sdl_keycode.h": "c",
         "e_bullet.h": "c",
-        "new": "cpp"
+        "new": "cpp",
+        "filecntl.h": "c",
+        "config.h": "c",
+        "config-bot.h": "c",
+        "shell.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

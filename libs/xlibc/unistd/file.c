@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <math.h>
 #include <sys/dir.h>
 #include <sys/syscall.h>
@@ -54,10 +55,14 @@ int ioctl(int fd, int cmd, void *arg)
     return syscall3(int, SYS_IOCTL, fd, cmd, arg);
 }
 
-int fcntl(int fd, int cmd, long arg)
+int fcntl(int fd, int cmd, ...)
 {
     if (fd < 0)
         return -1;
+    va_list argptr;
+    va_start( argptr, cmd);
+    long arg = va_arg( argptr, long);
+    va_end( argptr);
     return syscall3(int, SYS_FCNTL, fd, cmd, arg);
 }
 

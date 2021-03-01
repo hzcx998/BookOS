@@ -71,8 +71,11 @@ struct __FILE {
 #define stdout		(__stdio_get_stdout())
 #define stderr		(__stdio_get_stderr())
 
+#define fileno(stream)  ((stream)->fd)      
+
 FILE * fopen(const char * path, const char * mode);
 FILE * freopen(const char * path, const char * mode, FILE * f);
+FILE * fdopen(int fildes, const char * mode);
 int fclose(FILE * f);
 
 int remove(const char * path);

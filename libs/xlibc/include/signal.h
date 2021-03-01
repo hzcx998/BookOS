@@ -26,16 +26,17 @@ extern "C" {
 #define SIGCHLD     EXP_CODE_CHLD
 #define SIGCONT     EXP_CODE_CONT
 #define SIGSTOP     EXP_CODE_STOP
+#define SIGTSTP      SIGSTOP
 #define SIGTTIN     EXP_CODE_TTIN   
 #define SIGTTOU     EXP_CODE_TTOU
 #define SIGSYS      EXP_CODE_SYS   
 #define SIGIO       EXP_CODE_DEVICE
 #define SIG_UNUSED  EXP_CODE_MAX_NR
-#define SIGQUIT     SIGTERM
 #define SIGHUP      (SIG_UNUSED + 0)
 #define SIGWINCH    (SIG_UNUSED + 1)
 #define SIGVTALRM   (SIG_UNUSED + 2)
 #define SIGPROF     (SIG_UNUSED + 3)
+#define SIGQUIT     (SIG_UNUSED + 4)
 #define SIG_UNUSED_ (SIGPROF + 1)
 #define NSIG        SIG_UNUSED_
 
@@ -45,6 +46,17 @@ extern "C" {
 typedef void (*sighandler_t)(int);
 
 typedef unsigned int sigset_t;
+
+#ifndef _SIG_ATOMIC_T_DEFINED
+typedef int sig_atomic_t;
+#define _SIG_ATOMIC_T_DEFINED
+#endif /* _SIG_ATOMIC_T_DEFINED */
+
+struct sigaction {
+    void (*sa_handler)(int);        // 默认信号处理函数 
+    int sa_flags;                   // 信号处理标志
+    sigset_t sa_mask;               // 信号捕捉时的屏蔽信号集
+};
 
 #define SIG_DFL         ((sighandler_t)0)        /* 默认信号处理方式 */
 #define SIG_IGN         ((sighandler_t)1)        /* 忽略信号 */
@@ -82,6 +94,20 @@ static inline int signal(int signo, sighandler_t handler)
             return -1;
     }
     return 0;
+}
+
+static inline int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)
+{
+    if (IS_BAD_SIGNAL(signum))
+        return -1;
+    if (oldact) {
+        // 保存旧的信号行为
+        oldact->sa_handler = (sighandler_t) exphandler(signum);
+        oldact->sa_flags = 0;
+        oldact->sa_mask = 0;
+    }
+    // 设置新的信号行为, sa_flags: unused， sa_mask: unused
+    return signal(signum, act->sa_handler);
 }
 
 static inline int sigaddset(sigset_t *mask,int signo)

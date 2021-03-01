@@ -13,6 +13,10 @@ extern "C" {
 #include "environ.h"
 
 #define RAND_MAX 0x7fff
+#define MB_CUR_MAX 1
+
+#define	EXIT_FAILURE	1	/* Failing exit status.  */
+#define	EXIT_SUCCESS	0	/* Successful exit status.  */
 
 typedef struct { int quot, rem; } div_t;
 typedef struct { long quot, rem; } ldiv_t;
@@ -25,6 +29,9 @@ lldiv_t lldiv(long long num, long long den);
 void srand(unsigned long seed);
 int rand();
 
+int random();
+void srandom(unsigned long seed);
+
 void qsort( void  * base, size_t n_elements, size_t el_size,
     int  (* compare ) (void const *, void const *) );
 
@@ -34,6 +41,7 @@ unsigned long strtoul(const char * nptr, char ** endptr, int base);
 unsigned long long strtoull(const char * nptr, char ** endptr, int base);
 double strtod(const char * nptr, char ** endptr);
 float strtof(const char * nptr, char ** endptr);
+#define strtold strtod
 
 intmax_t strtoimax(const char * nptr, char ** endptr, int base);
 uintmax_t strtoumax(const char * nptr, char ** endptr, int base);

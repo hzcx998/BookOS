@@ -40,3 +40,8 @@ int expunblock(uint32_t code)
 {
     return __expblock(code, 0);
 }
+
+void *exphandler(uint32_t code)
+{
+    return syscall1(void *, SYS_EXPHANDLER, code);
+}
