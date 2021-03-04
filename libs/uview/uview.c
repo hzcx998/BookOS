@@ -8,18 +8,13 @@
 /**
  * 打开用户态视图
  */
-int uview_open(int width, int height)
+int uview_open(int width, int height, int type)
 {
     if (width <= 0 || height <= 0)
         return -1;
     uview_repair_size(&width, &height);
-    int flags = (width << 16) | height;
-    char buf[12] = {0};
-    if (probedev("view", buf, 12) < 0) {
-        printf("uview: no free view existed!\n");
-        return -1;
-    }
-    int vfd = opendev(buf, flags);
+    int flags = ((type & 0x1f) << 26) | ((width & 0x1fff) << 12) | (height & 0x1fff);
+    int vfd = openclass("view", flags);
     if (vfd < 0) {
         printf("uview: open view failed!\n");
         return -1;
@@ -115,6 +110,13 @@ int uview_set_nowait(int vfd, int is_nowait)
     else
         vflags &= ~DEV_NOWAIT;
     return fastio(vfd, VIEWIO_SETFLGS, &vflags);
+}
+
+int uview_set_monitor(int vfd, int is_monitor)
+{
+    if (vfd < 0)
+        return -1;
+    return fastio(vfd, VIEWIO_SETMONITOR, &is_monitor);
 }
 
 int uview_show(int vfd)

@@ -74,7 +74,9 @@ static inline void uview_msg_reset(uview_msg_t *msg)
 }
 
 #define is_uview_msg_valid(msg) ((msg)->id > UVIEW_MSG_NONE)
-#define uview_msg_get_type(msg) ((msg)->id)
+#define uview_msg_get_id(msg) ((msg)->id)
+#define uview_msg_get_target(msg) ((msg)->target)
+#define uview_msg_get_type(msg) ((msg)->data0)
 #define uview_msg_get_mouse_x(msg) ((msg)->data0)
 #define uview_msg_get_mouse_y(msg) ((msg)->data1)
 #define uview_msg_get_mouse_wheel(msg) ((int)(msg)->data2)

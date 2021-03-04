@@ -53,6 +53,7 @@ export AS LD
 
 # bin
 MODULE      +=  xde
+MODULE      +=  taskbar
 MODULE      +=  gato
 MODULE      +=  infones
 MODULE      +=  invader

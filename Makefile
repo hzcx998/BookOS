@@ -67,7 +67,7 @@ SETUP_BIN 	= $(ARCH)/boot/setup.bin
 KERNEL_ELF 	= $(ARCH)/kernel.elf
 
 # 参数
-.PHONY: all clean wrdisk build debuild qemu
+.PHONY: all clean wrdisk build debuild
 
 all: 
 	$(MAKE) -s -C  $(LIBS_DIR) && \
@@ -81,15 +81,12 @@ clean:
 	$(MAKE) -s -C  $(BIN_DIR) clean && \
 	$(MAKE) -s -C  $(APP_DIR) clean
 
-wrdisk :  
+wrdisk: all
 	$(DD) if=$(BOOT_BIN) of=$(BOOT_DISK) bs=512 count=1 conv=notrunc
 	$(DD) if=$(LOADER_BIN) of=$(BOOT_DISK) bs=512 seek=$(LOADER_OFF) count=$(LOADER_CNTS) conv=notrunc
 	$(DD) if=$(SETUP_BIN) of=$(BOOT_DISK) bs=512 seek=$(SETUP_OFF) count=$(SETUP_CNTS) conv=notrunc
 	$(DD) if=$(KERNEL_ELF) of=$(BOOT_DISK) bs=512 seek=$(KERNEL_OFF) count=$(KERNEL_CNTS) conv=notrunc
 	$(FATFS_BIN) $(FS_DISK) $(ROM_DIR) 0
-
-# run启动虚拟机
-run: all wrdisk qemu
 
 # 构建环境。镜像>工具>环境>rom
 build: 
@@ -170,5 +167,5 @@ QEMU_ARGUMENT = -m 1024M $(QEMU_KVM) \
 #		-net nic,model=rtl8139 -net tap,ifname=tap0,script=no,downscript=no 
 
 # qemu启动
-qemu: 
+run: wrdisk
 	$(QEMU) $(QEMU_ARGUMENT)

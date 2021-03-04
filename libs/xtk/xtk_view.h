@@ -8,6 +8,7 @@
 typedef struct {
     list_t list;
     int view;
+    int real_view;
     list_t spirit_list_head;
     xtk_spirit_t *spirit;
     int nowait;

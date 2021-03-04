@@ -5,8 +5,8 @@
 #include "uview_bitmap.h"
 #include "uview_msg.h"
 #include "uview_shape.h"
-#include "uview_image.h"
 #include "uview_mouse.h"
+#include "uview_keycode.h"
 
 /* 视图类型 */
 enum uview_type {
@@ -23,9 +23,9 @@ enum uview_attr {
 #define UVIEW_MAX_SIZE_WIDTH     1920
 #define UVIEW_MAX_SIZE_HEIGHT    1080
 
-#define UVIEW_BAD_ID(view)  (view < 0)
+#define UVIEW_BAD_ID(view)  ((view) < 0)
 
-int uview_open(int width, int height);
+int uview_open(int width, int height, int type);
 int uview_close(int vfd);
 int uview_set_pos(int vfd, int x, int y);
 int uview_set_type(int vfd, int type);
@@ -55,6 +55,7 @@ int uview_get_pos(int vfd, int *x, int *y);
 int uview_get_vid(int vfd, int *vid);
 int uview_set_drag_region(int vfd, int left, int top, int right, int bottom);
 void uview_repair_size(int *width, int *height);
+int uview_set_monitor(int vfd, int is_taskbar);
 
 typedef struct {
     unsigned long timer_id;

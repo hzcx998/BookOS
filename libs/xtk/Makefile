@@ -1,4 +1,4 @@
-X_INCDIRS	:= xlibc/include uview/include dotfont/
+X_INCDIRS	:= xlibc/include uview/include dotfont/ libpng/ zlib/ jpeg/
 
 SRC			:= *.c
 

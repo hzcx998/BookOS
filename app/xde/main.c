@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <uview.h>
 #include <assert.h>
 #include <sys/ioctl.h>
 
@@ -36,17 +35,24 @@ void desktop_setup(xtk_spirit_t *spirit)
     // 创建子进程
     pid_t pid = fork();
     if (!pid) {
+        #if 0
         char *_argv[3] = {
             "/app/infones",
             "/res/nes/mario.nes",
             NULL
         };
+        #else
+        char *_argv[2] = {
+            "/app/taskbar",
+            NULL
+        };
+        #endif
         execv(_argv[0], _argv);
         exit(-1);
     }
 }
 
-int open_desktop()
+int main(int argc, char *argv[]) 
 {
     if (xtk_init(NULL, NULL) < 0) {
         printf("xtk_init failed!\n");
@@ -67,13 +73,5 @@ int open_desktop()
     desktop_setup(screen_window);
 
     xtk_main();
-    return 0;
-}
-
-
-int main(int argc, char *argv[]) 
-{
-    if (open_desktop() < 0)
-        return -1;
     return 0;
 }

@@ -51,9 +51,11 @@ int xtk_main()
         abort();
     }
     xtk_spirit_t *spirit;
+    xtk_window_t *window;
     uview_msg_t msg;
     xtk_view_t *pview, *vnext;
     int filter_val; 
+    int target;
     int view_nr = xtk_view_length();
     while (__xtk_main_loop && view_nr > 0) { 
         view_nr = xtk_view_length();   
@@ -74,28 +76,37 @@ int xtk_main()
             }
             __xtk_has_window_close = 0; /* 没有窗口关闭 */
             filter_val = 1; /* 消息没有过滤掉 */
-
-            // 遍历每一个视图来获取上面的精灵
-            list_for_each_owner (spirit, &pview->spirit_list_head, list) {                
-                if (!(filter_val = xtk_window_main(spirit, &msg)))
-                    break;
+            target = uview_msg_get_target(&msg);
+            window = XTK_WINDOW(pview->spirit);
+            if (pview->real_view == target) {    /* 目标是当前视图才能进行遍历 */ 
+                // 遍历每一个视图来获取上面的精灵
+                list_for_each_owner (spirit, &pview->spirit_list_head, list) {                
+                    if (!(filter_val = xtk_window_main(spirit, &msg)))
+                        break;
+                    if (!__xtk_main_loop) {
+                        return 0;
+                    }
+                    if (__xtk_has_window_close)
+                        break;
+                }
+                // 需要检测一下是否有窗口已经关闭掉了，如果是那么就不再往后面执行
                 if (!__xtk_main_loop) {
                     return 0;
                 }
-                if (__xtk_has_window_close)
-                    break;
+                if (__xtk_has_window_close) {
+                    continue;
+                }
+                // 没有过滤掉才处理用户消息
+                if (filter_val)
+                    filter_val = xtk_window_filter_msg(window, &msg);
             }
-            // 需要检测一下是否有窗口已经关闭掉了，如果是那么就不再往后面执行
-            if (!__xtk_main_loop) {
-                return 0;
+            // 调用用户消息过滤函数
+            if (filter_val) {
+                // 调用用户处理函数
+                if (window->routine)
+                    window->routine(&window->spirit, &msg);
             }
-            if (__xtk_has_window_close) {
-                continue;
-            }
-            spirit = pview->spirit;
-            // 没有过滤掉才处理用户消息
-            if (filter_val)
-                xtk_window_filter_msg(XTK_WINDOW(spirit), &msg);
+
         }
     }
     return 0;
@@ -113,9 +124,11 @@ int xtk_poll()
         abort();
     }
     xtk_spirit_t *spirit;
+    xtk_window_t *window;
     uview_msg_t msg;
     xtk_view_t *pview, *vnext;
     int filter_val; 
+    int target;
     int view_nr = xtk_view_length();
     if (__xtk_main_loop && view_nr > 0) {    
         xtk_view_for_each_safe (pview, vnext) {
@@ -126,29 +139,37 @@ int xtk_poll()
             while (!uview_get_msg(pview->view, &msg)) {
                 __xtk_has_window_close = 0; /* 没有窗口关闭 */
                 filter_val = 1; /* 消息没有过滤掉 */
+                target = uview_msg_get_target(&msg);
+                window = XTK_WINDOW(pview->spirit);
+                if (pview->real_view == target) {    /* 目标是当前视图才能进行遍历 */ 
+                    // 遍历每一个视图来获取上面的精灵
+                    list_for_each_owner (spirit, &pview->spirit_list_head, list) {                
+                        if (!(filter_val = xtk_window_main(spirit, &msg)))
+                            break;
+                        if (!__xtk_main_loop) {
+                            return 0;
+                        }
+                        if (__xtk_has_window_close)
+                            break;
+                    }
 
-                // 遍历每一个视图来获取上面的精灵
-                list_for_each_owner (spirit, &pview->spirit_list_head, list) {                
-                    if (!(filter_val = xtk_window_main(spirit, &msg)))
-                        break;
+                    // 需要检测一下是否有窗口已经关闭掉了，如果是那么就不再往后面执行
                     if (!__xtk_main_loop) {
                         return 0;
                     }
-                    if (__xtk_has_window_close)
-                        break;
+                    if (__xtk_has_window_close) {
+                        continue;
+                    }
+                    // 没有过滤掉才处理用户消息
+                    if (filter_val)
+                        xtk_window_filter_msg(window, &msg);
                 }
-
-                // 需要检测一下是否有窗口已经关闭掉了，如果是那么就不再往后面执行
-                if (!__xtk_main_loop) {
-                    return 0;
+                // 调用用户消息过滤函数
+                if (filter_val) {
+                    // 调用用户处理函数
+                    if (window->routine)
+                        window->routine(&window->spirit, &msg);
                 }
-                if (__xtk_has_window_close) {
-                    continue;
-                }
-                spirit = pview->spirit;
-                // 没有过滤掉才处理用户消息
-                if (filter_val)
-                    xtk_window_filter_msg(XTK_WINDOW(spirit), &msg);
             }
         }
     } else {

@@ -67,6 +67,7 @@ int xtk_spirit_cleanup(xtk_spirit_t *spirit)
         free(spirit->text);
         spirit->text = NULL;
     }
+    xtk_signal_destroy_all(spirit);
     return 0;
 }
 

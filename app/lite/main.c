@@ -11,7 +11,6 @@
   #include <mach-o/dyld.h>
 #endif
 
-
 SDL_Window *window;
 
 
@@ -63,6 +62,7 @@ static void init_window_icon(void) {
   SDL_FreeSurface(surf);
 #endif
 }
+
 
 
 int main(int argc, char **argv) {
@@ -146,3 +146,4 @@ int main(int argc, char **argv) {
 
   return EXIT_SUCCESS;
 }
+

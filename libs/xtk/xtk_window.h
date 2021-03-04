@@ -85,6 +85,7 @@ int xtk_window_resize(xtk_window_t *window, int width, int height);
 int xtk_window_get_screen(xtk_window_t *window, int *width, int *height);
 int xtk_window_get_position(xtk_window_t *window, int *x, int *y);
 int xtk_window_resize_to_screen(xtk_window_t *window);
+int xtk_window_set_monitor(xtk_window_t *window, bool monitor);
 
 xtk_surface_t *xtk_window_get_surface(xtk_window_t *window);
 
@@ -96,7 +97,7 @@ int xtk_window_update(xtk_window_t *window, int x, int y, int w, int h);
 int xtk_window_main(xtk_spirit_t *spirit, uview_msg_t *msg);
 int xtk_window_quit(xtk_spirit_t *spirit);
 
-void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg);
+int xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg);
 
 int xtk_window_draw_border(xtk_window_t *window, 
         int is_active, int redraw_bg);

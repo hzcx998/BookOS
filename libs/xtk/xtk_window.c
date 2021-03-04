@@ -126,10 +126,10 @@ int xtk_mouse_fileter_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
     if (x < 0 || y < 0 || x >= spirit->width || y >= spirit->height) {
         return 1;
     }
-    int msg_type = uview_msg_get_type(msg);
+    int msg_id = uview_msg_get_id(msg);
     xtk_event_t event;
     int tmpval = -1;
-    switch (msg_type) {
+    switch (msg_id) {
     case UVIEW_MSG_MOUSE_MOTION:
         event.type = XTK_MOUSE_MOTION;                
         event.motion.x = x;
@@ -143,11 +143,11 @@ int xtk_mouse_fileter_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
     case UVIEW_MSG_MOUSE_MBTN_DOWN:
     case UVIEW_MSG_MOUSE_RBTN_DBLCLK:
     case UVIEW_MSG_MOUSE_RBTN_DOWN:
-        if (msg_type == UVIEW_MSG_MOUSE_LBTN_DOWN || msg_type == UVIEW_MSG_MOUSE_LBTN_DBLCLK) {
+        if (msg_id == UVIEW_MSG_MOUSE_LBTN_DOWN || msg_id == UVIEW_MSG_MOUSE_LBTN_DBLCLK) {
             tmpval = UVIEW_BTN_LEFT;
-        } else if (msg_type == UVIEW_MSG_MOUSE_MBTN_DOWN || msg_type == UVIEW_MSG_MOUSE_MBTN_DBLCLK) {
+        } else if (msg_id == UVIEW_MSG_MOUSE_MBTN_DOWN || msg_id == UVIEW_MSG_MOUSE_MBTN_DBLCLK) {
             tmpval = UVIEW_BTN_MIDDLE;
-        } else if (msg_type == UVIEW_MSG_MOUSE_RBTN_DOWN || msg_type == UVIEW_MSG_MOUSE_RBTN_DBLCLK) {
+        } else if (msg_id == UVIEW_MSG_MOUSE_RBTN_DOWN || msg_id == UVIEW_MSG_MOUSE_RBTN_DBLCLK) {
             tmpval = UVIEW_BTN_RIGHT;
         }
         event.type = XTK_MOUSE_BUTTON_DOWN;
@@ -161,11 +161,11 @@ int xtk_mouse_fileter_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
     case UVIEW_MSG_MOUSE_LBTN_UP:
     case UVIEW_MSG_MOUSE_MBTN_UP:
     case UVIEW_MSG_MOUSE_RBTN_UP:
-        if (msg_type == UVIEW_MSG_MOUSE_LBTN_UP) {
+        if (msg_id == UVIEW_MSG_MOUSE_LBTN_UP) {
             tmpval = UVIEW_BTN_LEFT;
-        } else if (msg_type == UVIEW_MSG_MOUSE_MBTN_UP) {
+        } else if (msg_id == UVIEW_MSG_MOUSE_MBTN_UP) {
             tmpval = UVIEW_BTN_MIDDLE;
-        } else if (msg_type == UVIEW_MSG_MOUSE_RBTN_UP) {
+        } else if (msg_id == UVIEW_MSG_MOUSE_RBTN_UP) {
             tmpval = UVIEW_BTN_RIGHT;
         }
         event.type = XTK_MOUSE_BUTTON_UP;
@@ -180,13 +180,13 @@ int xtk_mouse_fileter_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
     case UVIEW_MSG_MOUSE_WHEEL_DOWN:
     case UVIEW_MSG_MOUSE_WHEEL_LEFT:
     case UVIEW_MSG_MOUSE_WHEEL_RIGHT:
-        if (msg_type == UVIEW_MSG_MOUSE_WHEEL_UP) {
+        if (msg_id == UVIEW_MSG_MOUSE_WHEEL_UP) {
             tmpval = XTK_WHEEL_UP;
-        } else if (msg_type == UVIEW_MSG_MOUSE_WHEEL_DOWN) {
+        } else if (msg_id == UVIEW_MSG_MOUSE_WHEEL_DOWN) {
             tmpval = XTK_WHEEL_DOWN;
-        } else if (msg_type == UVIEW_MSG_MOUSE_WHEEL_LEFT) {
+        } else if (msg_id == UVIEW_MSG_MOUSE_WHEEL_LEFT) {
             tmpval = XTK_WHEEL_LEFT;
-        } else if (msg_type == UVIEW_MSG_MOUSE_WHEEL_RIGHT) {
+        } else if (msg_id == UVIEW_MSG_MOUSE_WHEEL_RIGHT) {
             tmpval = XTK_WHEEL_RIGHT;
         }
         event.type = XTK_MOUSE_WHEEL;
@@ -205,15 +205,15 @@ int xtk_mouse_fileter_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
 int xtk_keyboard_fileter_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
 {
     xtk_event_t event;
-    int msg_type = uview_msg_get_type(msg);
-    if (msg_type == UVIEW_MSG_KEY_DOWN) {
+    int msg_id = uview_msg_get_id(msg);
+    if (msg_id == UVIEW_MSG_KEY_DOWN) {
         event.type = XTK_KEY_DOWN;
         event.key.state = XTK_PRESSED;
         event.key.keycode.code = uview_msg_get_key_code(msg);
         event.key.keycode.modify = uview_msg_get_key_modify(msg);
         if (xtk_signal_emit_arg(spirit, "key_press", &event))
             return 1;
-    } else if (msg_type == UVIEW_MSG_KEY_UP) {
+    } else if (msg_id == UVIEW_MSG_KEY_UP) {
         event.type = XTK_KEY_UP;
         event.key.state = XTK_RELEASED;
         event.key.keycode.code = uview_msg_get_key_code(msg);
@@ -224,13 +224,15 @@ int xtk_keyboard_fileter_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
     return 0;
 }
 
-
-void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
+/**
+ * 
+ */
+int xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
 {
     xtk_spirit_t *spirit = &window->spirit;
-    int msg_type = uview_msg_get_type(msg);
+    int msg_id = uview_msg_get_id(msg);
     // 转换鼠标坐标位置为窗口内容的坐标
-    switch (msg_type) {
+    switch (msg_id) {
     case UVIEW_MSG_MOUSE_MOTION:
     case UVIEW_MSG_MOUSE_LBTN_DBLCLK:
     case UVIEW_MSG_MOUSE_LBTN_DOWN:
@@ -246,12 +248,12 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
     case UVIEW_MSG_MOUSE_WHEEL_LEFT:
     case UVIEW_MSG_MOUSE_WHEEL_RIGHT:
         if (xtk_mouse_fileter_msg(spirit, msg))
-            return;
+            return 0;
         break;
     case UVIEW_MSG_KEY_DOWN:
     case UVIEW_MSG_KEY_UP:
         if (xtk_keyboard_fileter_msg(spirit, msg))
-            return;
+            return 0;
         break;
     case UVIEW_MSG_HIDE:
         xtk_mouse_motion(spirit, -1, -1);
@@ -265,14 +267,14 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
         if (window->type == XTK_WINDOW_TOPLEVEL) {
             xtk_window_set_active(window, true);        
             xtk_signal_emit_by_name(spirit, "active");    
-            return;    
+            return 0;    
         }
         break;
     case UVIEW_MSG_INACTIVATE:
         if (window->type == XTK_WINDOW_TOPLEVEL) {
             xtk_window_set_active(window, false);        
             xtk_signal_emit_by_name(spirit, "inactive");    
-            return;
+            return 0;
         }
         break;
     case UVIEW_MSG_LEAVE:
@@ -294,7 +296,7 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
             if (!xtk_window_get_invalid(window, &rect)) {
                 if (xtk_rect_valid(&rect)) {
                     window->paint_callback(spirit, &rect);
-                    return;
+                    return 0;
                 }
             }
         }
@@ -312,7 +314,7 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
                         xtk_window_restart_timer(window, timer_id, -1);
                     } 
                 }
-                return;
+                return 0;
             }
             break;
         }
@@ -323,11 +325,11 @@ void xtk_window_filter_msg(xtk_window_t *window, uview_msg_t *msg)
             event.winmove.x = uview_msg_get_move_x(msg);
             event.winmove.y = uview_msg_get_move_y(msg);
             xtk_signal_emit_arg(spirit, "move_event", &event);
-            printf("window move to %d, %d\n", event.winmove.x, event.winmove.y);
         }
     default:
         break;
     }
+    return -1;
     // 调用用户处理函数
     if (window->routine)
         window->routine(spirit, msg);
@@ -342,7 +344,7 @@ int xtk_window_main(xtk_spirit_t *spirit, uview_msg_t *msg)
     // 每个窗口精灵都需要进行这些消息检测
     int x = uview_msg_get_mouse_x(msg) - spirit->x;
     int y = uview_msg_get_mouse_y(msg) - spirit->y;
-    switch (uview_msg_get_type(msg)) {
+    switch (uview_msg_get_id(msg)) {
     case UVIEW_MSG_LEAVE:
     case UVIEW_MSG_ENTER:
         xtk_mouse_motion(spirit, x, y);
@@ -642,11 +644,11 @@ int xtk_window_spirit_setdown(xtk_spirit_t *spirit)
 int xtk_window_view_setup(xtk_window_t *window, int x, int y, int width, int height)
 {
     // 创建视图
-    int view = uview_open(width, height);
+    int view = uview_open(width, height, window->type == XTK_WINDOW_TOPLEVEL ?
+        UVIEW_TYPE_WINDOW : UVIEW_TYPE_FIXED);
     if (view < 0) {
         return -1;
     }
-    uview_set_type(view, UVIEW_TYPE_WINDOW);
     uview_set_pos(view, x, y);
     // 绑定视图
     xtk_spirit_set_view(&window->spirit, view);
@@ -657,11 +659,13 @@ int xtk_window_view_setup(xtk_window_t *window, int x, int y, int width, int hei
     xtk_view_t *pview = xtk_view_create();
     assert(pview);
     pview->view = view;
+    uview_get_vid(view, &pview->real_view);
     list_add(&window->spirit.list, &pview->spirit_list_head);    
     if (window->type == XTK_WINDOW_TOPLEVEL) {
         list_add(&window->window_spirit.list, &pview->spirit_list_head);
     }
     xtk_view_add(pview);
+    
     pview->spirit = &window->spirit;
     return 0;
 }
@@ -878,7 +882,6 @@ int xtk_window_destroy(xtk_window_t *window)
         xtk_window_destroy_navigation(window);
         xtk_window_spirit_setdown(&window->window_spirit);
     }
-    xtk_signal_destroy_all(&window->spirit);
     xtk_window_spirit_setdown(&window->spirit);
     free(window);
     // 检查到有窗口销毁
@@ -927,7 +930,7 @@ int xtk_window_set_resizable(xtk_window_t *window, bool resizable)
 {
     if (!window)
         return -1;
-    xtk_spirit_t *spirit = &window->window_spirit;
+    xtk_spirit_t *spirit = &window->spirit;
     if (resizable) {
         window->winflgs |= XTK_WINDOW_RESIZABLE;
         uview_set_resizable(spirit->view);
@@ -936,6 +939,14 @@ int xtk_window_set_resizable(xtk_window_t *window, bool resizable)
         uview_set_unresizable(spirit->view);
     }
     return 0;
+}
+
+int xtk_window_set_monitor(xtk_window_t *window, bool monitor)
+{
+    if (!window)
+        return -1;
+    xtk_spirit_t *spirit = &window->spirit;
+    return uview_set_monitor(spirit->view, monitor);
 }
 
 int xtk_window_reset_mobile_area(xtk_window_t *window)
@@ -1039,32 +1050,33 @@ int xtk_window_set_position(xtk_window_t *window, xtk_window_position_t pos)
 {
     if (!window)
         return -1;
-    xtk_spirit_t *spirit = &window->window_spirit;
-    if (spirit->view < 0)
+    int view = window->spirit.view;
+    xtk_spirit_t *spirit = &window->spirit;
+    if (view < 0)
         return -1;
     switch (pos) {
     case XTK_WIN_POS_NONE:
         {
             int vx = 0, vy = 0;
-            uview_get_lastpos(spirit->view, &vx, &vy);
-            uview_set_pos(spirit->view, vx, vy);
+            uview_get_lastpos(view, &vx, &vy);
+            uview_set_pos(view, vx, vy);
         }
         break;
     case XTK_WIN_POS_CENTER_ALWAYS:
-        uview_set_unmoveable(spirit->view);
+        uview_set_unmoveable(view);
     case XTK_WIN_POS_CENTER:
         {
             int w = 0, h = 0;
-            uview_get_screensize(spirit->view, &w, &h);
-            uview_set_pos(spirit->view, w / 2 - spirit->width / 2,
+            uview_get_screensize(view, &w, &h);
+            uview_set_pos(view, w / 2 - spirit->width / 2,
                 h / 2 - spirit->height / 2);
         }
         break;    
     case XTK_WIN_POS_MOUSE:
         {
             int mx = 0, my = 0;
-            uview_get_mousepos(spirit->view, &mx, &my);
-            uview_set_pos(spirit->view, mx, my);
+            uview_get_mousepos(view, &mx, &my);
+            uview_set_pos(view, mx, my);
         }
         break;  
     default:
