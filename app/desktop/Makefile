@@ -1,4 +1,5 @@
-X_LIBS		+= libxlibc.a libuview.a libzlib.a libpng.a libjpeg.a libxtk.a
+X_LIBS		+= libxlibc.a libuview.a libzlib.a libpng.a libjpeg.a libxtk.a \
+				libiniparser.a libcjson.a
 
 NAME		:= desktop
 SRC			+= *.c

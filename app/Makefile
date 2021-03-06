@@ -25,8 +25,9 @@ X_INCDIRS	+= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/n
 				$(LIBS_DIR)/libtiff \
 				$(LIBS_DIR)/SDL2_image \
 				$(LIBS_DIR)/SDL2_ttf \
-				
-X_LDFLAGS	+= -no-pie -m elf_i386 -e _start -Ttext 0x00001000
+				$(LIBS_DIR)/iniparser \
+				$(LIBS_DIR)/cjson \
+					
 X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/netsocket \
 				$(LIBS_DIR)/zlib \
@@ -45,7 +46,11 @@ X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/libtiff \
 				$(LIBS_DIR)/SDL2_image \
 				$(LIBS_DIR)/SDL2_ttf \
+				$(LIBS_DIR)/iniparser \
+				$(LIBS_DIR)/cjson \
 				
+X_LDFLAGS	+= -no-pie -m elf_i386 -e _start -Ttext 0x00001000
+
 LD			:= ld -m elf_i386
 AS			:=	nasm
 

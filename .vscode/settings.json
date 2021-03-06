@@ -48,7 +48,8 @@
         "environ.h": "c",
         "desktop.h": "c",
         "time.h": "c",
-        "dirent.h": "c"
+        "dirent.h": "c",
+        "dictionary.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

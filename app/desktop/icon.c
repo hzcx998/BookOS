@@ -5,6 +5,9 @@
 #include <sys/time.h>
 #include <dirent.h>
 #include <sys/types.h>
+#include <iniparser.h>
+
+#include <cJSON.h>
 
 static void icon_launch(icon_t *icon)
 {
@@ -68,7 +71,7 @@ static int icon_create_spirit(icon_t *icon, char *name, char *icon_file)
         xtk_spirit_destroy(icon->button);
         return -1;    
     }
-    if (xtk_spirit_set_background_image(icon->icon, icon_file) < 0)
+    if (xtk_spirit_set_image2(icon->icon, icon_file) < 0)
         printf("icon: set image failed!\n");
 
     return 0;
@@ -173,9 +176,105 @@ void icon_paint_all()
     }
 }
 
+static int icon_read_from_json(cJSON * root)
+{
+    cJSON * item = NULL;//cjson对象
+    char *name = NULL, *exec = NULL, *iconname = NULL, *terminal = NULL, *type = NULL;
+    int ver;
+    item = cJSON_GetObjectItem(root, "Version");
+    ver = item->valueint;
+    if (ver != 1) {
+        return -1;
+    }
+    item = cJSON_GetObjectItem(root, "Name");
+    if (!item)
+        return -1;
+    name = item->valuestring;
+    if (!name)
+        return -1;
+    item = cJSON_GetObjectItem(root, "Exec");
+    if (!item)
+        return -1;
+    exec = item->valuestring;
+    if (!exec)
+        return -1;
+    item = cJSON_GetObjectItem(root, "Icon");
+    if (!item)
+        return -1;
+    iconname = item->valuestring;
+    if (!iconname)
+        return -1;
+    item = cJSON_GetObjectItem(root, "Type");
+    if (!item)
+        return -1;
+    type = item->valuestring;
+    if (!type)
+        return -1;
+    item = cJSON_GetObjectItem(root, "Terminal");
+    if (!item) {
+        terminal = "false";
+    } else {
+        terminal = item->valuestring;
+        if (!terminal)
+            terminal = "false";
+    }
+    /* 创建图标 */
+    icon_t *icon = icon_create(name, 
+        exec,
+        iconname);
+    if (!icon) { 
+        printf("icon: create icon failed!\n");
+        return -1;
+    }
+    icon->terminal = (terminal == "true") ? true : false;
+    if (type == "Application")
+        icon->type = ICON_TYPE_APP;
+    else if (type == "Link")
+        icon->type = ICON_TYPE_LINK;
+    else
+        icon->type = ICON_TYPE_UNKNOWN;
+    icon_add(icon, desktop.window);
+    return 0;
+}
+
 int icon_read_desktop_file(char *pathname)
 {
-    printf("icon file: %s\n", pathname);
+    FILE *fp = fopen(pathname, "r");
+    if (!fp) {
+        printf("icon: open file %s failed!\n", pathname);
+        return -1;
+    }
+    fseek(fp, 0, SEEK_END);
+    long fsz = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+    char * jsonStr = malloc(fsz + 1);
+    if (!jsonStr) {
+        printf("icon: malloc for json str failed!\n");
+        fclose(fp);
+        return -1;
+    }
+    if (fread(jsonStr, fsz, 1, fp) <= 0) {
+        printf("icon: read json file failed!\n");
+        free(jsonStr);
+        fclose(fp);
+        return -1;
+    }
+    fclose(fp);
+
+    cJSON * root = NULL;
+    root = cJSON_Parse(jsonStr);   
+    if (!root)  {
+        printf("icon: Parse json Error before: [%s]\n",cJSON_GetErrorPtr());
+        free(jsonStr);
+        return -1;
+    } else {
+        if (icon_read_from_json(root) < 0) {
+            printf("icon: read from json failed!\n");
+            free(jsonStr);
+            return -1;
+        }
+    }
+    free(jsonStr);
     return 0;
 }
 
@@ -196,7 +295,6 @@ void icon_scan()
             break;
         // 获取文件名，并打开之
         if (!(de->d_attr & DE_DIR)) {
-            printf("dir: %s, file: %s\n", DESKTOP_DIR, de->d_name);
             char name[_MAX_PATH] = {0};
             strcpy(name, DESKTOP_DIR);
             strcat(name, "/");
@@ -209,26 +307,8 @@ void icon_scan()
 
 int icon_init()
 {
-    icon_t *icon = icon_create("infones", 
-        "/app/infones /res/nes/mario.nes",
-        "/usr/local/infones/infones.png");
-
-    if (icon)
-        icon_add(icon, desktop.window);
-    icon = icon_create("invader", 
-        "/app/invader",
-        "/usr/local/infones/infones.png");
-    if (icon)
-        icon_add(icon, desktop.window);
-    icon = icon_create("lite", 
-        "/app/lite", 
-        "/usr/local/lite/lite.png");
-    if (icon)
-        icon_add(icon, desktop.window);
+    icon_scan();
     icon_locate_all();
     icon_paint_all();
-
-    icon_scan();
-
     return 0;
 }

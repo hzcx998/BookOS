@@ -1,0 +1,8 @@
+{
+    "Version":1.0,
+    "Name":"Lite",
+    "Exec":"/app/lite",
+    "Icon":"/usr/local/lite/lite.png",
+    "Terminal":"false",
+    "Type":"Application"
+}

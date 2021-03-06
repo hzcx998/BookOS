@@ -689,6 +689,7 @@ dictionary * iniparser_load(const char * ininame)
         } else {
             last=0 ;
         }
+        printf("iniparser: line: %s\n", line);
         switch (iniparser_line(line, section, key, val)) {
             case LINE_EMPTY:
             case LINE_COMMENT:

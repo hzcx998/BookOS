@@ -553,7 +553,7 @@ static int xtk_window_create_navigation(xtk_window_t *window)
 
     xtk_spirit_t *spirit_minim = xtk_button_create_with_label("-");
     assert(spirit_minim);
-    xtk_spirit_t *spirit_maxim = xtk_button_create_with_label("O");
+    xtk_spirit_t *spirit_maxim = xtk_button_create_with_label("[]");
     assert(spirit_maxim);
     xtk_spirit_t *spirit_close = xtk_button_create_with_label("X");
     assert(spirit_close);

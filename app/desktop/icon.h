@@ -21,11 +21,12 @@ Categories = GNOME;Application;Network;   # 注明在菜单栏中显示的类别
 */
 
 #define ICON_SIZE_DEFAULT   32 
-#define ICON_BUTTON_SIZE   64
-#define ICON_DISTANCE   2
+#define ICON_BUTTON_SIZE    64
+#define ICON_DISTANCE       2
 
-#define ICON_TYPE_APP       0
-#define ICON_TYPE_LINK      1
+#define ICON_TYPE_UNKNOWN   0
+#define ICON_TYPE_APP       1
+#define ICON_TYPE_LINK      2
 
 #define ICON_CLICK_DISTANCE_MS      500
 
