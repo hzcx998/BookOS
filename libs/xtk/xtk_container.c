@@ -31,6 +31,9 @@ int xtk_container_add(xtk_container_t *container, xtk_spirit_t *spirit)
     if (container->spirit == spirit)
         return -1;
     
+    if (list_find(&spirit->list, &container->children_list))
+        return -1;
+    
     // 添加到容器中
     list_add_tail(&spirit->list, &container->children_list);
     

@@ -64,23 +64,16 @@ void taskbar_main()
 static void taskbar_setup(xtk_spirit_t *spirit)
 {
     #if 0
-    // init winctl
-    winctl_create(1);
-    winctl_create(2);
-    winctl_paint(NULL);
-    winctl_get_focus(winctl_find(2));
+    char *argv[2] = {"/app/xtk", NULL};
+    if (!fork()) {
+        exit(execv(argv[0], argv));
+    }
     #endif
-    #if 1
-    char *argv[2] = {"/app/lite", NULL};
-    #else
-    char *argv[3] = {"/app/infones", "/res/nes/contra_u.nes", 0};
-    #endif
-    pid_t pid = create_process(argv, NULL, 0);
-    printf("create process %d\n", pid);
+    /*
     char *argv2[3] = {"/app/infones", "/res/nes/contra_u.nes", 0};
-    pid = create_process(argv2, NULL, 0);
-    printf("create process %d\n", pid);
-    
+    if (!fork()) {
+        exit(execv(argv2[0], argv2));
+    }*/
 }
 
 void taskbar_draw_back()
@@ -91,6 +84,7 @@ void taskbar_draw_back()
     xtk_window_flip(XTK_WINDOW(taskbar.spirit));
 }
 
+/* 由于是监视器，因此这些消息都是来自其它视图的。 */
 static void taskbar_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
 {
     int type = uview_msg_get_type(msg); /* view type */

@@ -3,8 +3,8 @@
  * -taskbar
  */
 
-#ifndef BDE_TASKBAR_H   /* bookos desktop environment (BDE) */
-#define BDE_TASKBAR_H
+#ifndef _BDE_TASKBAR_H   /* bookos desktop environment (BDE) */
+#define _BDE_TASKBAR_H
 
 #include <xtk.h>
 #include <sys/list.h>
@@ -32,4 +32,4 @@ void taskbar_exit();
 void taskbar_main();
 void taskbar_draw_back();
 
-#endif  /* BDE_TASKBAR_H */
+#endif  /* _BDE_TASKBAR_H */

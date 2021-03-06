@@ -333,7 +333,7 @@ void paint_callback(xtk_spirit_t *spirit, xtk_rect_t *rect)
     xtk_image_t *img = xtk_image_load("/res/image.png");
     assert(img);
     xtk_surface_t img_surf;
-    xtk_surface_init(&img_surf, img->w, img->h, img->buf);
+    xtk_surface_init(&img_surf, img->w, img->h, (uint32_t *) img->buf);
     xtk_surface_blit(&img_surf, NULL, xtk_window_get_surface(XTK_WINDOW(spirit)), NULL);
     xtk_window_flip(XTK_WINDOW(spirit));
 }
@@ -367,7 +367,6 @@ int main(int argc, char *argv[])
     xtk_signal_connect(win, "enter_notify", XTK_CALLBACK(enter), NULL);
     xtk_signal_connect(win, "leave_notify", XTK_CALLBACK(leave), NULL);
 
-
     xtk_spirit_t *l0 = xtk_label_create("count: 0");
     assert(l0);
     assert(!xtk_container_add(XTK_CONTAINER(win), l0));
@@ -382,11 +381,22 @@ int main(int argc, char *argv[])
     xtk_signal_connect(btn1, "button_press", clear_btn_event, l0);
     assert(!xtk_container_add(XTK_CONTAINER(win), btn1));
     xtk_spirit_set_pos(btn1, 160 + 50, 100);
-    xtk_spirit_show_all(win);    
-    xtk_window_paint_callback(XTK_WINDOW(win), paint_callback);
+    // xtk_window_paint_callback(XTK_WINDOW(win), paint_callback);
+    xtk_spirit_show_all(win);
     
-    cairo_test(XTK_WINDOW(win));
+    // cairo_test(XTK_WINDOW(win));
+    /* 图标图形测试 */
+    printf("spirit image test\n");
+    xtk_spirit_t *icon = xtk_spirit_create(0, 0, 48, 48);
+    assert(icon != NULL);
     
+    if (xtk_spirit_set_image2(icon, "/usr/local/infones/infones.png") < 0)
+        printf("set image failed!\n");
+    xtk_spirit_set_text(icon, "123");
+    assert(!xtk_container_add(XTK_CONTAINER(win), icon));
+    xtk_spirit_set_pos(icon, 10, 10);
+    xtk_spirit_show(icon);
+
     xtk_main();
     return 0;
 }

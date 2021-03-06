@@ -52,13 +52,13 @@ AS			:=	nasm
 export AS LD
 
 # bin
-MODULE      +=  xde
+MODULE      +=  desktop
 MODULE      +=  taskbar
-MODULE      +=  gato
+#MODULE      +=  gato
 MODULE      +=  infones
 MODULE      +=  invader
 MODULE      +=  xtk
-MODULE      +=  sdl2
+#MODULE      +=  sdl2
 MODULE      +=  lite
 MODULE      +=  showfont
 MODULE      +=  showimage

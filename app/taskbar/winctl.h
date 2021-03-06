@@ -1,5 +1,5 @@
-#ifndef BDE_TASKBAR_WINCTL_H   /* bookos desktop environment (BDE) */
-#define BDE_TASKBAR_WINCTL_H
+#ifndef _BDE_WINCTL_H   /* bookos desktop environment (BDE) */
+#define _BDE_WINCTL_H
 
 #include <xtk.h>
 #include <sys/list.h>
@@ -27,4 +27,4 @@ void winctl_get_focus(winctl_t *winctl);
 void winctl_lost_focus(winctl_t *winctl);
 void winctl_paint(winctl_t *winctl);
 
-#endif  /* BDE_TASKBAR_WINCTL_H */
+#endif  /* _BDE_WINCTL_H */

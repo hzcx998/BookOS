@@ -1,6 +1,9 @@
 
 X_INCDIRS	+= infones/core
 X_LIBS		+= libxlibc.a libxtk.a libuview.a libjpeg.a libzlib.a libpng.a
+
+X_CFLAGS    := -fno-builtin -fno-PIE -m32 -fno-stack-protector -std=gnu99 -O3
+
 NAME		:= infones
 SRC			+= infoNES_System_Book.c
 

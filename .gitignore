@@ -115,7 +115,6 @@ bin/touch/touch
 bin/hello/hello
 bin/lua/lua
 
-
 # /app
 app/gato/gato
 app/infones/infones
@@ -127,3 +126,5 @@ app/lite/lite
 app/showimage/showimage
 app/showfont/showfont
 app/SDL2snake/SDL2snake
+app/desktop/desktop
+app/taskbar/taskbar

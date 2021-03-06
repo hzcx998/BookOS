@@ -364,3 +364,4 @@ void setdec8(char *s, int i)
 	}
 	s[8] = 0;
 }
+

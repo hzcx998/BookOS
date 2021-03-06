@@ -100,6 +100,7 @@ int xtk_spirit_auto_size(xtk_spirit_t *spilit);
 int xtk_spirit_set_background_image(xtk_spirit_t *spilit, char *filename);
 int xtk_spirit_to_surface(xtk_spirit_t *spilit, xtk_surface_t *surface);
 int xtk_spirit_set_image(xtk_spirit_t *spilit, char *filename);
+int xtk_spirit_set_image2(xtk_spirit_t *spirit, char *filename);
 int xtk_spirit_set_surface(xtk_spirit_t *spilit, xtk_surface_t *surface);
 int xtk_spirit_set_view(xtk_spirit_t *spirit, int view);
 int xtk_spirit_set_container(xtk_spirit_t *spirit, xtk_container_t *container);

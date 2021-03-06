@@ -248,6 +248,27 @@ int xtk_spirit_set_image(xtk_spirit_t *spirit, char *filename)
     return 0;
 }
 
+int xtk_spirit_set_image2(xtk_spirit_t *spirit, char *filename)
+{
+    if (!spirit)
+        return -1;
+    if (filename == NULL) {
+        if (spirit->image)
+            xtk_image_destroy(spirit->image);
+        spirit->image = NULL;
+        return 0;
+    }
+    xtk_image_t *img = xtk_image_load2(filename, spirit->width, spirit->height);
+    if (!img)
+        return -1;
+    if (spirit->image) {
+        xtk_image_destroy(spirit->image);
+        spirit->image = NULL;
+    }
+    spirit->image = img;
+    return 0;
+}
+
 int xtk_spirit_set_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
 {
     if (!spirit)
@@ -372,7 +393,7 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
 
         xtk_rect_t srcrect = {0, 0, src_surface.w, src_surface.h};
         xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, surface->w, surface->h};
-        xtk_surface_blit(surface, &dstrect, &src_surface, &srcrect);
+        xtk_surface_blit(&src_surface, &srcrect, surface, &dstrect);
     }
     
     /* 前景 */
@@ -383,12 +404,13 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
         
         xtk_rect_t srcrect = {0, 0, spirit->surface->w, spirit->surface->h};
         xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, surface->w, surface->h};
-        xtk_surface_blit(surface, &dstrect, spirit->surface, &srcrect);
+        xtk_surface_blit(spirit->surface, &srcrect, surface, &dstrect);
     }
     if (spirit->image) {
         // 根据对齐方式设置显示位置
         __xtk_calc_aligin_pos(spirit->style.align, spirit->width, spirit->height, spirit->image->w,
             spirit->image->h, &off_x, &off_y);
+        
         xtk_surface_t src_surface;
         xtk_surface_init(&src_surface, 
             (unsigned int) spirit->image->w,
@@ -397,7 +419,7 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
         
         xtk_rect_t srcrect = {0, 0, src_surface.w, src_surface.h};
         xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, surface->w, surface->h};
-        xtk_surface_blit(surface, &dstrect, &src_surface, &srcrect);
+        xtk_surface_blit(&src_surface, &srcrect, surface, &dstrect);
     }
 
     if (spirit->text && spirit->style.color != XTK_NONE_COLOR) {

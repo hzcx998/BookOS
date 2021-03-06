@@ -442,10 +442,11 @@ int xtk_window_draw_border(xtk_window_t *window,
     // 绘制导航栏
     xtk_surface_rectfill(win_spirit->surface, border_thick, border_thick, 
         win_spirit->width - border_thick * 2, window->style->navigation_height, back);
+    /*
     xtk_surface_rectfill(win_spirit->surface, border_thick, 
         navigation_bottom - border_thick,
         win_spirit->width - border_thick * 2, border_thick, border);
-    
+    */
     /* 基础边框 */
     xtk_surface_rectfill(win_spirit->surface, 0, 0, win_spirit->width, border_thick, border);
     xtk_surface_rectfill(win_spirit->surface, 0, win_spirit->height - border_thick, win_spirit->width,
@@ -567,6 +568,10 @@ static int xtk_window_create_navigation(xtk_window_t *window)
     x += spirit_minim->width;
     xtk_spirit_set_pos(spirit_maxim, x, y - spirit_maxim->height / 2);
     
+    spirit_close->style.border_color = XTK_NONE_COLOR;
+    spirit_minim->style.border_color = XTK_NONE_COLOR;
+    spirit_maxim->style.border_color = XTK_NONE_COLOR;
+
     xtk_container_add(XTK_CONTAINER(window_spirit), spirit_close);
     xtk_container_add(XTK_CONTAINER(window_spirit), spirit_minim);
     xtk_container_add(XTK_CONTAINER(window_spirit), spirit_maxim);
