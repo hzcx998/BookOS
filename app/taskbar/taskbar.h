@@ -23,6 +23,7 @@ typedef struct {
     int screen_height;
     list_t winctl_list_head;    /* 窗口控制的链表头 */
     winctl_t *last_winctl;      /* 最近访问过的窗口控制 */
+    int icon_msgid;              /* 图标消息队列 */
 } taskbar_t;
 
 extern taskbar_t taskbar;

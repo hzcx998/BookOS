@@ -113,6 +113,7 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
         perror("xbook window set position failed!\n");
         goto fail;
     }
+
     /*  */
     xtk_window_paint_callback(pwin, BOOKOS_WindowPaint);
     /* window events */

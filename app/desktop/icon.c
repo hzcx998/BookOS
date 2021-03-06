@@ -35,7 +35,6 @@ static bool icon_button_press_event(xtk_spirit_t *button, void *arg)
         gettimeofday(&tv, NULL);
         int tm = tv.tv_sec * 1000 + tv.tv_usec / 1000;
         if ((tm - icon->click_ms) < ICON_CLICK_DISTANCE_MS) { // 双击间隔
-            printf("# luanch %s\n", icon->exec);
             icon_launch(icon);
         }
         icon->click_ms = 0;
@@ -71,7 +70,7 @@ static int icon_create_spirit(icon_t *icon, char *name, char *icon_file)
         xtk_spirit_destroy(icon->button);
         return -1;    
     }
-    if (xtk_spirit_set_image2(icon->icon, icon_file) < 0)
+    if (xtk_spirit_set_image2(icon->icon, icon_file, -1, -1) < 0)
         printf("icon: set image failed!\n");
 
     return 0;

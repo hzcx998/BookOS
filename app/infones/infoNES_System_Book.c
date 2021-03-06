@@ -169,9 +169,11 @@ void start_application( char *filename )
 
     /* 设置允许调整的最小大小 */
     xtk_spirit_set_size_request(window, NES_DISP_WIDTH, NES_DISP_HEIGHT);
+    
+    xtk_window_set_icon(XTK_WINDOW(window), "/usr/local/infones/infones.png", XTK_WINDOW_ICON_MIDDLE);
     /* 设置窗口界面 */
     xtk_spirit_show(window);
-
+    
     /* 设置键盘按键信号 */
     xtk_signal_connect(window, "key_press", win_key_press, NULL);
     xtk_signal_connect(window, "key_release", win_key_release, NULL);

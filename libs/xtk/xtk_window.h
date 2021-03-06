@@ -24,6 +24,12 @@ typedef enum {
 #define XTK_WINDOW_WIDTH_DEFAULT    320
 #define XTK_WINDOW_HEIGHT_DEFAULT   240
 
+#define XTK_WINDOW_ICON_MSG_NAME   "taskbar_icon"
+
+#define XTK_WINDOW_ICON_BIG     1   /* 窗口切换时的图标 */   
+#define XTK_WINDOW_ICON_MIDDLE  2   /* 任务栏显示的图标 */
+#define XTK_WINDOW_ICON_SMALL   3   /* 托盘图标 */
+
 typedef struct {
     int border_thick;       // 边框宽度
     int navigation_height;  // 导航高度
@@ -67,6 +73,7 @@ typedef struct {
     list_t timer_list_head;     // 定时器
     xtk_surface_t mmap_surface;
     void *extension;
+    int icon_msgid;         /* 任务栏图标消息队列 */
 } xtk_window_t;
 
 #define XTK_WINDOW(spirit)  ((xtk_window_t *)(spirit))
@@ -86,6 +93,7 @@ int xtk_window_get_screen(xtk_window_t *window, int *width, int *height);
 int xtk_window_get_position(xtk_window_t *window, int *x, int *y);
 int xtk_window_resize_to_screen(xtk_window_t *window);
 int xtk_window_set_monitor(xtk_window_t *window, bool monitor);
+int xtk_window_set_icon(xtk_window_t *window, const char *pathname, int type);
 
 xtk_surface_t *xtk_window_get_surface(xtk_window_t *window);
 

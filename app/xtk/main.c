@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
     xtk_spirit_t *icon = xtk_spirit_create(0, 0, 48, 48);
     assert(icon != NULL);
     
-    if (xtk_spirit_set_image2(icon, "/usr/local/infones/infones.png") < 0)
+    if (xtk_spirit_set_image2(icon, "/usr/local/infones/infones.png", -1, -1) < 0)
         printf("set image failed!\n");
     xtk_spirit_set_text(icon, "123");
     assert(!xtk_container_add(XTK_CONTAINER(win), icon));

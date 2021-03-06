@@ -71,6 +71,15 @@ int winctl_destroy(winctl_t *winctl)
     return 0;
 }
 
+int winctl_destroy_all()
+{
+    winctl_t *winctl, *winctl_next;
+    list_for_each_owner_safe (winctl, winctl_next, &taskbar.winctl_list_head, list) {
+        winctl_destroy(winctl);
+    }
+    return 0;
+}
+
 winctl_t *winctl_find(int winid)
 {
     winctl_t *winctl;
@@ -96,6 +105,21 @@ void winctl_lost_focus(winctl_t *winctl)
     xtk_button_t *btn = XTK_BUTTON(winctl->button);
     btn->color_idle = taskbar.winctl_back_color;
     btn->spirit.style.background_color = btn->color_idle;
+}
+
+int winctl_set_icon(winctl_t *winctl, char *pathname)
+{
+    if (!winctl || !pathname)
+        return -1;
+    xtk_spirit_t *spirit = winctl->button;
+    if (!spirit)
+        return -1;
+    /* 如果设置图标失败则尝试用默认图标 */
+    if (xtk_spirit_set_image2(spirit, pathname, WINCTL_ICON_SIZE, WINCTL_ICON_SIZE) < 0)
+        if (xtk_spirit_set_image2(spirit, WINCTL_ICON_PATH_DEFAULT, WINCTL_ICON_SIZE, WINCTL_ICON_SIZE) < 0)
+            return -1;
+    xtk_spirit_show(spirit);
+    return 0;
 }
 
 /**

@@ -49,7 +49,10 @@
         "desktop.h": "c",
         "time.h": "c",
         "dirent.h": "c",
-        "dictionary.h": "c"
+        "dictionary.h": "c",
+        "proc.h": "c",
+        "ipc.h": "c",
+        "vmm.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

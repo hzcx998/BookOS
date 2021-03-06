@@ -4,6 +4,8 @@
 #include <xtk.h>
 #include <sys/list.h>
 
+#define WINCTL_ICON_PATH_DEFAULT    "/system/icons/default.png"
+
 #define WINCTL_ICON_SIZE        36
 #define WINCTL_SIZE_DEFAULT    (WINCTL_ICON_SIZE + 4)
 
@@ -21,10 +23,13 @@ typedef struct {
 extern winctl_t *winctl_last;
 winctl_t *winctl_create(int winid);
 int winctl_destroy(winctl_t *winctl);
+int winctl_destroy_all();
 winctl_t *winctl_find(int winid);
 
 void winctl_get_focus(winctl_t *winctl);
 void winctl_lost_focus(winctl_t *winctl);
 void winctl_paint(winctl_t *winctl);
+
+int winctl_set_icon(winctl_t *winctl, char *pathname);
 
 #endif  /* _BDE_WINCTL_H */

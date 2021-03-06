@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <sys/vmm.h>
+#include <sys/ipc.h>
 
 static xtk_timer_t *xtk_window_find_timer(xtk_window_t *window, uint32_t timer_id);
 static int xtk_window_destroy_timer_all(xtk_window_t *window);
@@ -613,6 +614,34 @@ int xtk_window_show(xtk_window_t *window)
     return 0;
 }
 
+int xtk_window_set_icon(xtk_window_t *window, const char *pathname, int type)
+{
+    if (!window)
+        return -1;
+    if (window->type != XTK_WINDOW_TOPLEVEL)
+        return -1;
+    /* 连接图标消息队列 */
+    if (window->icon_msgid == -1) {
+        window->icon_msgid = msgget(XTK_WINDOW_ICON_MSG_NAME, IPC_CREAT);
+        if (window->icon_msgid < 0)
+            return -1;
+    }
+    xtk_view_t *view = xtk_view_find(window->spirit.view);
+    if (!view)
+        return -1;
+    
+    /* 发送路径 */
+    if (msgsend(window->icon_msgid, pathname, min(_MAX_PATH, strlen(pathname) + 1), 0) < 0)
+        return -1;
+    /* 发送图标消息 */
+    uview_msg_t msg;
+    uview_msg_header(&msg, UVIEW_MSG_SETICON, view->real_view);
+    uview_msg_data(&msg, 0, type, 0, 0);
+    if (uview_send_msg(window->spirit.view, &msg) < 0)
+        return -1;
+    return 0;
+}
+
 int xtk_window_spirit_setup(xtk_window_t *window, xtk_spirit_t *spirit, int x, int y, int width, int height)
 {
     xtk_spirit_init(spirit, x, y, width, height);
@@ -763,6 +792,7 @@ xtk_spirit_t *xtk_window_create(xtk_window_type_t type)
     window->content_width = XTK_WINDOW_WIDTH_DEFAULT;
     window->content_height = XTK_WINDOW_HEIGHT_DEFAULT;
     window->extension = NULL;
+    window->icon_msgid = -1;
     xtk_surface_init(&window->mmap_surface, 0, 0, NULL);
     xtk_rect_init(&window->invalid_rect, 0, 0, 0, 0);
     xtk_rect_init(&window->backup_win_info, 0, 0, 0, 0);

@@ -242,6 +242,8 @@ int init_window(int width, int height)
     xtk_window_flip(XTK_WINDOW(window.win));
 	xtk_signal_connect(window.win, "key_press", win_key_press, NULL);
     
+    xtk_window_set_icon(XTK_WINDOW(window.win), "/usr/local/invader/invader.png", XTK_WINDOW_ICON_MIDDLE);
+
     xtk_spirit_show(window.win);
     window.surface = surface;
     return 0;

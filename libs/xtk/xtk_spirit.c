@@ -248,7 +248,7 @@ int xtk_spirit_set_image(xtk_spirit_t *spirit, char *filename)
     return 0;
 }
 
-int xtk_spirit_set_image2(xtk_spirit_t *spirit, char *filename)
+int xtk_spirit_set_image2(xtk_spirit_t *spirit, char *filename, int width, int height)
 {
     if (!spirit)
         return -1;
@@ -258,7 +258,11 @@ int xtk_spirit_set_image2(xtk_spirit_t *spirit, char *filename)
         spirit->image = NULL;
         return 0;
     }
-    xtk_image_t *img = xtk_image_load2(filename, spirit->width, spirit->height);
+    if (width > spirit->width || width <= 0)
+        width = spirit->width;
+    if (height > spirit->height || height <= 0)
+        height = spirit->height;
+    xtk_image_t *img = xtk_image_load2(filename, width, height);
     if (!img)
         return -1;
     if (spirit->image) {

@@ -6,10 +6,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/proc.h>
+#include <sys/ipc.h>
 
 taskbar_t taskbar;
-
-static void taskbar_setup(xtk_spirit_t *spirit);
 
 static void taskbar_msg(xtk_spirit_t *spirit, uview_msg_t *msg);
 
@@ -20,6 +19,13 @@ int taskbar_init()
     taskbar.winctl_back_color = WINCTL_BACK_COLOR;
     taskbar.winctl_active_color = WINCTL_ACTIVE_COLOR;
     taskbar.last_winctl = NULL;
+    /* 创建消息队列，接收图标路径 */
+    taskbar.icon_msgid = msgget(XTK_WINDOW_ICON_MSG_NAME, IPC_CREAT | IPC_EXCL);
+    if (taskbar.icon_msgid < 0) {
+        printf("create taskbar message failed!\n");
+        return -1;
+    }
+
     if (xtk_init(NULL, NULL) < 0) {
         printf("taskbar: xtk_init failed!\n");
         return -1;
@@ -39,15 +45,14 @@ int taskbar_init()
     xtk_window_set_monitor(XTK_WINDOW(spirit), true);
 
     taskbar_draw_back();
-    taskbar_setup(spirit);
     xtk_spirit_show(spirit);
     return 0;
 }
 
 void taskbar_exit()
 {
-    /* TODO:destroy winctls */
-
+    msgput(taskbar.icon_msgid);
+    winctl_destroy_all();
     if (taskbar.spirit) {
         xtk_spirit_destroy(taskbar.spirit);
         taskbar.spirit = NULL;
@@ -59,21 +64,6 @@ void taskbar_exit()
 void taskbar_main()
 {
     xtk_main();
-}
-
-static void taskbar_setup(xtk_spirit_t *spirit)
-{
-    #if 0
-    char *argv[2] = {"/app/xtk", NULL};
-    if (!fork()) {
-        exit(execv(argv[0], argv));
-    }
-    #endif
-    /*
-    char *argv2[3] = {"/app/infones", "/res/nes/contra_u.nes", 0};
-    if (!fork()) {
-        exit(execv(argv2[0], argv2));
-    }*/
 }
 
 void taskbar_draw_back()
@@ -141,6 +131,22 @@ static void taskbar_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
             if (winctl) {
                 winctl->ishidden = false;
                 winctl_paint(winctl);
+            }
+        }
+        break;
+    case UVIEW_MSG_SETICON:
+        if (type == UVIEW_TYPE_WINDOW) {
+            winctl = winctl_find(target);
+            if (winctl && uview_msg_get_icontype(msg) == XTK_WINDOW_ICON_MIDDLE) {
+                char icon_path[_MAX_PATH] = {0};
+                /* 如果加载失败就使用默认图标 */
+                if (taskbar.icon_msgid >= 0) {
+                    if (msgrecv(taskbar.icon_msgid, icon_path, _MAX_PATH, 0) < 0)
+                        strcpy(icon_path, WINCTL_ICON_PATH_DEFAULT);
+                } else {
+                    strcpy(icon_path, WINCTL_ICON_PATH_DEFAULT);
+                }
+                winctl_set_icon(winctl, icon_path);
             }
         }
         break;

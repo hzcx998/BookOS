@@ -1,0 +1,8 @@
+{
+    "Version":1.0,
+    "Name":"Invader",
+    "Exec":"/app/invader",
+    "Icon":"/usr/local/invader/invader.png",
+    "Terminal":"false",
+    "Type":"Application"
+}
