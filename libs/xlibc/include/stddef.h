@@ -88,10 +88,6 @@ __buildin_expect((x), 0)表示x的值为假的可能性更大.
 #define MAX_PATH    256
 #endif
 
-#ifndef _MAX_PATH
-#define _MAX_PATH    260
-#endif
-
 #define ifloor(x)		((x) > 0 ? (int)(x) : (int)((x) - 0.9999999999))
 #define iround(x)		((x) > 0 ? (int)((x) + 0.5) : (int)((x) - 0.5))
 #define iceil(x)		((x) > 0 ? (int)((x) + 0.9999999999) : (int)(x))

@@ -43,6 +43,8 @@ int taskbar_init()
     xtk_window_set_position_absolute(XTK_WINDOW(spirit), 0, taskbar.screen_height - TASKBAR_HEIGHT_DEFAULT);
     xtk_window_set_routine(XTK_WINDOW(spirit), taskbar_msg);
     xtk_window_set_monitor(XTK_WINDOW(spirit), true);
+    xtk_rect_t rect = {0, 0, (int) taskbar.screen_width, (int) (taskbar.screen_height - spirit->height)};
+    xtk_window_set_maxim_rect(XTK_WINDOW(spirit), &rect);
 
     taskbar_draw_back();
     xtk_spirit_show(spirit);
@@ -138,10 +140,10 @@ static void taskbar_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
         if (type == UVIEW_TYPE_WINDOW) {
             winctl = winctl_find(target);
             if (winctl && uview_msg_get_icontype(msg) == XTK_WINDOW_ICON_MIDDLE) {
-                char icon_path[_MAX_PATH] = {0};
+                char icon_path[MAX_PATH] = {0};
                 /* 如果加载失败就使用默认图标 */
                 if (taskbar.icon_msgid >= 0) {
-                    if (msgrecv(taskbar.icon_msgid, icon_path, _MAX_PATH, 0) < 0)
+                    if (msgrecv(taskbar.icon_msgid, icon_path, MAX_PATH, 0) < 0)
                         strcpy(icon_path, WINCTL_ICON_PATH_DEFAULT);
                 } else {
                     strcpy(icon_path, WINCTL_ICON_PATH_DEFAULT);

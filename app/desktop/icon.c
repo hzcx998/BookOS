@@ -294,7 +294,7 @@ void icon_scan()
             break;
         // 获取文件名，并打开之
         if (!(de->d_attr & DE_DIR)) {
-            char name[_MAX_PATH] = {0};
+            char name[MAX_PATH] = {0};
             strcpy(name, DESKTOP_DIR);
             strcat(name, "/");
             strcat(name, de->d_name);

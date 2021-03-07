@@ -631,7 +631,7 @@ int xtk_window_set_icon(xtk_window_t *window, const char *pathname, int type)
         return -1;
     
     /* 发送路径 */
-    if (msgsend(window->icon_msgid, pathname, min(_MAX_PATH, strlen(pathname) + 1), 0) < 0)
+    if (msgsend(window->icon_msgid, pathname, min(MAX_PATH, strlen(pathname) + 1), 0) < 0)
         return -1;
     /* 发送图标消息 */
     uview_msg_t msg;
@@ -1245,6 +1245,26 @@ int xtk_window_get_position(xtk_window_t *window, int *x, int *y)
     return uview_get_pos(window->spirit.view, x, y);
 }
 
+int xtk_window_set_maxim_rect(xtk_window_t *window, xtk_rect_t *rect)
+{
+    if (!window || !rect)
+        return -1;
+    if (window->spirit.view < 0)
+        return -1;
+    return uview_set_win_maxim_rect(window->spirit.view, rect->x, rect->y,
+        (int) rect->w, (int) rect->h);
+}
+
+int xtk_window_get_maxim_rect(xtk_window_t *window, xtk_rect_t *rect)
+{
+    if (!window || !rect)
+        return -1;
+    if (window->spirit.view < 0)
+        return -1;
+    return uview_get_win_maxim_rect(window->spirit.view, &rect->x, &rect->y, 
+        (int *) &rect->w, (int *) &rect->h);
+}
+
 /**
  * maxim window
  */
@@ -1262,9 +1282,14 @@ int xtk_window_maxim(xtk_window_t *window)
     xtk_rect_init(&window->backup_win_info, wx, wy,
         window->window_spirit.width, window->window_spirit.height);
 
-    // 设置要调整成的大小和位置
-    xtk_window_get_screen(window, (int *) &info_rect.w, (int *) &info_rect.h);
-    xtk_rect_init(&info_rect, 0, 0, info_rect.w, info_rect.h);
+    // 设置要调整成的大小和位置，这个区域是普通窗口最大化的区域。
+    if (xtk_window_get_maxim_rect(window, &info_rect) < 0) {
+        printf("xtk window: get maxim rect failed!\n");
+        return -1;
+    }
+
+    // xtk_window_get_screen(window, (int *) &info_rect.w, (int *) &info_rect.h);
+    // xtk_rect_init(&info_rect, 0, 0, info_rect.w, info_rect.h);
     
     window->winflgs |= XTK_WINDOW_MAXIM;
     if (window->winflgs & XTK_WINDOW_RESIZABLE) {

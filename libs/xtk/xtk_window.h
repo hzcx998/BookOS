@@ -94,6 +94,8 @@ int xtk_window_get_position(xtk_window_t *window, int *x, int *y);
 int xtk_window_resize_to_screen(xtk_window_t *window);
 int xtk_window_set_monitor(xtk_window_t *window, bool monitor);
 int xtk_window_set_icon(xtk_window_t *window, const char *pathname, int type);
+int xtk_window_set_maxim_rect(xtk_window_t *window, xtk_rect_t *rect);
+int xtk_window_get_maxim_rect(xtk_window_t *window, xtk_rect_t *rect);
 
 xtk_surface_t *xtk_window_get_surface(xtk_window_t *window);
 

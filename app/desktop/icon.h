@@ -40,7 +40,7 @@ typedef struct {
     xtk_spirit_t *button;   // 图标的按钮
     xtk_spirit_t *label;    // 图标的显示文本
     xtk_spirit_t *icon;     // 图标的图标显示
-    char exec[_MAX_PATH];
+    char exec[MAX_PATH];
     bool terminal;              
     int type;                   // 图标类型
 } icon_t;
