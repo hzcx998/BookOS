@@ -24,6 +24,7 @@ typedef struct {
     list_t winctl_list_head;    /* 窗口控制的链表头 */
     winctl_t *last_winctl;      /* 最近访问过的窗口控制 */
     int icon_msgid;              /* 图标消息队列 */
+    xtk_spirit_t *clock_label;
 } taskbar_t;
 
 extern taskbar_t taskbar;
@@ -32,5 +33,7 @@ int taskbar_init();
 void taskbar_exit();
 void taskbar_main();
 void taskbar_draw_back();
+
+int tasbar_clock_init(xtk_spirit_t *spirit);
 
 #endif  /* _BDE_TASKBAR_H */

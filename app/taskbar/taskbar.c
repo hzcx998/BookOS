@@ -35,6 +35,7 @@ int taskbar_init()
         printf("taskbar: create window spirit failed!\n");
         return -1;
     }
+    spirit->style.background_color = taskbar.taskbar_color;
     taskbar.spirit = spirit;
     xtk_window_get_screen(XTK_WINDOW(spirit), &taskbar.screen_width, &taskbar.screen_height);
     xtk_window_set_fixed(XTK_WINDOW(spirit), true);
@@ -42,12 +43,14 @@ int taskbar_init()
     xtk_window_set_resizable(XTK_WINDOW(spirit), false);
     xtk_window_set_position_absolute(XTK_WINDOW(spirit), 0, taskbar.screen_height - TASKBAR_HEIGHT_DEFAULT);
     xtk_window_set_routine(XTK_WINDOW(spirit), taskbar_msg);
+    
     xtk_window_set_monitor(XTK_WINDOW(spirit), true);
     xtk_rect_t rect = {0, 0, (int) taskbar.screen_width, (int) (taskbar.screen_height - spirit->height)};
     xtk_window_set_maxim_rect(XTK_WINDOW(spirit), &rect);
-
     taskbar_draw_back();
-    xtk_spirit_show(spirit);
+    if (tasbar_clock_init(spirit) < 0)
+        return -1;
+    xtk_spirit_show_all(spirit);
     return 0;
 }
 
@@ -88,6 +91,7 @@ static void taskbar_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
         if (type == UVIEW_TYPE_WINDOW) {
             winctl_create(target);
             winctl_paint(NULL); /* paint all winctl */
+            xtk_spirit_show(taskbar.clock_label);
         }
         break;
     case UVIEW_MSG_CLOSE:
@@ -96,6 +100,7 @@ static void taskbar_msg(xtk_spirit_t *spirit, uview_msg_t *msg)
             if (winctl) {
                 winctl_destroy(winctl);
                 winctl_paint(NULL); /* paint all winctl */
+                xtk_spirit_show(taskbar.clock_label);
                 taskbar.last_winctl = NULL; /* clear last winctl */
             }
         }
