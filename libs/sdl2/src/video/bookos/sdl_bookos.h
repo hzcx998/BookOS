@@ -26,7 +26,12 @@
 #include <xtk.h>
 
 typedef struct {
+    int startTextInput;
+} SDL_VideoDeviceData;
+
+typedef struct {
     xtk_spirit_t *window;
+    SDL_VideoDeviceData *deviceData;
 } SDL_WindowData;
 
 #endif

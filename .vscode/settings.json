@@ -52,7 +52,10 @@
         "dictionary.h": "c",
         "proc.h": "c",
         "ipc.h": "c",
-        "vmm.h": "c"
+        "vmm.h": "c",
+        "string.h": "c",
+        "vt100.h": "c",
+        "xtk_view.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

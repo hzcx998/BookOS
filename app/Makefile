@@ -57,13 +57,15 @@ AS			:=	nasm
 export AS LD
 
 # bin
+MODULE      +=  terminal
+#MODULE      +=  vt100
 MODULE      +=  desktop
 MODULE      +=  taskbar
 #MODULE      +=  gato
 MODULE      +=  infones
 MODULE      +=  invader
 MODULE      +=  xtk
-#MODULE      +=  sdl2
+MODULE      +=  sdl2
 MODULE      +=  lite
-MODULE      +=  showfont
-MODULE      +=  showimage
+#MODULE      +=  showfont
+#MODULE      +=  showimage

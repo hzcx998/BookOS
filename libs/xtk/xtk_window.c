@@ -487,15 +487,12 @@ int xtk_window_draw_border(xtk_window_t *window,
 
     // TODO: 刷新所有精灵
     xtk_spirit_show_children(win_spirit);
-
-    //if (win_back) {
     // 刷新content surface内容
     uview_bitmap_init(&bmp, spirit->surface->w, spirit->surface->h,
         (uview_color_t *) spirit->surface->pixels);
     uview_bitblt_update(spirit->view, spirit->x,
         spirit->y, &bmp);
     xtk_spirit_show_children(spirit);
-    //}
     return 0;
 }
 
@@ -756,8 +753,10 @@ static xtk_spirit_t *xtk_window_create_toplevel(xtk_window_t *window)
         return NULL;
     }
     xtk_window_reset_mobile_area(window);
-    // 窗口需要绘制
+    // 把内容绘制成黑色，并且绘制边框
+    xtk_surface_rectfill(spirit->surface, 0, 0, spirit->width, spirit->height, XTK_BLACK);
     xtk_window_draw_border(window, 1, 1);
+
     return spirit;
 }
 

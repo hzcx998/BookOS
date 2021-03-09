@@ -1,0 +1,8 @@
+{
+    "Version":1.0,
+    "Name":"Terminal",
+    "Exec":"/app/terminal",
+    "Icon":"/usr/local/terminal/terminal.png",
+    "Terminal":"false",
+    "Type":"Application"
+}

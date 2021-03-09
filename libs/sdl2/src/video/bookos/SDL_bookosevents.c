@@ -542,24 +542,79 @@ uint32_t xtk_code_to_sdl_code(uint32_t code)
     }
     return SDL_SCANCODE_UNKNOWN;
 }
+
+SDL_bool SDL_SacncodeVisiable(uint32_t scancode)
+{
+    if ((scancode >= SDL_SCANCODE_A && scancode <= SDL_SCANCODE_0)
+    || (scancode == SDL_SCANCODE_SPACE)
+    || (scancode >= SDL_SCANCODE_MINUS && scancode <= SDL_SCANCODE_SLASH)
+    || (scancode >= SDL_SCANCODE_KP_DIVIDE && scancode <= SDL_SCANCODE_KP_PERIOD))
+        return SDL_TRUE;
+    return SDL_FALSE;
+}
+
+/**
+ * 如果打开了文本输入：
+ * 如果按下了组合键，那么就发送组合键+Key中的key。
+ * 没有按下组合键，如果是可显示按键，那么就发送成为SDL_TEXTINPUT事件
+ * 如果不是可显示按键，就直接发送该按键。
+ */
 bool BOOKOS_KeyPressEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
 {    
     SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
     if (window) {
         uint32_t scancode = xtk_code_to_sdl_code(event->key.keycode.code);
-        if (scancode != SDL_SCANCODE_UNKNOWN)
-            SDL_SendKeyboardKey(SDL_PRESSED, scancode);   
+        if (data->deviceData->startTextInput) {
+            if (event->key.keycode.modify & (UVIEW_KMOD_CTRL | UVIEW_KMOD_ALT)) {    /* 有组合按键，就直接转发按键 */
+                if (scancode != SDL_SCANCODE_UNKNOWN)
+                    SDL_SendKeyboardKey(SDL_PRESSED, scancode);   
+            } else {    /* 没有组合按键，可显示字符就发送给文本，不可显示就直接发送按键值 */
+                if (SDL_SacncodeVisiable(scancode) && scancode != SDL_SCANCODE_UNKNOWN) {
+                    /* 生产文本字符，产生SDL_TEXTINPUT消息 */
+                    char s[2] = {0};
+                    s[0] = uview_keypad2ascii(event->key.keycode.code); /* 可显示按键转ASCII */
+                    if (s[0])
+                        SDL_SendKeyboardText(s);
+                } else {
+                    if (scancode != SDL_SCANCODE_UNKNOWN)
+                        SDL_SendKeyboardKey(SDL_PRESSED, scancode);
+                }
+            }
+        } else {    /* 没有开启文本输入，是什么按键就转发什么按键 */
+            if (scancode != SDL_SCANCODE_UNKNOWN)
+                SDL_SendKeyboardKey(SDL_PRESSED, scancode);   
+        }
     }
     return true;
 }
 
+/**
+ * 如果打开了文本输入：
+ * 如果弹起了组合键，那么就发送组合键+Key中的key。
+ * 没有按下组合键，如果是可显示按键，那么忽略不管
+ * 如果不是可显示按键，就直接发送该按键。
+ */
 bool BOOKOS_KeyReleaseEvent(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
 {    
     SDL_Window *window = XTK_WINDOW(spirit)->extension;
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
     if (window) {
         uint32_t scancode = xtk_code_to_sdl_code(event->key.keycode.code);
-        if (scancode != SDL_SCANCODE_UNKNOWN)
-            SDL_SendKeyboardKey(SDL_RELEASED, scancode);   
+        if (data->deviceData->startTextInput) {
+            if (event->key.keycode.modify & (UVIEW_KMOD_SHIFT | UVIEW_KMOD_CTRL | UVIEW_KMOD_ALT)) {    /* 有组合按键，就直接转发按键 */
+                if (scancode != SDL_SCANCODE_UNKNOWN)
+                    SDL_SendKeyboardKey(SDL_RELEASED, scancode);   
+            } else {    /* 没有组合按键，不可显示就直接发送按键值 */
+                if (!SDL_SacncodeVisiable(scancode)) {
+                    if (scancode != SDL_SCANCODE_UNKNOWN)
+                        SDL_SendKeyboardKey(SDL_RELEASED, scancode);
+                }
+            }
+        } else {    /* 没有开启文本输入，是什么按键就转发什么按键 */
+            if (scancode != SDL_SCANCODE_UNKNOWN)
+                SDL_SendKeyboardKey(SDL_RELEASED, scancode);   
+        }
     }
     return true;
 }

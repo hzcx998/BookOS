@@ -190,4 +190,6 @@ enum {
     UVIEW_KEY_LAST       /* last one */        
 };
 
+char uview_keypad2ascii(int code);
+
 #endif /* _UVIEW_UVIEW_KEYCODE_H */

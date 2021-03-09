@@ -128,3 +128,4 @@ app/showfont/showfont
 app/SDL2snake/SDL2snake
 app/desktop/desktop
 app/taskbar/taskbar
+app/terminal/terminal

@@ -28,6 +28,7 @@ int main( int argc, char* args[] )
     // This will show the new, red contents of the window.
     SDL_RenderPresent(renderer);
 
+    SDL_StartTextInput();
     // Give us time to see the window.
     //SDL_Delay(5000);
     int is_quit = 0;
@@ -73,6 +74,9 @@ int main( int argc, char* args[] )
             case SDL_WINDOWEVENT:
                 printf("SDL window event %d\n", event.window.event);
                 break;
+            case SDL_TEXTINPUT:
+                printf("SDL text input %s\n", event.text.text);
+                break;
             default:
                 break;
             }
@@ -84,4 +88,3 @@ int main( int argc, char* args[] )
     SDL_Quit();
     return 0;
 }
-

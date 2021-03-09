@@ -91,7 +91,7 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
 {
     SDL_WindowData *data;
     if (window->flags & SDL_WINDOW_OPENGL) {
-        perror("xbook do not support OPENGL!\n");
+        perror("bookos do not support OPENGL!\n");
         return -1;
     }
     
@@ -104,13 +104,15 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
     if (!data->window) {
         goto fail;
     }
+    data->deviceData = (SDL_VideoDeviceData *)_this->driverdata;   /* 指向设备数据 */
+
     xtk_window_t *pwin = XTK_WINDOW(data->window);
     if (xtk_window_set_default_size(pwin, window->w, window->h) < 0) {
-        perror("xbook window size invalid!\n");
+        perror("bookos window size invalid!\n");
         goto fail;
     }
     if (xtk_window_set_position(pwin, XTK_WIN_POS_CENTER) < 0) {
-        perror("xbook window set position failed!\n");
+        perror("bookos window set position failed!\n");
         goto fail;
     }
 
@@ -156,6 +158,7 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
     
     pwin->extension = window;
     window->driverdata = data;  /* SDL_Window->driverdata -> SDL_WindowData */
+    
     return 0;
 fail:
     if (data->window) {
@@ -345,21 +348,32 @@ static int BOOKOS_SetDisplayMode(_THIS, SDL_VideoDisplay *display, SDL_DisplayMo
     return 0;
 }
 
+/**
+ * 开始接收文本输入，按键产生文本字符串
+ */
 static void
 BOOKOS_StartTextInput(_THIS)
 {
-
+    SDL_VideoDeviceData *data = (SDL_VideoDeviceData *) _this->driverdata;
+    data->startTextInput = 1;
 }
 
+/**
+ * 结束文本输入，按键不产生文本字符串，是默认的按键值
+ */
 static void
 BOOKOS_StopTextInput(_THIS)
 {
+    SDL_VideoDeviceData *data = (SDL_VideoDeviceData *) _this->driverdata;
+    data->startTextInput = 0;
 #ifdef SDL_USE_IME
     SDL_IME_Reset();
 #endif
 }
 
-
+/**
+ * 设置输入法已经输入的文本的区域
+ */
 static void
 BOOKOS_SetTextInputRect(_THIS, SDL_Rect *rect)
 {
@@ -394,7 +408,14 @@ BOOKOS_CreateDevice(int devindex)
         return NULL;
     }
 
-    device->driverdata = NULL;
+    SDL_VideoDeviceData *data;
+    data = (SDL_VideoDeviceData *)SDL_calloc(1, sizeof(SDL_VideoDeviceData));
+    if (data == NULL) {
+        SDL_free(device);
+        return NULL;
+    }
+    data->startTextInput = 0;   /* 默认没打开 */
+    device->driverdata = data;
     device->VideoInit = BOOKOS_VideoInit;
     device->VideoQuit = BOOKOS_VideoQuit;
     device->SetDisplayMode = BOOKOS_SetDisplayMode;
