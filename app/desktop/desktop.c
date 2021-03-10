@@ -11,6 +11,16 @@ void desktop_launch(const char *pathname, char *arg)
 {
     char *argv[3] = {(char *)pathname, arg, NULL};
     if (!fork()) {
+        /* 如果是绝对路径，那么就 */
+        char *p = (char *)pathname;
+        if (*p == '/' && *(p + 1)) {
+            char *p = strrchr(pathname, '/');
+            if (p) {
+                *p = '\0';
+                chdir(pathname);
+                *p = '/';
+            }
+        }
         exit(execv(pathname, argv));
     }
 }

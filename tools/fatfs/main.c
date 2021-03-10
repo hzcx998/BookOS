@@ -29,7 +29,7 @@
 #define ROM_DIS 0
 
 /* 默认磁盘大小 */
-#define DISK_SIZE       (10*1024*1024)    
+#define DISK_SIZE       (100*1024*1024)    
 
 extern int mkfs_flags;
 
@@ -89,6 +89,11 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    if (drv_open() < 0) {
+        printf("fatfs: open driver failed!\n");
+        return -1;
+    }
+
     FATFS fs;           /* Filesystem object */
     FIL fil;            /* File object */
     FRESULT res;        /* API result code */
@@ -120,7 +125,11 @@ int main(int argc, char *argv[])
     #ifdef DEBUG_FATFS_MAIN   
     printf("==== HOST ROM FILES ====\n");
     #endif
-    scan_host_files(rom_dir, "0:");
+    if (scan_host_files(rom_dir, "0:") < 0) {
+        printf("fatfs: sync files failed!\n");
+        retval = -1;
+        goto scroll_close_driver;
+    }
 
     /* 打印磁盘文件上的文件信息 */
     #ifdef DEBUG_FATFS_MAIN   
@@ -128,7 +137,11 @@ int main(int argc, char *argv[])
     #endif
     char dir_buf[256] = {0};
     strcpy(dir_buf, "0:");
-    scan_files(dir_buf);
+    if (scan_files(dir_buf) != F_OK) {
+        printf("fatfs: scan image file failed!\n");
+        retval = -1;
+        goto scroll_close_driver;
+    }
 
     /* Unregister work area */
     f_mount(0, "", 0);

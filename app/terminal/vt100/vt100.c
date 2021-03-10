@@ -187,18 +187,18 @@ STATE(_st_esc_sq_bracket, term, ev, arg) {
 						break;
 					}
 					case 'C': { // cursor right (cursor stops at right margin)
-						int n = (term->narg > 0) ? term->args[0] : 1;
+                        int n = (term->narg > 0) ? term->args[0] : 1;
 						term->cursor_x += n;
 						if (term->cursor_x >= term->width) term->cursor_x = term->width - 1;
 						term->state = _st_idle;
-						break;
+                        break;
 					}
 					case 'D': { // cursor left
-						int n = (term->narg > 0) ? term->args[0] : 1;
+                        int n = (term->narg > 0) ? term->args[0] : 1;
 						term->cursor_x -= n;
 						if (term->cursor_x < 0) term->cursor_x = 0;
 						term->state = _st_idle;
-						break;
+                        break;
 					}
 					case 'f':
 					case 'H': { // move cursor to position (default 0;0)

@@ -51,15 +51,7 @@ DSTATUS disk_initialize (
 	int result;
     if (pdrv >= FF_VOLUMES)
         return STA_NOINIT;
-
-    result = drv_open();
-    if (result >= 0) {
-        stat = 0;
-    } else {
-        stat = STA_NODISK;
-        printf("%s: open disk failed!\n", __func__);
-    }
-    return stat;
+    return 0;
 }
 
 

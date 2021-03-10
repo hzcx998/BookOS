@@ -34,6 +34,8 @@ char pts_name[50];
 #define SCREEN_WIDTH (10 * LINE_CHARS)
 #define SCREEN_HEIGHT (21 * COLUMN_CHARS)
 
+#define SHELL_NAME  "/bin/bash"
+
 SDL_Renderer *renderer;
 TTF_Font *font;
 SDL_Texture *texture;
@@ -245,9 +247,8 @@ void launch_shell()
         dup2(fds, STDIN_FILENO);
         dup2(fds, STDOUT_FILENO);
         dup2(fds, STDERR_FILENO);
-        system("bash");
-        /* 执行完成后就退出 */
-        exit(0);
+        // system(SHELL_NAME);
+        exit(execl(SHELL_NAME, SHELL_NAME, NULL));
     }
     else
     {
@@ -328,6 +329,8 @@ void launch_vt100()
 
     launch_shell();
     SDL_StartTextInput();   // 开启文本输入，可现实字符串输入
+
+    char rect_buf[1024] = {0};
     //主循环
     while (!quit)
     {
@@ -363,18 +366,31 @@ void launch_vt100()
                     buf[0] = '\t';
                     console_virt_write(term, buf, 1);
                 }
-                else if (e.key.keysym.sym == SDLK_UP)
-                    write(fdm, "\e[A", 3);
+                else if (e.key.keysym.sym == SDLK_UP) 
+                {
+                    write(fdm, "\e[A", 3);  
+                }
                 else if (e.key.keysym.sym == SDLK_DOWN)
-                    write(fdm, "\e[B", 3);
+                {
+                    write(fdm, "\e[B", 3); 
+                }
                 else if (e.key.keysym.sym == SDLK_RIGHT)
-                    write(fdm, "\e[C", 3);
-                else if (e.key.keysym.sym == SDLK_LEFT)
-                    write(fdm, "\e[D", 3);
-                else if (e.key.keysym.sym == SDLK_HOME)
+                {
+                    write(fdm, "\e[C", 3);   
+                }
+                else if (e.key.keysym.sym == SDLK_LEFT) 
+                {
+                    write(fdm, "\e[D", 3);     
+                }
+                else if (e.key.keysym.sym == SDLK_HOME) {
                     write(fdm, "\e[7~", 4);
+                    console_virt_write(term, "\e[7~", 4);        
+                }
                 else if (e.key.keysym.sym == SDLK_END)
+                {
                     write(fdm, "\e[8~", 4);
+                    console_virt_write(term, "\e[8~", 4);        
+                }
                 else if (e.key.keysym.sym == SDLK_F1)
                     write(fdm, "\e[[A", 4);
                 else if (e.key.keysym.sym == SDLK_F2)
@@ -396,12 +412,6 @@ void launch_vt100()
                 else if (e.key.keysym.sym == SDLK_F10)
                     write(fdm, "\e[21~", 5);
                 else {
-                    /* TODO: 将SDL按键转换成ASCII码并发送给shell */
-                    /*char buf[2] = {0, 0};
-                    buf[0] = (char) e.key.keysym.sym;
-                    write(fdm, buf, strlen(buf));
-                    console_virt_write(term, buf, strlen(buf)); 
-                    */
                     /* 处理控制按键 */
                     printf("terminal get unused keycode %x:%c\n", e.key.keysym.sym, e.key.keysym.sym);
                     if (e.key.keysym.mod & (KMOD_LCTRL | KMOD_RCTRL)) {
@@ -430,8 +440,8 @@ void launch_vt100()
             /* 读取剩余的再pty中的字符，避免子进程退出时，发出的数据依然存在，没有读取干净 */
             while (1) 
             {
-                char c[200] = {0};
-                if (read(fdm, c, 200 - 1) < 0)  /* 非阻塞读取 */
+                SDL_memset(rect_buf, 0, 1024);
+                if (read(fdm, rect_buf, 1024 - 1) < 0)  /* 非阻塞读取 */
                     break;
             }
             break;
@@ -440,11 +450,11 @@ void launch_vt100()
         /* 读取shell发送来的字符字符并显示 */
         while (1) 
         {
-            char c[200] = {0};
-            if (read(fdm, c, 200 - 1) < 0)  /* 非阻塞读取 */
+            SDL_memset(rect_buf, 0, 1024);
+            if (read(fdm, rect_buf, 1024 - 1) < 0)  /* 非阻塞读取 */
                 break;
             // write(STDOUT_FILENO, c, strlen(c));
-            console_virt_write(term, c, strlen(c));
+            console_virt_write(term, rect_buf, strlen(rect_buf));
         }
         
         #if 0

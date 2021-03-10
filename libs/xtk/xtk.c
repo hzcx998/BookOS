@@ -38,8 +38,7 @@ void xtk_exit(void)
         
         // TODO: do exit everything
         xtk_view_exit();
-
-        printf("xtk: exit now.\n");
+        //printf("xtk: exit now.\n");
         __xtk_init_done = 0;
     }
 }

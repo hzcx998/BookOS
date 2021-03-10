@@ -119,7 +119,6 @@ int main(int argc, char **argv) {
   get_exe_filename(exename, sizeof(exename));
   lua_pushstring(L, exename);
   lua_setglobal(L, "EXEFILE");
-
   (void) luaL_dostring(L,
     "local core\n"
     "xpcall(function()\n"

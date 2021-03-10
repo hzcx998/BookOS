@@ -627,7 +627,7 @@ void BOOKOS_PumpEvents(_THIS)
 {
     if (!xtk_poll()) {
         // 退出事件
-        printf("SDL PumpEvents: xtk poll quit event!\n");
+        // printf("SDL PumpEvents: xtk poll quit event!\n");
     }
 }
 

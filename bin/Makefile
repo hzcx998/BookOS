@@ -38,4 +38,4 @@ MODULE      +=  hello
 MODULE      +=  osver
 MODULE      +=  sh
 #MODULE      +=  lua
-#MODULE      +=  bash
+MODULE      +=  bash

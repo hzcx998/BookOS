@@ -20,8 +20,6 @@ void *drv_buf;
 char disk_path[256];
 char disk_name[32];
 
-int open_ref;
-
 int mkfs_flags;
 extern int rom_disk;   /* rom is always new */
 
@@ -32,7 +30,6 @@ int disk_sectors;
 
 int drv_init(char *path, int disk_sz)
 {
-    open_ref = 0;
     mkfs_flags = 0;
     drv_buf = NULL;
     
@@ -145,14 +142,10 @@ int drv_init(char *path, int disk_sz)
 int drv_open()
 {
     //printf("fatfs: call open driver!\n");
-    
-    if (open_ref > 0) {
-        open_ref++;
-        return 0;
-    }
 #ifdef DEBUG_FATFS_DRIVER   
     printf("fatfs: do open driver.\n");
 #endif    
+    
     /* 加载磁盘数据到内存 */
     rewind(drv_file);
     if (fread(drv_buf, disk_size / 10, 10,  drv_file) <= 0) {
@@ -160,18 +153,12 @@ int drv_open()
         return -1;
     }
     rewind(drv_file);
-
-    open_ref++;
     return 0;
 }
 
 int drv_close()
 {
     //printf("fatfs: call close driver!\n");
-    open_ref--;
-    if (open_ref > 0) {
-        return 0;
-    }
 #ifdef DEBUG_FATFS_DRIVER   
     printf("fatfs: do close driver.\n");
 #endif
@@ -206,10 +193,10 @@ int drv_ioctl(int cmd, unsigned long arg)
     switch(cmd)
     {
     case DISKIO_SYNC:
-        rewind(drv_file);
+        /*rewind(drv_file);
         fwrite(drv_buf, disk_size / 10, 10, drv_file);
         rewind(drv_file);
-        
+        */
         break;
     case DISKIO_GETSSIZE:
         *(unsigned int *)arg = SECTOR_SIZE;
