@@ -103,7 +103,7 @@ bin/ls/ls
 bin/mem/mem
 bin/mkdir/mkdir
 bin/mv/mv
-bin/osver/osver
+bin/uname/uname
 bin/ps/ps
 bin/rename/rename
 bin/rm/rm
