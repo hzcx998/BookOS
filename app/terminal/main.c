@@ -244,9 +244,15 @@ void launch_shell()
             exit(0);
         }
 
+
+        /* 为shell设置新组 */
+        setpgrp();
+        tcsetpgrp(fds, getpgrp());
+
         dup2(fds, STDIN_FILENO);
         dup2(fds, STDOUT_FILENO);
         dup2(fds, STDERR_FILENO);
+
         // system(SHELL_NAME);
         exit(execl(SHELL_NAME, SHELL_NAME, NULL));
     }
@@ -413,11 +419,9 @@ void launch_vt100()
                     write(fdm, "\e[21~", 5);
                 else {
                     /* 处理控制按键 */
-                    printf("terminal get unused keycode %x:%c\n", e.key.keysym.sym, e.key.keysym.sym);
+                    // printf("terminal get unused keycode %x:%c\n", e.key.keysym.sym, e.key.keysym.sym);
                     if (e.key.keysym.mod & (KMOD_LCTRL | KMOD_RCTRL)) {
-                        printf("ctl down\n");
                         if (e.key.keysym.sym == SDLK_c) { /* ctrl + C */
-                            /* 发送终端控制符 */
                             char buf[2] = {0, 0};
                             buf[0] = '\003';
                             write(fdm, buf, strlen(buf));

@@ -33,7 +33,6 @@ int exp_test(int argc, char *argv[]);
 int fifo_test(int argc, char *argv[]);
 int sys_test(int argc, char *argv[]);
 int pthread_test(int argc, char *argv[]);
-int pthread_test_key(int argc, char *argv[]);
 
 int file_test(int argc, char *argv[]);
 int file_test2(int argc, char *argv[]);
@@ -53,7 +52,11 @@ int proc_test(int argc, char *argv[]);
 int port_comm_test(int argc, char *argv[]);
 int gui_test(int argc, char *argv[]);
 int file_test3(int argc, char *argv[]);
-int pthread_test_struct(int argc, char *argv[]);
+int fcntl_test(int argc, char *argv[]);
+int tty_test(int argc, char *argv[]);
+
+int id_test(int argc, char *argv[]);
+int pty_test2(int argc, char *argv[]);
 
 static inline void sys_err(char *str)
 {

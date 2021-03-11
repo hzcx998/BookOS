@@ -68,6 +68,9 @@ develop/rom/app/
 develop/rom/acct/
 develop/bochs/
 
+# local app
+develop/rom/usr/local/lite/lite
+
 # linux fixdep
 libs/fixdep
 sbin/fixdep
@@ -114,6 +117,7 @@ bin/test/test
 bin/touch/touch
 bin/hello/hello
 bin/lua/lua
+bin/bash/bash
 
 # /app
 app/gato/gato
@@ -122,7 +126,6 @@ app/invader/invader
 app/xde/xde
 app/xtk/xtk
 app/sdl2/sdl2
-app/lite/lite
 app/showimage/showimage
 app/showfont/showfont
 app/SDL2snake/SDL2snake

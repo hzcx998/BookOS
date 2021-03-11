@@ -34,10 +34,10 @@ int video_test(int argc, char *argv[])
     /* 查看1s可刷新的次数，测试10次，求平均数 */
     while (test_count < 10)
     {
-        memset(fb_buf, 0xff, fb_len);
-        memset(fb_buf, 0xff, fb_len);
-        memset(fb_buf, 0xff, fb_len);
-        memset(fb_buf, 0xff, fb_len);
+        memset(fb_buf, test_count * 10, fb_len);
+        memset(fb_buf, test_count * 10, fb_len);
+        memset(fb_buf, test_count * 10, fb_len);
+        memset(fb_buf, test_count * 10, fb_len);
         
         fps++;
         gettimeofday(&time2, NULL);
