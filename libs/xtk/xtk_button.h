@@ -16,6 +16,8 @@ typedef struct {
     xtk_color_t color_idle;
     xtk_color_t color_touch;
     xtk_color_t color_click;
+    xtk_color_t color_disabled;
+    int disabled;
 } xtk_button_t;
 
 #define XTK_BUTTON(spirit)  ((xtk_button_t *)(spirit))
@@ -26,5 +28,7 @@ typedef struct {
 xtk_spirit_t *xtk_button_create();
 xtk_spirit_t *xtk_button_create_with_label(char *label);
 void xtk_button_change_state(xtk_button_t *button, xtk_button_state_t state);
+int xtk_button_set_disable(xtk_button_t *button);
+int xtk_button_set_enable(xtk_button_t *button);
 
 #endif /* _LIB_XTK_BUTTON_H */

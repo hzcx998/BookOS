@@ -21,6 +21,8 @@ int xtk_mouse_motion(xtk_spirit_t *spirit, int x, int y)
         case XTK_SPIRIT_TYPE_BUTTON:
             {
                 xtk_button_t *button = XTK_BUTTON(tmp);
+                if (button->disabled)
+                    break;
                 if (XTK_IN_SPIRIT(tmp, x, y)) {
                     uview_set_mouse_state(spirit->view, tmp->style.cursor);                        
                     if (button->state == XTK_BUTTON_IDLE) {
@@ -67,6 +69,9 @@ int xtk_mouse_btn_down(xtk_spirit_t *spirit, int btn, int x, int y)
                 if (btn != UVIEW_BTN_LEFT)
                     break;
                 xtk_button_t *button = XTK_BUTTON(tmp);
+                if (button->disabled)
+                    break;
+                
                 if (XTK_IN_SPIRIT(tmp, x, y)) {
                     uview_set_mouse_state(spirit->view, tmp->style.cursor);                        
                     if (button->state == XTK_BUTTON_TOUCH) {
@@ -114,6 +119,9 @@ int xtk_mouse_btn_up(xtk_spirit_t *spirit, int btn, int x, int y)
                     break;
                     
                 xtk_button_t *button = XTK_BUTTON(tmp);
+                if (button->disabled)
+                    break;
+                
                 if (XTK_IN_SPIRIT(tmp, x, y)) {
                     uview_set_mouse_state(spirit->view, tmp->style.cursor);                        
                     if (button->state == XTK_BUTTON_CLICK) {

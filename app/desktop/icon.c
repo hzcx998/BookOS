@@ -225,10 +225,10 @@ static int icon_read_from_json(cJSON * root)
         printf("icon: create icon failed!\n");
         return -1;
     }
-    icon->terminal = (terminal == "true") ? true : false;
-    if (type == "Application")
+    icon->terminal = (!strcmp(terminal, "true")) ? true : false;
+    if (!strcmp(type, "Application"))
         icon->type = ICON_TYPE_APP;
-    else if (type == "Link")
+    else if (!strcmp(type, "Link"))
         icon->type = ICON_TYPE_LINK;
     else
         icon->type = ICON_TYPE_UNKNOWN;

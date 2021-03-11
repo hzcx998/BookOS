@@ -235,7 +235,9 @@ int init_window(int width, int height)
     if (window.win < 0) {
         return -1;
     }
+    xtk_window_disable_maxim(XTK_WINDOW(window.win));
     xtk_window_set_resizable(XTK_WINDOW(window.win), false);
+    
     /* 用背景颜色清屏 */
     xtk_surface_t *surface = xtk_window_get_surface(XTK_WINDOW(window.win));
     xtk_surface_rectfill(surface, 0, 0, window.width, window.height, window.bcolor);

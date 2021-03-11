@@ -438,7 +438,7 @@ int xtk_window_draw_border(xtk_window_t *window,
             spirit->style.background_color);
     }
 
-    int navigation_bottom = border_thick + window->style->navigation_height;
+    //int navigation_bottom = border_thick + window->style->navigation_height;
 
     // 绘制导航栏
     xtk_surface_rectfill(win_spirit->surface, border_thick, border_thick, 
@@ -556,6 +556,8 @@ static int xtk_window_create_navigation(xtk_window_t *window)
     xtk_spirit_t *spirit_close = xtk_button_create_with_label("X");
     assert(spirit_close);
 
+    navigation->maxim = spirit_maxim;
+
     int x = window->style->border_thick;
     int y = window->style->border_thick + window->style->navigation_height / 2;
     xtk_spirit_set_pos(spirit_close, x, y - spirit_close->height / 2);
@@ -628,7 +630,7 @@ int xtk_window_set_icon(xtk_window_t *window, const char *pathname, int type)
         return -1;
     
     /* 发送路径 */
-    if (msgsend(window->icon_msgid, pathname, min(MAX_PATH, strlen(pathname) + 1), 0) < 0)
+    if (msgsend(window->icon_msgid, (void *) pathname, min(MAX_PATH, strlen(pathname) + 1), 0) < 0)
         return -1;
     /* 发送图标消息 */
     uview_msg_t msg;
@@ -1242,6 +1244,20 @@ int xtk_window_get_position(xtk_window_t *window, int *x, int *y)
     if (window->spirit.view < 0)
         return -1;
     return uview_get_pos(window->spirit.view, x, y);
+}
+
+int xtk_window_enable_maxim(xtk_window_t *window)
+{
+    if (!window)
+        return -1;
+    return xtk_button_set_enable(XTK_BUTTON(window->navigation.maxim));  
+}
+
+int xtk_window_disable_maxim(xtk_window_t *window)
+{
+    if (!window)
+        return -1;
+    return xtk_button_set_disable(XTK_BUTTON(window->navigation.maxim));  
 }
 
 int xtk_window_set_maxim_rect(xtk_window_t *window, xtk_rect_t *rect)
