@@ -51,10 +51,10 @@ int taskbar_init()
     if (tasbar_clock_init(spirit) < 0)
         return -1;
     xtk_spirit_show_all(spirit);
-    /*
+    #if 0
     if (!fork())
-        exit(execl("/app/sdl2", "/app/sdl2", NULL));
-    */
+        exit(execl("/app/xtk", "/app/sdl2", NULL));
+    #endif
     return 0;
 }
 

@@ -27,4 +27,3 @@
 * 将任务栏层次提高到普通窗口上面。
 * 移植以前bosh的终端或者freeterm终端。
 * 将APP生成路径存放到/usr/local/xxx目录下面
-* xtk window禁用最大化操作。

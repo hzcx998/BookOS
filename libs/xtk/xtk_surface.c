@@ -46,6 +46,7 @@ int xtk_surface_resize(xtk_surface_t *surface, uint32_t width, uint32_t height)
     surface->pixels = new_pixels;
     surface->w = width;
     surface->h = height;
+    memset(surface->pixels, 0, surface->w * surface->h * sizeof(uint32_t));
     return 0;
 }
 

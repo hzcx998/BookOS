@@ -18,6 +18,7 @@ RM			= rm
 DD			= dd
 MKDIR		= mkdir
 OBJDUMP		= objdump
+CP			= cp
 
 # virtual machine
 QEMU 		= qemu-system-i386
@@ -66,8 +67,11 @@ SETUP_BIN 	= $(ARCH)/boot/setup.bin
 # kernel file
 KERNEL_ELF 	= $(ARCH)/kernel.elf
 
+REMOTE_KERNEL_ELF 	= ../xbook2/src/kernel.elf
+REMOTE_XLIBC 		= ../xbook2/user/libs/xlibc
+
 # 参数
-.PHONY: all clean wrdisk build debuild
+.PHONY: all clean wrdisk build debuild sync_kern
 
 all: 
 	$(MAKE) -s -C  $(LIBS_DIR) && \
@@ -157,7 +161,11 @@ QEMU_KVM := # no virutal
 QEMU_ARGUMENT = -m 1024M $(QEMU_KVM) \
 		-name "BookOS Development Platform for x86" \
 		-fda $(FLOPPYA_IMG) \
-		-hda $(HDA_IMG) -hdb $(HDB_IMG) \
+		-drive id=disk0,file=$(HDA_IMG),if=none \
+		-drive id=disk1,file=$(HDB_IMG),if=none \
+		-device ahci,id=ahci \
+		-device ide-drive,drive=disk0,bus=ahci.0 \
+		-device ide-drive,drive=disk1,bus=ahci.1 \
 		-boot a \
 		-serial stdio \
 		-soundhw sb16 \
@@ -169,3 +177,10 @@ QEMU_ARGUMENT = -m 1024M $(QEMU_KVM) \
 # qemu启动
 run: wrdisk
 	$(QEMU) $(QEMU_ARGUMENT)
+
+
+sync_kern:
+	$(CP) $(REMOTE_KERNEL_ELF) $(KERNEL_ELF)
+
+sync_xlibc:
+	$(CP) $(REMOTE_XLIBC) $(LIBS_DIR)/xlibc
