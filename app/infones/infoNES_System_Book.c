@@ -77,7 +77,7 @@ static bool win_timer(xtk_spirit_t *spirit, uint32_t tmid, void *arg);
 /* 绘制缓冲区 */
 DWORD graphBuffer[NES_DISP_WIDTH*NES_DISP_HEIGHT];
 
-#define DEF_NES_FILE    "/res/nes/mario.nes"
+#define DEF_NES_FILE    "/usr/local/infones/mario.nes"
 
 int main(int argc, char **argv)
 {

@@ -5,6 +5,7 @@
 
 #define MOUSE_CURSOR_DIR            "/system/cursors"
 #define BACKGROUND_IMAGE_NAME       "/system/background/picture.jpg"
+#define PRGRAMS_DIR                 "/system/programs/"
 
 typedef struct {
     xtk_spirit_t *window;

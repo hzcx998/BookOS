@@ -12,7 +12,7 @@
 #include <gato.h>
 
 // #define XTK_USE_MMAP
-#define XTK_USE_POPUP
+// #define XTK_USE_POPUP
 
 #if 0
 static SDL_Window *gWindow = NULL;
@@ -66,6 +66,8 @@ static void frambuffer_init()
     printf("xtk win done!\n");
     
     xtk_window_set_default_size(XTK_WINDOW(gWindow), W, H);
+    xtk_window_set_resizable(XTK_WINDOW(gWindow), false);
+    xtk_window_disable_maxim(XTK_WINDOW(gWindow));
     
     //xtk_window_set_position(XTK_WINDOW(gWindow), XTK_WIN_POS_CENTER);
     

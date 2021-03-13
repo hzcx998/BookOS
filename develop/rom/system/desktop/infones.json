@@ -1,7 +1,7 @@
 {
     "Version":1.0,
     "Name":"Infones",
-    "Exec":"/app/infones /res/nes/mario.nes",
+    "Exec":"/usr/local/infones/infones /usr/local/infones/mario.nes",
     "Icon":"/usr/local/infones/infones.png",
     "Terminal":"false",
     "Type":"Application"

@@ -68,9 +68,6 @@ develop/rom/app/
 develop/rom/acct/
 develop/bochs/
 
-# local app
-develop/rom/usr/local/lite/lite
-
 # linux fixdep
 libs/fixdep
 sbin/fixdep
@@ -120,15 +117,13 @@ bin/lua/lua
 bin/bash/bash
 
 # /app
-app/gato/gato
-app/infones/infones
-app/invader/invader
-app/xde/xde
-app/xtk/xtk
-app/sdl2/sdl2
-app/showimage/showimage
-app/showfont/showfont
-app/SDL2snake/SDL2snake
-app/desktop/desktop
-app/taskbar/taskbar
-app/terminal/terminal
+# local app
+develop/rom/system/programs
+develop/rom/usr/local/lite/lite
+develop/rom/usr/local/terminal/terminal
+develop/rom/usr/local/infones/infones
+develop/rom/usr/local/invader/invader
+develop/rom/usr/local/gato/gato
+develop/rom/usr/local/xtk
+develop/rom/usr/local/showimage
+develop/rom/usr/local/showfont

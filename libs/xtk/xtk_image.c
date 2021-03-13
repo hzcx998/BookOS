@@ -12,7 +12,6 @@
 
 static unsigned char *__xtk_load_png_image(const char *filename, int *width, int *height, int *channels_in_file);
 static unsigned char *__xtk_load_jpg_image(const char *filename, int *width, int *height, int *channels_in_file);
-static unsigned char *__xtk_load_image(const char *filename, int *width, int *height, int *channels_in_file);
 
 /* 图片缩放算法 */
 typedef enum {
@@ -23,11 +22,6 @@ typedef enum {
 static void ____xtk_resize_image_mode(unsigned char *src_buf, int src_w, int src_h, 
         unsigned char *dst_buf, int dst_w, int dst_h, 
         int num_channels, xtk_image_stretch_mode_t mode);
-        
-static void __xtk_resize_image(unsigned char *src_buf, int src_w, int src_h, 
-        unsigned char *dst_buf, int dst_w, int dst_h, 
-        int num_channels);
-
 
 // #define DEBUG_XTK_IMAGE
 
@@ -350,7 +344,7 @@ static unsigned char *__xtk_load_jpg_image(const char *filename, int *width, int
     return (unsigned char *) bitmap;
 }
 
-static unsigned char *__xtk_load_image(const char *filename, int *width, int *height, int *channels_in_file) 
+unsigned char *xtk_load_image_raw(const char *filename, int *width, int *height, int *channels_in_file) 
 {
     char *type =  strrchr(filename, '.');
     if (type == NULL) {
@@ -430,7 +424,7 @@ static void ____xtk_resize_image_mode(unsigned char *src_buf, int src_w, int src
     }
 }
 
-static void __xtk_resize_image(unsigned char *src_buf, int src_w, int src_h, 
+void xtk_resize_image_raw(unsigned char *src_buf, int src_w, int src_h, 
         unsigned char *dst_buf, int dst_w, int dst_h, 
         int num_channels)
 {
@@ -444,7 +438,7 @@ xtk_image_t *xtk_image_load(char *filename)
     xtk_image_t *img = malloc(sizeof(xtk_image_t));
     if (!img)
         return NULL;
-    img->buf = __xtk_load_image(filename, &img->w, &img->h, &img->channels);
+    img->buf = xtk_load_image_raw(filename, &img->w, &img->h, &img->channels);
     if (!img->buf) {
         free(img);
         return NULL;
@@ -469,7 +463,7 @@ int xtk_image_resize(xtk_image_t *img, int w, int h)
     unsigned char *buf = malloc(w * h * img->channels);
     if (!buf)
         return -1;
-    __xtk_resize_image(img->buf, img->w, img->h, buf, w, h, img->channels);
+    xtk_resize_image_raw(img->buf, img->w, img->h, buf, w, h, img->channels);
     free(img->buf);
     img->buf = buf;
     img->w = w;
@@ -484,7 +478,7 @@ int xtk_image_resize2(xtk_image_t *img, int w, int h, int out_channels)
     unsigned char *buf = malloc(w * h * out_channels);
     if (!buf)
         return -1;
-    __xtk_resize_image(img->buf, img->w, img->h, buf, w, h, out_channels);
+    xtk_resize_image_raw(img->buf, img->w, img->h, buf, w, h, out_channels);
     free(img->buf);
     img->buf = buf;
     img->w = w;

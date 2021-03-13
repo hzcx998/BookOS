@@ -58,10 +58,9 @@ export AS LD
 
 # bin
 MODULE      +=  terminal
-#MODULE      +=  vt100
 MODULE      +=  desktop
 MODULE      +=  taskbar
-#MODULE      +=  gato
+MODULE      +=  gato
 MODULE      +=  infones
 MODULE      +=  invader
 MODULE      +=  xtk

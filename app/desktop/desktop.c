@@ -50,7 +50,7 @@ static void desktop_setup()
     // 加载背景图
     desktop_load_background(BACKGROUND_IMAGE_NAME);
     // 启动任务栏
-    desktop_launch("/app/taskbar", NULL);
+    desktop_launch(PRGRAMS_DIR "taskbar", NULL);
     
     icon_init();
 }

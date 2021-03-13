@@ -1,0 +1,8 @@
+{
+    "Version":1.0,
+    "Name":"Gato",
+    "Exec":"/usr/local/gato/gato",
+    "Icon":"/usr/local/gato/gato.png",
+    "Terminal":"false",
+    "Type":"Application"
+}

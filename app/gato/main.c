@@ -4,8 +4,8 @@
 
 #include <gato.h>
 
-#define W 1920
-#define H 1080
+#define W 1024
+#define H 768
 #define N 10
 #define M 11
 #define fclampf(v, a, b) fminf(fmaxf(a, v), b)
@@ -13,17 +13,17 @@
 static surface_t *image[M] = {0};
 
 static char *image_path[M] = {
-	"res/gato/appstore.png",
-	"res/gato/messages.png",
-	"res/gato/calendar.png",
-	"res/gato/launchpad.png",
-	"res/gato/gamecenter.png",
-	"res/gato/systempreferences.png",
-	"res/gato/textedit.png",
-	"res/gato/facetime.png",
-	"res/gato/dictionnary.png",
-	"res/gato/safari.png",
-    "res/gato/Sierra.jpg"};
+	"appstore.png",
+	"messages.png",
+	"calendar.png",
+	"launchpad.png",
+	"gamecenter.png",
+	"systempreferences.png",
+	"textedit.png",
+	"facetime.png",
+	"dictionnary.png",
+	"safari.png",
+    "Sierra.jpg"};
 
 static void motion_get_xy(int *x, int *y);
 

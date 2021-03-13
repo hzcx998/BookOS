@@ -35,8 +35,8 @@ FS_DISK		= $(HDB_IMG)
 
 # image size
 FLOPPYA_SZ	= 1474560  # 1.44 MB
-HDA_SZ		= 33554432 # 32 MB: 33554432
-HDB_SZ		= 33554432
+HDA_SZ		= 33554432 # 64 MB: 33554432
+HDB_SZ		= 67108864
 
 # environment dir
 
@@ -167,8 +167,6 @@ QEMU_ARGUMENT = -m 1024M $(QEMU_KVM) \
 		-device ide-drive,drive=disk1,bus=ahci.1 \
 		-boot a \
 		-serial stdio \
-		-soundhw sb16 \
-		-soundhw pcspk
 
 #		-fda $(FLOPPYA_IMG) -hda $(HDA_IMG) -hdb $(HDB_IMG) -boot a \
 #		-net nic,model=rtl8139 -net tap,ifname=tap0,script=no,downscript=no 
