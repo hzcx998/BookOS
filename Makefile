@@ -68,10 +68,9 @@ SETUP_BIN 	= $(ARCH)/boot/setup.bin
 KERNEL_ELF 	= $(ARCH)/kernel.elf
 
 REMOTE_KERNEL_ELF 	= ../xbook2/src/kernel.elf
-REMOTE_XLIBC 		= ../xbook2/user/libs/xlibc
 
 # 参数
-.PHONY: all clean wrdisk build debuild sync_kern
+.PHONY: all clean wrdisk build debuild sync
 
 all: 
 	$(MAKE) -s -C  $(LIBS_DIR) && \
@@ -179,8 +178,5 @@ run: wrdisk
 	$(QEMU) $(QEMU_ARGUMENT)
 
 
-sync_kern:
+sync:
 	$(CP) $(REMOTE_KERNEL_ELF) $(KERNEL_ELF)
-
-sync_xlibc:
-	$(CP) $(REMOTE_XLIBC) $(LIBS_DIR)/xlibc
