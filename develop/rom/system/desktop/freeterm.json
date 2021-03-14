@@ -1,0 +1,8 @@
+{
+    "Version":1.0,
+    "Name":"Freeterm",
+    "Exec":"/usr/local/freeterm/freeterm",
+    "Icon":"/usr/local/freeterm/freeterm.png",
+    "Terminal":"false",
+    "Type":"Application"
+}

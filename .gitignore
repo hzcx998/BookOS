@@ -117,7 +117,6 @@ bin/lua/lua
 bin/bash/bash
 
 # /app
-# local app
 
 app/desktop/desktop
 app/taskbar/taskbar
@@ -127,8 +126,9 @@ app/infones/infones
 app/invader/invader
 app/gato/gato
 app/xtk/xtk
-app/xtk/showimage
-app/xtk/showfont
+app/showimage/showimage
+app/showimage/showfont
+app/freeterm/freeterm
 
 develop/rom/system/programs/desktop
 develop/rom/system/programs/taskbar
@@ -140,3 +140,4 @@ develop/rom/usr/local/gato/gato
 develop/rom/usr/local/xtk
 develop/rom/usr/local/showimage
 develop/rom/usr/local/showfont
+develop/rom/usr/local/freeterm/freeterm

@@ -1,6 +1,6 @@
 #include <uview.h>
 
-char uview_keypad2ascii(int code)
+int uview_keypad2ascii(int code)
 {
     if (code >= UVIEW_KEY_KP0 && code <= UVIEW_KEY_KP_PLUS) {
         switch (code) {
@@ -38,5 +38,5 @@ char uview_keypad2ascii(int code)
             break;
         }
     }
-    return (char) code;
+    return code;
 }
