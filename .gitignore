@@ -118,6 +118,18 @@ bin/bash/bash
 
 # /app
 # local app
+
+app/desktop/desktop
+app/taskbar/taskbar
+app/lite/lite
+app/terminal/terminal
+app/infones/infones
+app/invader/invader
+app/gato/gato
+app/xtk/xtk
+app/xtk/showimage
+app/xtk/showfont
+
 develop/rom/system/programs/desktop
 develop/rom/system/programs/taskbar
 develop/rom/usr/local/lite/lite

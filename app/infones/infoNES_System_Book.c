@@ -27,7 +27,11 @@
 #define FPS_TIMEOUT 1000
 #endif
 
-#define MAX_DELAYS   10
+#define VM_DISABLE
+
+#define MAX_DELAYS   1000
+
+#define MDELAY_NR   25
 
 void start_application( char *filename );
 int InfoNES_Load( const char *pszFileName );
@@ -620,6 +624,7 @@ void InfoNES_LoadFrame()
   #ifdef _USE_FPS_CALC 
   win_fps++;
   #endif
+  #ifdef VM_DISABLE
 /*
 * 延时计算算法：
 * base = 原始大小
@@ -638,6 +643,9 @@ void InfoNES_LoadFrame()
   
   // printf("distance:%d, single:%d, countn:%d dealy:%d\n", distance_bytes, single, countn, delay);
   mdelay(delay); // 屏幕越大，延时越小，屏幕越小，延时越大
+    #else
+    mdelay(MDELAY_NR);
+    #endif
 }
 
 int PollEvent(void)
