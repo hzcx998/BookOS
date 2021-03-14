@@ -118,7 +118,8 @@ bin/bash/bash
 
 # /app
 # local app
-develop/rom/system/programs
+develop/rom/system/programs/desktop
+develop/rom/system/programs/taskbar
 develop/rom/usr/local/lite/lite
 develop/rom/usr/local/terminal/terminal
 develop/rom/usr/local/infones/infones

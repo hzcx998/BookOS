@@ -97,6 +97,7 @@ build:
 	-$(MKDIR) $(ROM_DIR)/bin
 	-$(MKDIR) $(ROM_DIR)/sbin
 	-$(MKDIR) $(ROM_DIR)/app
+	-$(MKDIR) $(ROM_DIR)/system/programs
 	$(TRUNC) -s $(FLOPPYA_SZ) $(FLOPPYA_IMG)
 	$(TRUNC) -s $(HDA_SZ) $(HDA_IMG)
 	$(TRUNC) -s $(HDB_SZ) $(HDB_IMG) 
@@ -124,6 +125,7 @@ endif
 	-$(RM) -r $(ROM_DIR)/sbin
 	-$(RM) -r $(ROM_DIR)/app
 	-$(RM) -r $(ROM_DIR)/acct
+	-$(MKDIR) $(ROM_DIR)/system/programs
 	-$(RM) -r $(IMAGE_DIR)
 
 #-hda $(HDA_IMG) -hdb $(HDB_IMG)
