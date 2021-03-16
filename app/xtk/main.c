@@ -76,7 +76,6 @@ void draw_char(xtk_surface_t *surface, int x, int y, unsigned int wch, int size)
 {
     FT_GlyphSlot slot;
     FT_UInt		charIdx;
-	int			start_x = x, start_y = y;	// 字符图像开始装入的位置
 	// 4. 获取字符图像索引
 	charIdx = FT_Get_Char_Index(face, wch);
     slot = face->glyph;
