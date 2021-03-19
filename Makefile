@@ -151,7 +151,10 @@ endif
 		-device ahci,id=ahci \
 		-device ide-drive,drive=disk0,bus=ahci.0 \
 		-device ide-drive,drive=disk1,bus=ahci.1 \
-               
+
+# 时间配置：使用主机一样的时间
+# 		-rtc base=localtime	
+
 ifeq ($(OS),Windows_NT)
 QEMU_KVM := -accel hax
 else
@@ -167,6 +170,7 @@ QEMU_ARGUMENT = -m 1024M $(QEMU_KVM) \
 		-device ahci,id=ahci \
 		-device ide-drive,drive=disk0,bus=ahci.0 \
 		-device ide-drive,drive=disk1,bus=ahci.1 \
+		-rtc base=localtime \
 		-boot a \
 		-serial stdio \
 
