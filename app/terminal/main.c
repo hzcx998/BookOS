@@ -160,15 +160,15 @@ static void terminal_init(struct vt100 *term, int char_width, int char_height, i
     vt100_init(term);
     //sync(term);
 }
-
-static ssize_t console_virt_read(struct vt100 *term, unsigned char *buf, size_t count)
+#if 0
+static ssize_t console_virt_read(struct vt100 *term, char *buf, size_t count)
 {
     return count;
 }
-
-static ssize_t console_virt_write(struct vt100 *term, const unsigned char *buf, size_t count)
+#endif
+static ssize_t console_virt_write(struct vt100 *term, char *buf, size_t count)
 {
-    vt100_puts(term, buf, count);
+    vt100_puts(term, (char *)buf, count);
     //sync(pdat);
     return count;
 }

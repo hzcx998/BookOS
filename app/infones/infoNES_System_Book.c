@@ -16,7 +16,7 @@
 #define CONFIG_SOUND
 
 #ifdef CONFIG_SOUND
-#define SOUND_DEVICE "sb16"
+#define SOUND_DEVICE "/dev/sb16"
 #endif /* CONFIG_SOUND */
 
 
@@ -705,7 +705,7 @@ int InfoNES_SoundOpen( int samples_per_sync, int sample_rate )
     
 #ifdef CONFIG_SOUND
     printf("InfoNES_SoundOpen: samples_per_sync=%d, sample_rate=%d\n", samples_per_sync, sample_rate);
-    sound_fd = opendev(SOUND_DEVICE, 0);
+    sound_fd = open(SOUND_DEVICE, 0);
     if (sound_fd < 0) {
         sound_fd = -1;
         return 0;
