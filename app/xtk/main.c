@@ -10,7 +10,6 @@
 #include <freetype/ftglyph.h>
 #include <freetype/ftoutln.h>
 
-
 #include <cairo.h>
 
 #include <math.h>
@@ -38,6 +37,79 @@ static bool clear_btn_event(xtk_spirit_t *spirit, void *label)
     xtk_label_set_text(label, str);
     return true;
 }
+
+// 回调函数，切换进度条的移动方向 
+void toggle_orientation(xtk_spirit_t *spirit, void *data) 
+{ 
+	// xtk_progress_bar_get_orientation: 获得进度条当前移动的方向
+	switch( xtk_progress_bar_get_orientation( XTK_PROGRESS_BAR(data)) ){ 
+	case XTK_PROGRESS_LEFT_TO_RIGHT: 
+		xtk_progress_bar_set_orientation(XTK_PROGRESS_BAR(data), XTK_PROGRESS_RIGHT_TO_LEFT); 
+		break; 
+	case XTK_PROGRESS_RIGHT_TO_LEFT: 
+		xtk_progress_bar_set_orientation(XTK_PROGRESS_BAR(data), XTK_PROGRESS_BOTTOM_TO_TOP); 
+		break; 
+    case XTK_PROGRESS_BOTTOM_TO_TOP: 
+		xtk_progress_bar_set_orientation(XTK_PROGRESS_BAR(data), XTK_PROGRESS_TOP_TO_BOTTOM); 
+		break;     
+    case XTK_PROGRESS_TOP_TO_BOTTOM: 
+		xtk_progress_bar_set_orientation(XTK_PROGRESS_BAR(data), XTK_PROGRESS_LEFT_TO_RIGHT); 
+		break;  
+	default: // 什么也不做 
+		break;
+	} 
+} 
+
+static bool add_btn_event(xtk_spirit_t *spirit, void *data) 
+{
+    xtk_progress_bar_t *pbar = XTK_PROGRESS_BAR(data);
+
+    double new_val = xtk_progress_bar_get_fraction(pbar) + 0.05; 
+	   
+	if(new_val > 1.0){	// 越界处理
+		new_val = 0.0; 
+	}
+	   
+	// 设置进度条的新值 
+	xtk_progress_bar_set_fraction(pbar, new_val);
+    return true;
+}
+int activity_mode = 0;
+
+void toggle_activity_mode( xtk_spirit_t *spirit, void *data) 
+{
+  activity_mode = !activity_mode;
+  if (activity_mode) 
+      xtk_progress_bar_pulse (XTK_PROGRESS_BAR (data));
+  else
+      xtk_progress_bar_set_fraction (XTK_PROGRESS_BAR (data), 0.0);
+}
+
+/* 更新进度条，这样就能够看到进度条的移动 */
+bool progress_timeout(xtk_spirit_t *spirit, uint32_t id, void *data )
+{
+  
+  double new_val;
+  
+  if (activity_mode) 
+    xtk_progress_bar_pulse (XTK_PROGRESS_BAR (data));
+  else 
+    {
+      /* 使用在调整对象中设置的取值范围计算进度条的值 */
+      
+      new_val = xtk_progress_bar_get_fraction (XTK_PROGRESS_BAR (data)) + 0.01;
+      
+      if (new_val > 1.0)
+	    new_val = 0.0;
+      
+      /* 设置进度条的新值 */
+      xtk_progress_bar_set_fraction (XTK_PROGRESS_BAR (data), new_val);
+    }
+  
+  /* 这是一个timeout函数，返回 TRUE，这样它就能够继续被调用 */
+  return true;
+} 
+
 #define FONT_SIZE   32
 
 FT_Library	library;
@@ -67,7 +139,6 @@ void freetype_test(xtk_window_t *win)
         return;
     }
     #endif
-
     xtk_window_invalid_window(win);
     xtk_window_paint(win);
 }
@@ -339,7 +410,7 @@ void paint_callback(xtk_spirit_t *spirit, xtk_rect_t *rect)
 
 bool motion(xtk_spirit_t *spirit, xtk_event_t *event, void *arg)
 {
-    printf("motion %d, %d\n", event->motion.x, event->motion.y);
+    //printf("motion %d, %d\n", event->motion.x, event->motion.y);
     return true;
 }
 
@@ -395,6 +466,42 @@ int main(int argc, char *argv[])
     assert(!xtk_container_add(XTK_CONTAINER(win), icon));
     xtk_spirit_set_pos(icon, 10, 10);
     xtk_spirit_show(icon);
+
+    xtk_spirit_t *pbar = xtk_progress_bar_create();
+    assert(pbar);
+    assert(!xtk_container_add(XTK_CONTAINER(win), pbar));
+    xtk_spirit_set_pos(pbar, 100, 150);
+    
+    xtk_spirit_reset_size(pbar, 400, 100);
+
+    xtk_progress_bar_set_fraction(XTK_PROGRESS_BAR(pbar), 0.5f);
+    xtk_progress_bar_set_text(XTK_PROGRESS_BAR(pbar), "hello");
+    xtk_progress_bar_set_pulse_step(XTK_PROGRESS_BAR(pbar), 0.1f);
+    
+    xtk_spirit_show(pbar);
+
+    xtk_spirit_t *btn2 = xtk_button_create_with_label("add");
+    assert(btn2);
+    xtk_signal_connect(btn2, "button_press", add_btn_event, pbar);
+    assert(!xtk_container_add(XTK_CONTAINER(win), btn2));
+    xtk_spirit_set_pos(btn2, 160 - 50, 300);
+    xtk_spirit_show(btn2);
+
+    xtk_spirit_t *btn3 = xtk_button_create_with_label("origen");
+    assert(btn3);
+    xtk_signal_connect(btn3, "button_press", toggle_orientation, pbar);
+    assert(!xtk_container_add(XTK_CONTAINER(win), btn3));
+    xtk_spirit_set_pos(btn3, 160 + 50, 300);
+    xtk_spirit_show(btn3);
+
+    xtk_spirit_t *btn4 = xtk_button_create_with_label("active");
+    assert(btn4);
+    xtk_signal_connect(btn4, "button_press", toggle_activity_mode, pbar);
+    assert(!xtk_container_add(XTK_CONTAINER(win), btn4));
+    xtk_spirit_set_pos(btn4, 260 + 50, 300);
+    xtk_spirit_show(btn4);
+    
+    xtk_window_add_timer(XTK_WINDOW(win), 100, progress_timeout, pbar);
 
     xtk_main();
     return 0;

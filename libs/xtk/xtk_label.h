@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <string.h>
 #include "xtk_spirit.h"
+#include "xtk_color.h"
 
 static inline xtk_spirit_t *xtk_label_create(char *text)
 {

@@ -297,15 +297,8 @@ int xtk_spirit_reset_size(xtk_spirit_t *spirit, int width, int height)
         return -1;
     // resize surface
     if (spirit->surface) {
-        #if 1
         if (xtk_surface_resize(spirit->surface, width, height) < 0)
             return -1;
-        #else
-        xtk_spirit_set_surface(spirit, NULL);
-        xtk_surface_t *surface = xtk_surface_create(width, height);
-        assert(surface);
-        xtk_spirit_set_surface(spirit, surface);
-        #endif
     }
     spirit->width = width;
     spirit->height = height;

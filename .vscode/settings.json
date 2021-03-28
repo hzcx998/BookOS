@@ -59,7 +59,8 @@
         "ft_window.h": "c",
         "ft_console.h": "c",
         "ioctl.h": "c",
-        "ft_pty.h": "c"
+        "ft_pty.h": "c",
+        "xtk_progress_bar.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

@@ -53,10 +53,11 @@ int taskbar_init()
     xtk_spirit_show_all(spirit);
     #if 0
     if (!fork())
-        exit(execl("/app/xtk", "/app/sdl2", NULL));
+        exit(execl("/usr/local/xtk", "/app/sdl2", NULL));
     #endif
     return 0;
 }
+
 
 void taskbar_exit()
 {

@@ -56,6 +56,7 @@ typedef enum {
     XTK_SPIRIT_TYPE_BOX,
     XTK_SPIRIT_TYPE_TABLE,
     XTK_SPIRIT_TYPE_FIXED,
+    XTK_SPIRIT_TYPE_PBAR,
 } xtk_spirit_type_t;
 
 typedef struct {
