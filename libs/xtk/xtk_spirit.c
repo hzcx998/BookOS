@@ -19,8 +19,11 @@ void xtk_spirit_init(xtk_spirit_t *spirit, int x, int y, int width, int height)
     spirit->width_min = 0;
     spirit->height_min = 0;
     spirit->visible = 0;
-    spirit->style.border_color = XTK_NONE_COLOR;
+    spirit->max_text_len = -1;  /* no limit */
     
+    memset(&spirit->style, 0, sizeof(xtk_style_t));
+
+    spirit->style.border_color = XTK_NONE_COLOR;
     spirit->style.color = XTK_BLACK;
     spirit->style.align = XTK_ALIGN_LEFT;
     spirit->text = NULL;
@@ -36,6 +39,8 @@ void xtk_spirit_init(xtk_spirit_t *spirit, int x, int y, int width, int height)
     spirit->container = NULL;
     spirit->attached_container = NULL;
     spirit->view = -1;
+
+    spirit->show_bottom = NULL;
 }
 
 xtk_spirit_t *xtk_spirit_create(int x, int y, int width, int height)
@@ -170,6 +175,10 @@ int xtk_spirit_set_text(xtk_spirit_t *spirit, char *text)
     if (!spirit)
         return -1;
     int new_len = strlen(text);
+    /* 设置文本长度 */
+    if (spirit->max_text_len > 0 && spirit->max_text_len < new_len)
+        new_len = spirit->max_text_len;
+
     if (!spirit->text) {
         spirit->text = malloc(new_len + 1);
         memset(spirit->text, 0, new_len + 1);
@@ -186,6 +195,22 @@ int xtk_spirit_set_text(xtk_spirit_t *spirit, char *text)
     assert(spirit->text);
     strcpy(spirit->text, text);
     spirit->text[strlen(spirit->text)] = '\0';
+    return 0;
+}
+
+int xtk_spirit_set_text_max_len(xtk_spirit_t *spirit, int maxlen)
+{
+    if (!spirit || maxlen < 1)
+        return -1;
+    spirit->max_text_len = maxlen;
+    if (spirit->text) {
+        int new_len = strlen(spirit->text);
+        /* 截断文本 */
+        if (spirit->max_text_len > 0 && spirit->max_text_len < new_len) {
+            new_len = spirit->max_text_len;
+            spirit->text[new_len] = '\0';
+        }
+    }
     return 0;
 }
 
@@ -323,26 +348,26 @@ int xtk_spirit_set_container(xtk_spirit_t *spirit, xtk_container_t *container)
     return 0;
 }
 
-static void __xtk_calc_aligin_pos(xtk_align_t align, int box_width, int box_height, 
+void xtk_aligin_calc_pos(xtk_style_t *style, xtk_align_t align, int box_width, int box_height, 
         int width, int height, int *out_x, int *out_y)
 {
     int x, y;
     switch (align) {
     case XTK_ALIGN_LEFT:
-        x = 0;
+        x = style->padding;
         y = box_height / 2 - height / 2;
         break;
     case XTK_ALIGN_RIGHT:
-        x = box_width - width;
+        x = box_width - width - style->padding;
         y = box_height / 2 - height / 2;
         break;
     case XTK_ALIGN_TOP:
         x = box_width / 2 - width / 2;
-        y = 0;
+        y = style->padding;
         break;
     case XTK_ALIGN_BOTTOM:
         x = box_width / 2 - width / 2;
-        y = box_height - height;
+        y = box_height - height - style->padding;
         break;
     default:
         x = box_width / 2 - width / 2;
@@ -357,7 +382,7 @@ int xtk_spirit_calc_aligin_pos(xtk_spirit_t *spirit, int width, int height, int 
 {
     if (!spirit)
         return -1;
-    __xtk_calc_aligin_pos(spirit->style.align, spirit->width, spirit->height,
+    xtk_aligin_calc_pos(&spirit->style, spirit->style.align, spirit->width, spirit->height,
         width, height, out_x, out_y);
     return 0;
 }
@@ -380,7 +405,7 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
     }
     if (spirit->background_image) {
         // 根据对齐方式设置显示位置
-        __xtk_calc_aligin_pos(spirit->style.background_align, spirit->width, spirit->height, spirit->background_image->w,
+        xtk_aligin_calc_pos(&spirit->style, spirit->style.background_align, spirit->width, spirit->height, spirit->background_image->w,
             spirit->background_image->h, &off_x, &off_y);
         xtk_surface_t src_surface;
         xtk_surface_init(&src_surface, 
@@ -396,7 +421,7 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
     /* 前景 */
     if (spirit->surface) {
         // 根据对齐方式设置显示位置
-        __xtk_calc_aligin_pos(spirit->style.align, spirit->width, spirit->height, 
+        xtk_aligin_calc_pos(&spirit->style, spirit->style.align, spirit->width, spirit->height, 
             spirit->surface->w, spirit->surface->h, &off_x, &off_y);
         
         xtk_rect_t srcrect = {0, 0, spirit->surface->w, spirit->surface->h};
@@ -405,7 +430,7 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
     }
     if (spirit->image) {
         // 根据对齐方式设置显示位置
-        __xtk_calc_aligin_pos(spirit->style.align, spirit->width, spirit->height, spirit->image->w,
+        xtk_aligin_calc_pos(&spirit->style, spirit->style.align, spirit->width, spirit->height, spirit->image->w,
             spirit->image->h, &off_x, &off_y);
         
         xtk_surface_t src_surface;
@@ -423,7 +448,7 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
         dotfont_t *dotfont = dotfont_find(&__xtk_dotflib, DOTF_STANDARD_NAME);
         assert(dotfont);
 
-        __xtk_calc_aligin_pos(spirit->style.align, spirit->width, spirit->height, 
+        xtk_aligin_calc_pos(&spirit->style, spirit->style.align, spirit->width, spirit->height, 
             dotfont_get_char_width(dotfont) * strlen(spirit->text),
             dotfont_get_char_height(dotfont), &off_x, &off_y);
         uview_bitmap_t bmp;
@@ -489,6 +514,10 @@ int xtk_spirit_show(xtk_spirit_t *spirit)
         return -1;
     
     xtk_spirit_to_surface(spirit, attached_spirit->surface);
+    
+    if (spirit->show_bottom)
+        spirit->show_bottom(spirit);
+        
     if (UVIEW_BAD_ID(attached_spirit->view))
         return -1;
     

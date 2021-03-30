@@ -55,6 +55,7 @@ xtk_spirit_t *xtk_progress_bar_create(void)
     spirit->style.align = XTK_ALIGN_CENTER;
     spirit->style.background_color = XTK_PBAR_BACK_COLOR;
     spirit->style.color = XTK_WHITE;
+    spirit->style.border_color = XTK_BLACK;
     
     xtk_spirit_set_surface(spirit, xtk_surface_create(spirit->width, spirit->height));
     __xtk_progress_bar_update(pbar);

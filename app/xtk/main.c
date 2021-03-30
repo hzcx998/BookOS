@@ -17,7 +17,6 @@
 #define WIN_W   640
 #define WIN_H   480
 
-
 int click_count = 0;
 
 static bool click_btn_event(xtk_spirit_t *spirit, void *label) 
@@ -109,6 +108,15 @@ bool progress_timeout(xtk_spirit_t *spirit, uint32_t id, void *data )
   /* 这是一个timeout函数，返回 TRUE，这样它就能够继续被调用 */
   return true;
 } 
+
+static bool text_input_done_event(xtk_spirit_t *spirit, void *data) 
+{
+    xtk_entry_t *entry = XTK_ENTRY(spirit);
+    char *t = xtk_entry_get_text(entry);
+    printf("input text:%s\n", t);
+    return true;
+}
+
 
 #define FONT_SIZE   32
 
@@ -501,8 +509,18 @@ int main(int argc, char *argv[])
     xtk_spirit_set_pos(btn4, 260 + 50, 300);
     xtk_spirit_show(btn4);
     
-    xtk_window_add_timer(XTK_WINDOW(win), 100, progress_timeout, pbar);
+    xtk_window_add_timer(XTK_WINDOW(win), 200, progress_timeout, pbar);
+
+    xtk_spirit_t *entry = xtk_entry_create();
+    assert(pbar);
+    assert(!xtk_container_add(XTK_CONTAINER(win), entry));
+    xtk_spirit_set_pos(entry, 50, 400);
+    
+    xtk_signal_connect(entry, "activate", text_input_done_event, NULL);
+    //xtk_entry_set_text(XTK_ENTRY(entry), "editor");
+    xtk_spirit_show(entry);
 
     xtk_main();
     return 0;
 }
+

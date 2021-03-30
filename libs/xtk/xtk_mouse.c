@@ -28,17 +28,20 @@ int xtk_mouse_motion(xtk_spirit_t *spirit, int x, int y)
                     if (button->state == XTK_BUTTON_IDLE) {
                         xtk_signal_emit_by_name(tmp, "enter_notify");
                         xtk_button_change_state(button, XTK_BUTTON_TOUCH);
-                        xtk_spirit_show(tmp);    
                         return 0;
                     }
                 } else {
                     if (button->state != XTK_BUTTON_IDLE) {
                         xtk_button_change_state(button, XTK_BUTTON_IDLE);
-                        xtk_spirit_show(tmp);
                         uview_set_mouse_state(spirit->view, XTK_CURSOR_NORMAL);
                         xtk_signal_emit_by_name(tmp, "leave_notify");
                     }
                 }
+            }
+            break;
+        case XTK_SPIRIT_TYPE_ENTRY:
+            {
+
             }
             break;
         default:
@@ -77,16 +80,28 @@ int xtk_mouse_btn_down(xtk_spirit_t *spirit, int btn, int x, int y)
                     if (button->state == XTK_BUTTON_TOUCH) {
                         xtk_signal_emit_by_name(tmp, "button_press");
                         xtk_button_change_state(button, XTK_BUTTON_CLICK);
-                        xtk_spirit_show(tmp);                     
                         return 0;  
                     }
                 } else {
                     if (button->state == XTK_BUTTON_TOUCH) {
                         xtk_signal_emit_by_name(tmp, "button_press");
                         xtk_button_change_state(button, XTK_BUTTON_CLICK);
-                        xtk_spirit_show(tmp);                     
                         return 0;  
                     }
+                }
+            }
+            break;
+        case XTK_SPIRIT_TYPE_ENTRY:
+            {
+                if (btn != UVIEW_BTN_LEFT)
+                    break;
+                xtk_entry_t *entry = XTK_ENTRY(tmp);
+                if (XTK_IN_SPIRIT(tmp, x, y)) {
+                    /* 定位 */
+                    xtk_entry_locate_position(entry, x - tmp->x);
+                    xtk_entry_set_focus(entry, true);
+                } else {
+                    xtk_entry_set_focus(entry, false);
                 }
             }
             break;
@@ -127,7 +142,6 @@ int xtk_mouse_btn_up(xtk_spirit_t *spirit, int btn, int x, int y)
                     if (button->state == XTK_BUTTON_CLICK) {
                         // printf("mouse call signal: %d, %d\n", x, y);
                         xtk_button_change_state(button, XTK_BUTTON_TOUCH);
-                        xtk_spirit_show(tmp);
                         xtk_signal_emit_by_name(tmp, "button_release");
                         return 0;
                     }

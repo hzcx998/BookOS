@@ -22,8 +22,8 @@ typedef struct {
 
 #define XTK_PROGRESS_BAR(spirit)  ((xtk_progress_bar_t *)(spirit))
 
-#define XTK_PBAR_BACK_COLOR     XTK_GRAY
-#define XTK_PBAR_BAR_COLOR      XTK_RED
+#define XTK_PBAR_BACK_COLOR     XTK_RGB(192, 192, 192)
+#define XTK_PBAR_BAR_COLOR      XTK_RGB(128, 128, 128)
 
 #define XTK_PBAR_WIDTH_DEFAULT 100
 #define XTK_PBAR_HEIGHT_DEFAULT 20

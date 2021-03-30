@@ -23,6 +23,8 @@ static inline int xtk_label_length(xtk_spirit_t *label)
 {
     if (!label)
         return -1;
+    if (!label->text)
+        return -1;
     return strlen(label->text);
 }
 

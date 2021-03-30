@@ -58,7 +58,6 @@ int taskbar_init()
     return 0;
 }
 
-
 void taskbar_exit()
 {
     msgput(taskbar.icon_msgid);

@@ -13,6 +13,7 @@
 #include "xtk_label.h"
 #include "xtk_button.h"
 #include "xtk_progress_bar.h"
+#include "xtk_entry.h"
 #include "xtk_window.h"
 #include "xtk_container.h"
 #include "xtk_box.h"

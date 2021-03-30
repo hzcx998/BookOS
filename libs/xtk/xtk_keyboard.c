@@ -1,5 +1,28 @@
 #include "xtk_keyboard.h"
+#include "xtk_entry.h"
+
 #include <stdio.h>
+#include <string.h>
+
+int xtk_keyboard_filter(int keycode, int modify)
+{
+    keycode = uview_keypad2ascii(keycode);
+    switch (keycode) {
+    case UVIEW_KEY_NUMLOCK:
+    case UVIEW_KEY_CAPSLOCK:
+    case UVIEW_KEY_SCROLLOCK:
+    case UVIEW_KEY_RSHIFT:
+    case UVIEW_KEY_LSHIFT:
+    case UVIEW_KEY_RCTRL:
+    case UVIEW_KEY_LCTRL:
+    case UVIEW_KEY_RALT:
+    case UVIEW_KEY_LALT:
+        return 0;
+    default:
+        break;
+    }
+    return keycode;
+}
 
 int xtk_keyboard_key_down(xtk_spirit_t *spirit, int keycode, int modify)
 {
@@ -19,6 +42,17 @@ int xtk_keyboard_key_down(xtk_spirit_t *spirit, int keycode, int modify)
         case XTK_SPIRIT_TYPE_BUTTON:
             {
                 
+            }
+            break;
+        case XTK_SPIRIT_TYPE_ENTRY:
+            {
+                xtk_entry_t *entry = XTK_ENTRY(tmp);
+                if (entry->focus) {
+                    keycode = xtk_keyboard_filter(keycode, modify);
+                    if (!keycode)
+                        break;
+                    xtk_entry_process_key(entry, keycode, modify);
+                }
             }
             break;
         default:

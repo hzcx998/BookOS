@@ -82,7 +82,7 @@ char* strncpy(char* _dst, const char* _src, int n)
 {
    char *s = (char *) _src;
    char* r = _dst;		      
-   while((*_dst++ = *s++) && n > 0) n--;
+   while(n > 0 && (*_dst++ = *s++)) n--;
    return r;
 }
 

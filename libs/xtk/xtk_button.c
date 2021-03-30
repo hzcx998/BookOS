@@ -113,4 +113,5 @@ void xtk_button_change_state(xtk_button_t *button, xtk_button_state_t state)
     default:
         break;
     }
+    xtk_spirit_show(spirit);    
 }

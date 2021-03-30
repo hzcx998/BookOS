@@ -46,6 +46,11 @@ typedef struct {
     xtk_color_t color;
     xtk_align_t align;
     xtk_cursor_state_t cursor;
+
+    /* layout */
+    uint16_t padding;
+    uint16_t border;
+    uint16_t margin;
 } xtk_style_t;
 
 typedef enum {
@@ -57,9 +62,10 @@ typedef enum {
     XTK_SPIRIT_TYPE_TABLE,
     XTK_SPIRIT_TYPE_FIXED,
     XTK_SPIRIT_TYPE_PBAR,
+    XTK_SPIRIT_TYPE_ENTRY,
 } xtk_spirit_type_t;
 
-typedef struct {
+typedef struct xtk_spirit {
     list_t list;
     list_t signal_list;
     xtk_spirit_type_t type;
@@ -76,11 +82,15 @@ typedef struct {
     xtk_image_t *background_image;
     /* front */
     char *text;
+    int max_text_len;
     xtk_image_t *image;
     xtk_surface_t *surface;
     /* extension */
     xtk_container_t *container;    // 每个精灵对应一个容器
     xtk_container_t *attached_container;    // 每个精灵附加到的容器
+
+    /* 函数调用回调 */
+    void (*show_bottom) (struct xtk_spirit *);
 } xtk_spirit_t;
 
 #define XTK_IN_SPIRIT(spirit, _x, _y) \
@@ -107,6 +117,7 @@ int xtk_spirit_set_surface(xtk_spirit_t *spilit, xtk_surface_t *surface);
 int xtk_spirit_set_view(xtk_spirit_t *spirit, int view);
 int xtk_spirit_set_container(xtk_spirit_t *spirit, xtk_container_t *container);
 int xtk_spirit_reset_size(xtk_spirit_t *spirit, int width, int height);
+int xtk_spirit_set_text_max_len(xtk_spirit_t *spirit, int maxlen);
 
 int xtk_spirit_calc_aligin_pos(xtk_spirit_t *spirit, int width, int height, int *out_x, int *out_y);
 
@@ -116,5 +127,8 @@ int xtk_spirit_show_children(xtk_spirit_t *spirit);
 
 int xtk_spirit_hide(xtk_spirit_t *spirit);
 int xtk_spirit_hide_all(xtk_spirit_t *spirit);
+
+void xtk_aligin_calc_pos(xtk_style_t *style, xtk_align_t align, int box_width, int box_height, 
+        int width, int height, int *out_x, int *out_y);
 
 #endif /* _LIB_XTK_SPIRIT_H */
