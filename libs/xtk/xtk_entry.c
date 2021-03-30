@@ -11,16 +11,56 @@ static void xtk_entry_draw_cursor(xtk_spirit_t *spirit)
     if (!entry->focus)
         return;
     xtk_spirit_t *attached_spirit = (xtk_spirit_t *)spirit->attached_container->spirit;
-    if (!attached_spirit->surface)
+        if (!attached_spirit->surface)
+            return;
+    if (!xtk_entry_get_selection_bounds(entry, NULL, NULL)) {
+        int start_x = spirit->x;
+        int start_y = spirit->y;
+        int off_x = 1, off_y = 1;
+        off_x += entry->cursor_pos * 8;
+        xtk_rect_t srcrect = {0, 0, entry->cursor->w, entry->cursor->h};
+        xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, entry->cursor->w, entry->cursor->h};
+        xtk_surface_blit(entry->cursor, &srcrect, attached_spirit->surface, &dstrect);
+    }
+}
+
+static void xtk_entry_draw_selection(xtk_spirit_t *spirit)
+{
+    xtk_entry_t *entry = XTK_ENTRY(spirit);
+    if (!entry->focus)
         return;
-    
-    int start_x = spirit->x;
-    int start_y = spirit->y;
-    int off_x = 1, off_y = 1;
-    off_x += entry->cursor_pos * 8;
-    xtk_rect_t srcrect = {0, 0, entry->cursor->w, entry->cursor->h};
-    xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, entry->cursor->w, entry->cursor->h};
-    xtk_surface_blit(entry->cursor, &srcrect, attached_spirit->surface, &dstrect);
+    xtk_spirit_t *attached_spirit = (xtk_spirit_t *)spirit->attached_container->spirit;
+        if (!attached_spirit->surface)
+            return;
+    if (xtk_entry_get_selection_bounds(entry, NULL, NULL)) {
+        int chars = abs(entry->select_start_pos - entry->select_end_pos);
+        if (!chars) // 没有字符就返回
+            return;
+        int min_pos = min(entry->select_start_pos, entry->select_end_pos);
+
+        int w = chars * 8;
+        int h = 18;
+
+        int start_x = spirit->x;
+        int start_y = spirit->y;
+        int off_x = 1, off_y = 1;
+        off_x += min_pos * 8;
+
+        /* 调整surface大小 */
+        if (!entry->selection) {
+            entry->selection = xtk_surface_create(w, h);
+            if (!entry->selection)  /* 创建失败 */
+                return;
+        } else {
+            if (xtk_surface_resize(entry->selection, w, h) < 0)
+                return;
+        }
+        xtk_surface_rectfill(entry->selection, 0, 0, entry->selection->w, entry->selection->h, XTK_GREEN);
+
+        xtk_rect_t srcrect = {0, 0, entry->selection->w, entry->selection->h};
+        xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, entry->selection->w, entry->selection->h};
+        xtk_surface_blit(entry->selection, &srcrect, attached_spirit->surface, &dstrect);
+    }
 }
 
 xtk_spirit_t *xtk_entry_create(void)
@@ -32,16 +72,26 @@ xtk_spirit_t *xtk_entry_create(void)
     entry->editable = true;
     entry->visible = true;
     entry->invisible_char = XTK_ENTRY_INVISIBLE_CHAR_DEFAULT;
-    entry->focus = 0;
+    entry->focus = false;
     entry->cursor_pos = 0;
     entry->focus_color = XTK_ENTRY_FOCUS_COLOR;
     entry->unfocus_color = XTK_GRAY;
-
+    entry->select_end_pos = entry->select_start_pos = 0;    /* no select, same */
+    entry->start_selecting = 0;
+    entry->selection = NULL;
+    
     entry->cursor = xtk_surface_create(1, XTK_ENTRY_HEIGHT_DEFAULT - 2);
     if (!entry->cursor) {
         free(entry);
         return NULL;
     }
+    /*
+    entry->selection = xtk_surface_create(8, 16);
+    if (!entry->selection) {
+        free(entry->cursor);
+        free(entry);
+        return NULL;
+    }*/
     xtk_surface_rectfill(entry->cursor, 0, 0, 1, entry->cursor->h, XTK_BLACK);
 
     xtk_spirit_t *spirit = &entry->spirit;
@@ -55,7 +105,9 @@ xtk_spirit_t *xtk_entry_create(void)
     spirit->style.color = XTK_BLACK;
     spirit->style.border_color = entry->unfocus_color;
     
+    spirit->show_middle = xtk_entry_draw_selection;
     spirit->show_bottom = xtk_entry_draw_cursor;
+    
     xtk_spirit_set_text(spirit, "");    /* set empty string */
 
     assert(!xtk_signal_create(spirit, "activate"));
@@ -141,12 +193,12 @@ void xtk_entry_set_focus(xtk_entry_t *entry, bool is_focus)
 {
     xtk_spirit_t *spirit = &entry->spirit;
     if (is_focus) {
-        entry->focus = 1;
+        entry->focus = true;
         spirit->style.border_color = entry->focus_color;
         xtk_spirit_show(spirit);
     } else {
         if (entry->focus) {
-            entry->focus = 0;
+            entry->focus = false;
             spirit->style.border_color = entry->unfocus_color;
             xtk_spirit_show(spirit);
         }
@@ -159,14 +211,15 @@ bool xtk_entry_get_focus(xtk_entry_t *entry)
 }
 
 /* entry种的某个x位置转换成光标位置 */
-void xtk_entry_locate_position (xtk_entry_t *entry, int pos_x)
+int xtk_entry_locate_position (xtk_entry_t *entry, int position)
 {
     xtk_spirit_t *spirit = &entry->spirit;
-    int cursor_pos = pos_x - spirit->style.padding;
+    int cursor_pos = position - spirit->style.padding;
     int char_width = 8;
     cursor_pos += char_width / 2;
     cursor_pos /= char_width;
     xtk_entry_set_position(entry, cursor_pos);
+    return entry->cursor_pos;
 }
 
 void xtk_entry_set_position(xtk_entry_t *entry,
@@ -217,8 +270,8 @@ void gtk_entry_insert_text(xtk_entry_t *entry,
 
 /* 删除字符串区间[start_pos, end_pos)，如果end_pos为负数，那么就到末尾 */
 void gtk_entry_delete_text(xtk_entry_t *entry,
-                      int start_pos,
-                      int end_pos)
+                           int start_pos,
+                           int end_pos)
 {
     if (!entry)
         return;
@@ -260,6 +313,10 @@ void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify)
     if (entry->editable == false)
         return;
     xtk_spirit_t *spirit = &entry->spirit;
+    
+    /* TODO: 如果此时有选区，那么添加字符和删除，就是针对选区进行 */
+    //xtk_entry_select_region(entry, entry->cursor_pos, entry->cursor_pos);
+
     /* 获取字符串，并加入字符串 */    
     switch (keycode) {
     case UVIEW_KEY_UP:
@@ -294,4 +351,29 @@ void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify)
         }
         break;
     }
+}
+
+void xtk_entry_select_region (xtk_entry_t *entry,
+                                 int start_pos,
+                                 int end_pos)
+{
+    if (!entry)
+        return;
+    entry->select_start_pos = start_pos;
+    entry->select_end_pos = end_pos;
+}
+
+bool xtk_entry_get_selection_bounds (xtk_entry_t *entry,
+                                     int *start_pos,
+                                     int *end_pos)
+{
+    if (!entry)
+        return false;
+    if (entry->select_start_pos == entry->select_end_pos)
+        return false;
+    if (start_pos)
+        *start_pos = entry->select_start_pos;
+    if (end_pos)
+        *end_pos = entry->select_end_pos;
+    return true;
 }

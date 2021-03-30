@@ -19,12 +19,17 @@ typedef struct {
     bool editable;
     bool visible;
     char invisible_char;
-    char focus; /* 聚焦到当前控件 */
+    bool focus; /* 聚焦到当前控件 */
     
     xtk_surface_t *cursor;  /* 输入光标 */
+    xtk_surface_t *selection;  /* 选择区域 */
+
     int cursor_pos;    /* 光标位置 */
     xtk_color_t focus_color;
     xtk_color_t unfocus_color;
+    int select_start_pos;       /* 选区起始位置 */
+    int select_end_pos;         /* 选区结束位置 */
+    int start_selecting;        /* 处于选择选区状态 */
 } xtk_entry_t;
 
 #define XTK_ENTRY(spirit)  ((xtk_entry_t *)(spirit))
@@ -57,18 +62,31 @@ bool xtk_entry_get_visibility (xtk_entry_t *entry);
 void xtk_entry_set_invisible_char(xtk_entry_t *entry,
                                    char ch);
 void xtk_entry_unset_invisible_char(xtk_entry_t *entry);
-void xtk_entry_move_cursor (xtk_entry_t *entry, xtk_entry_cursor_orientation_t orientation, int step);
 
 void xtk_entry_set_focus(xtk_entry_t *entry, bool is_focus);
 bool xtk_entry_get_focus(xtk_entry_t *entry);
 
-void xtk_entry_locate_position(xtk_entry_t *entry, int pos_x);
-
-void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify);
-
 void xtk_entry_set_position(xtk_entry_t *entry,
                             int position);
-int xtk_editable_get_position (xtk_entry_t *entry);
+int xtk_entry_get_position (xtk_entry_t *entry);
 
+void gtk_entry_insert_text(xtk_entry_t *entry,
+                              const char *new_text,
+                              int new_text_length);
+void gtk_entry_delete_text(xtk_entry_t *entry,
+                           int start_pos,
+                           int end_pos);
+
+void xtk_entry_select_region (xtk_entry_t *entry,
+                                 int start_pos,
+                                 int end_pos);
+
+bool xtk_entry_get_selection_bounds (xtk_entry_t *entry,
+                                     int *start_pos,
+                                     int *end_pos);
+
+int xtk_entry_locate_position(xtk_entry_t *entry, int position);
+void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify);
+void xtk_entry_move_cursor (xtk_entry_t *entry, xtk_entry_cursor_orientation_t orientation, int step);
 
 #endif /* _LIB_XTK_ENTRY_H */

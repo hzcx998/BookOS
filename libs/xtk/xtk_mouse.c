@@ -41,7 +41,23 @@ int xtk_mouse_motion(xtk_spirit_t *spirit, int x, int y)
             break;
         case XTK_SPIRIT_TYPE_ENTRY:
             {
+                xtk_entry_t *entry = XTK_ENTRY(tmp);
+                //if (XTK_IN_SPIRIT(tmp, x, y)) {
+                if (xtk_entry_get_focus(entry)) {
+                    if (entry->start_selecting) {
+                        int pos = xtk_entry_get_position(entry);
+                        int new_pos = xtk_entry_locate_position(entry, x - tmp->x);
+                        if (pos != new_pos) {
+                            entry->select_end_pos = new_pos;
+                            printf("move pos from %d to %d\n", pos, new_pos);
+                            xtk_spirit_show(&entry->spirit);
+                        }
 
+                        //xtk_entry_set_position(entry, pos);
+                        //}
+                    }
+                }
+                //}
             }
             break;
         default:
@@ -98,9 +114,21 @@ int xtk_mouse_btn_down(xtk_spirit_t *spirit, int btn, int x, int y)
                 xtk_entry_t *entry = XTK_ENTRY(tmp);
                 if (XTK_IN_SPIRIT(tmp, x, y)) {
                     /* 定位 */
-                    xtk_entry_locate_position(entry, x - tmp->x);
+                    
+                    int pos = xtk_entry_locate_position(entry, x - tmp->x);
+                    printf("start pos at %d\n", pos);
+                    if (!entry->start_selecting) { // 第一次点击,需要重置选区
+                        xtk_entry_select_region(entry, pos, pos);
+                    } else {
+                        entry->select_start_pos = pos;
+                    }
+
+                    xtk_entry_set_position(entry, pos);
                     xtk_entry_set_focus(entry, true);
+                    /* 激活后才选择，就不会刷新 */
+                    entry->start_selecting = 1;
                 } else {
+                    entry->start_selecting = 0;
                     xtk_entry_set_focus(entry, false);
                 }
             }
@@ -146,6 +174,30 @@ int xtk_mouse_btn_up(xtk_spirit_t *spirit, int btn, int x, int y)
                         return 0;
                     }
                 }
+            }
+            break;
+        case XTK_SPIRIT_TYPE_ENTRY:
+            {
+                if (btn != UVIEW_BTN_LEFT)
+                    break;
+                xtk_entry_t *entry = XTK_ENTRY(tmp);
+                //if (XTK_IN_SPIRIT(tmp, x, y)) {
+                if (xtk_entry_get_focus(entry)) {
+                    if (entry->start_selecting) {
+                        entry->select_end_pos = xtk_entry_get_position(entry);
+                        printf("end pos at %d\n", entry->select_end_pos);
+                        /* 有可能end比start小，于是调整位置 */
+                        if (entry->select_end_pos < entry->select_start_pos) {
+                            int tmp_pos = entry->select_end_pos;
+                            entry->select_end_pos = entry->select_start_pos;
+                            entry->select_start_pos = tmp_pos;
+                        }
+                        printf("selection [%d, %d)\n", entry->select_start_pos, entry->select_end_pos);
+                        entry->start_selecting = 0;
+                        xtk_spirit_show(&entry->spirit);
+                    }
+                }
+                //}
             }
             break;
         default:

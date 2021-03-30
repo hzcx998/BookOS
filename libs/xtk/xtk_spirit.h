@@ -89,7 +89,9 @@ typedef struct xtk_spirit {
     xtk_container_t *container;    // 每个精灵对应一个容器
     xtk_container_t *attached_container;    // 每个精灵附加到的容器
 
+
     /* 函数调用回调 */
+    void (*show_middle) (struct xtk_spirit *);
     void (*show_bottom) (struct xtk_spirit *);
 } xtk_spirit_t;
 

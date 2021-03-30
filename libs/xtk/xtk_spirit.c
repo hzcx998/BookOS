@@ -41,6 +41,8 @@ void xtk_spirit_init(xtk_spirit_t *spirit, int x, int y, int width, int height)
     spirit->view = -1;
 
     spirit->show_bottom = NULL;
+    spirit->show_middle = NULL;
+    
 }
 
 xtk_spirit_t *xtk_spirit_create(int x, int y, int width, int height)
@@ -444,6 +446,10 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
         xtk_surface_blit(&src_surface, &srcrect, surface, &dstrect);
     }
 
+    
+    if (spirit->show_middle)
+        spirit->show_middle(spirit);
+
     if (spirit->text && spirit->style.color != XTK_NONE_COLOR) {
         dotfont_t *dotfont = dotfont_find(&__xtk_dotflib, DOTF_STANDARD_NAME);
         assert(dotfont);
@@ -462,6 +468,10 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
         xtk_surface_rect(surface, start_x, start_y, spirit->width, spirit->height,
             spirit->style.border_color);
     }
+
+    if (spirit->show_bottom)
+        spirit->show_bottom(spirit);
+
     return 0;
 }
 
@@ -515,9 +525,6 @@ int xtk_spirit_show(xtk_spirit_t *spirit)
     
     xtk_spirit_to_surface(spirit, attached_spirit->surface);
     
-    if (spirit->show_bottom)
-        spirit->show_bottom(spirit);
-        
     if (UVIEW_BAD_ID(attached_spirit->view))
         return -1;
     

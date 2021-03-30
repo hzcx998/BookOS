@@ -117,7 +117,6 @@ static bool text_input_done_event(xtk_spirit_t *spirit, void *data)
     return true;
 }
 
-
 #define FONT_SIZE   32
 
 FT_Library	library;
@@ -517,10 +516,9 @@ int main(int argc, char *argv[])
     xtk_spirit_set_pos(entry, 50, 400);
     
     xtk_signal_connect(entry, "activate", text_input_done_event, NULL);
-    //xtk_entry_set_text(XTK_ENTRY(entry), "editor");
+    xtk_entry_set_text(XTK_ENTRY(entry), "editor");
     xtk_spirit_show(entry);
 
     xtk_main();
     return 0;
 }
-
