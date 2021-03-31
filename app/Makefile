@@ -57,6 +57,7 @@ AS			:=	nasm
 export AS LD
 
 # bin
+MODULE      +=  winlogin
 MODULE      +=  freeterm
 MODULE      +=  terminal
 MODULE      +=  desktop

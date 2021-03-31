@@ -217,7 +217,7 @@ void xtk_mouse_load_cursors(int view, char *pathname)
         strcat(filename, "/");
         strcat(filename, cursor_info[i].pathname);
         strcat(filename, ".png");
-        printf("mouse cursor: %s.\n", filename);
+        //printf("mouse cursor: %s.\n", filename);
         if (xtk_mouse_load_cursor(view, filename, i, cursor_info[i].off_x, cursor_info[i].off_y) < 0)
             printf("mouse load cursor %s failed!\n", filename);
     }
