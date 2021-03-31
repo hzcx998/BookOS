@@ -456,22 +456,14 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
             dotfont_get_char_width(dotfont) * strlen(spirit->text),
             dotfont_get_char_height(dotfont), &off_x, &off_y);
         
-        /* 把文字渲染到surface，然后再拷贝到目的surface */
-        if (!spirit->text_surface) {
-            spirit->text_surface = xtk_surface_create(spirit->width, spirit->height);
+        uview_bitmap_t bmp;
+        uview_bitmap_init(&bmp, surface->w, surface->h, (uview_color_t *) surface->pixels);
+        if (spirit->invisible_char) {
+            xtk_text_to_bitmap_ex(spirit->text, spirit->invisible_char, spirit->style.color,
+                DOTF_STANDARD_NAME, &bmp, start_x + off_x, start_y + off_y);
         } else {
-            xtk_surface_resize(spirit->text_surface, spirit->width, spirit->height);
-        }
-        if (spirit->text_surface) {
-            uview_bitmap_t bmp;
-            uview_bitmap_init(&bmp, surface->w, surface->h, (uview_color_t *) surface->pixels);
-            if (spirit->invisible_char) {
-                xtk_text_to_bitmap_ex(spirit->text, spirit->invisible_char, spirit->style.color,
-                    DOTF_STANDARD_NAME, &bmp, start_x + off_x, start_y + off_y);
-            } else {
-                xtk_text_to_bitmap(spirit->text, spirit->style.color, DOTF_STANDARD_NAME,
-                    &bmp, start_x + off_x, start_y + off_y);
-            }
+            xtk_text_to_bitmap(spirit->text, spirit->style.color, DOTF_STANDARD_NAME,
+                &bmp, start_x + off_x, start_y + off_y);
         }
     }
 

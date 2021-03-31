@@ -511,16 +511,23 @@ int main(int argc, char *argv[])
     xtk_window_add_timer(XTK_WINDOW(win), 200, progress_timeout, pbar);
 
     xtk_spirit_t *entry = xtk_entry_create();
-    assert(pbar);
+    assert(entry);
     assert(!xtk_container_add(XTK_CONTAINER(win), entry));
     xtk_spirit_set_pos(entry, 50, 400);
-    
     xtk_signal_connect(entry, "activate", text_input_done_event, NULL);
     xtk_entry_set_text(XTK_ENTRY(entry), "editor");
-    xtk_entry_set_editable(XTK_ENTRY(entry), false);
-    xtk_entry_set_invisible_char(XTK_ENTRY(entry), '@');
-    xtk_entry_set_visibility(XTK_ENTRY(entry), false);
+    //xtk_entry_set_editable(XTK_ENTRY(entry), false);
+    //xtk_entry_set_invisible_char(XTK_ENTRY(entry), '@');
+    //xtk_entry_set_visibility(XTK_ENTRY(entry), false);
     xtk_spirit_show(entry);
+
+    xtk_spirit_t *entry2 = xtk_entry_create();
+    assert(entry2);
+    assert(!xtk_container_add(XTK_CONTAINER(win), entry2));
+    xtk_spirit_set_pos(entry2, 50, 450);
+    xtk_signal_connect(entry2, "activate", text_input_done_event, NULL);
+    xtk_entry_set_text(XTK_ENTRY(entry2), "editor2");
+    xtk_spirit_show(entry2);
 
     xtk_main();
     return 0;

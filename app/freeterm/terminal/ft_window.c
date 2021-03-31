@@ -106,7 +106,7 @@ void window_loop()
             #endif
             memset(buf, 0, FT_PTM_BUFLEN);
         }
-        sched_yeild();
+        sched_yield();
     }
 }
 

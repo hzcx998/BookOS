@@ -87,7 +87,7 @@ int xtk_mouse_btn_down(xtk_spirit_t *spirit, int btn, int x, int y)
                     if (button->state == XTK_BUTTON_TOUCH) {
                         xtk_signal_emit_by_name(tmp, "button_press");
                         xtk_button_change_state(button, XTK_BUTTON_CLICK);
-                        return 0;  
+                        return 0;
                     }
                 }
             }
