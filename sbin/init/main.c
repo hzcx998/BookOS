@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         return -1;
     } else if (!g_pid) { // 子进程执行应用程序
         // 执行图形
-        exit(execv("/system/programs/winlogin", NULL));
+        exit(execv("/system/programs/desktop", NULL));
     } // 父进程执行shell
     #endif
 
