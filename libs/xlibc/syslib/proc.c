@@ -97,7 +97,7 @@ unsigned long sleep(unsigned long second)
  */
 void sched_yield()
 {
-    syscall0(int, SYS_SCHED_yield);
+    syscall0(int, SYS_SCHED_YIELD);
 }
 
 
