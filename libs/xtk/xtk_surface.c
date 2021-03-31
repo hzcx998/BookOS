@@ -42,6 +42,10 @@ int xtk_surface_resize(xtk_surface_t *surface, uint32_t width, uint32_t height)
     uint32_t *new_pixels = malloc(width * height * sizeof(uint32_t));
     if (!new_pixels)
         return -1;
+    /* if size same, don't resize */
+    if (surface->w == width && surface->h == height) {
+        return 0;
+    }
     free(surface->pixels);
     surface->pixels = new_pixels;
     surface->w = width;
@@ -55,13 +59,14 @@ void xtk_surface_clear(xtk_surface_t *surface)
     memset(surface->pixels, 0, surface->w * surface->h * sizeof(uint32_t));
 }
 
-void xtk_surface_putpixel(xtk_surface_t *surface, int x, int y, uint32_t color)
+int xtk_surface_putpixel(xtk_surface_t *surface, int x, int y, uint32_t color)
 {
     if (!surface)
-        return;
+        return -1;
     if (x < 0 || y < 0 || x >= surface->w || y >= surface->h)
-        return;
+        return -1;
     surface->pixels[y * surface->w + x] = color;
+    return 0;
 }
 
 int xtk_surface_getpixel(xtk_surface_t *surface, int x, int y, uint32_t *color)

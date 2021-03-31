@@ -47,8 +47,9 @@ static inline void xtk_surface_init(xtk_surface_t *surface, uint32_t width, uint
     surface->pixels = pixels;
 }
 
-void xtk_surface_putpixel(xtk_surface_t *surface, int x, int y, uint32_t color);
+int xtk_surface_putpixel(xtk_surface_t *surface, int x, int y, uint32_t color);
 int xtk_surface_getpixel(xtk_surface_t *surface, int x, int y, uint32_t *color);
+
 
 #define xtk_surface_putpixel_fast(surface, x, y, color) \
         (surface)->pixels[(y) * (surface)->w + (x)] = (color)

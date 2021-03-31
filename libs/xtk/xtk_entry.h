@@ -1,3 +1,8 @@
+/**
+ * TODO: 对于行编辑器，还需要做的就是可以通过光标来浏览超过
+ * 编辑框的内容。
+ */
+
 #ifndef _LIB_XTK_ENTRY_H
 #define _LIB_XTK_ENTRY_H
 

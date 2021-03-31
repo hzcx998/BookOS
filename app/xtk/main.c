@@ -517,9 +517,11 @@ int main(int argc, char *argv[])
     
     xtk_signal_connect(entry, "activate", text_input_done_event, NULL);
     xtk_entry_set_text(XTK_ENTRY(entry), "editor");
+    xtk_entry_set_editable(XTK_ENTRY(entry), false);
+    xtk_entry_set_invisible_char(XTK_ENTRY(entry), '@');
+    xtk_entry_set_visibility(XTK_ENTRY(entry), false);
     xtk_spirit_show(entry);
 
     xtk_main();
     return 0;
 }
-

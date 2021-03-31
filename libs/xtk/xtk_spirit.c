@@ -20,7 +20,7 @@ void xtk_spirit_init(xtk_spirit_t *spirit, int x, int y, int width, int height)
     spirit->height_min = 0;
     spirit->visible = 0;
     spirit->max_text_len = -1;  /* no limit */
-    
+    spirit->invisible_char = 0; /* no invisible char */
     memset(&spirit->style, 0, sizeof(xtk_style_t));
 
     spirit->style.border_color = XTK_NONE_COLOR;
@@ -29,7 +29,7 @@ void xtk_spirit_init(xtk_spirit_t *spirit, int x, int y, int width, int height)
     spirit->text = NULL;
     spirit->image = NULL;
     spirit->surface = NULL;
-    
+
     spirit->style.background_color = XTK_NONE_COLOR;
     spirit->style.background_align = XTK_ALIGN_LEFT;
     spirit->background_image = NULL;
@@ -403,7 +403,6 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
     if (spirit->style.background_color != XTK_NONE_COLOR) {
         xtk_surface_rectfill(surface, start_x, start_y, spirit->width, spirit->height,
             spirit->style.background_color);
-        
     }
     if (spirit->background_image) {
         // 根据对齐方式设置显示位置
@@ -445,7 +444,6 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
         xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, surface->w, surface->h};
         xtk_surface_blit(&src_surface, &srcrect, surface, &dstrect);
     }
-
     
     if (spirit->show_middle)
         spirit->show_middle(spirit);
@@ -457,10 +455,24 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
         xtk_aligin_calc_pos(&spirit->style, spirit->style.align, spirit->width, spirit->height, 
             dotfont_get_char_width(dotfont) * strlen(spirit->text),
             dotfont_get_char_height(dotfont), &off_x, &off_y);
-        uview_bitmap_t bmp;
-        uview_bitmap_init(&bmp, surface->w, surface->h, (uview_color_t *) surface->pixels);
-        xtk_text_to_bitmap(spirit->text, spirit->style.color, DOTF_STANDARD_NAME,
-            &bmp, start_x + off_x, start_y + off_y);
+        
+        /* 把文字渲染到surface，然后再拷贝到目的surface */
+        if (!spirit->text_surface) {
+            spirit->text_surface = xtk_surface_create(spirit->width, spirit->height);
+        } else {
+            xtk_surface_resize(spirit->text_surface, spirit->width, spirit->height);
+        }
+        if (spirit->text_surface) {
+            uview_bitmap_t bmp;
+            uview_bitmap_init(&bmp, surface->w, surface->h, (uview_color_t *) surface->pixels);
+            if (spirit->invisible_char) {
+                xtk_text_to_bitmap_ex(spirit->text, spirit->invisible_char, spirit->style.color,
+                    DOTF_STANDARD_NAME, &bmp, start_x + off_x, start_y + off_y);
+            } else {
+                xtk_text_to_bitmap(spirit->text, spirit->style.color, DOTF_STANDARD_NAME,
+                    &bmp, start_x + off_x, start_y + off_y);
+            }
+        }
     }
 
     /* 边框 */

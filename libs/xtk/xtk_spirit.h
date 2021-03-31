@@ -83,6 +83,8 @@ typedef struct xtk_spirit {
     /* front */
     char *text;
     int max_text_len;
+    char invisible_char;
+
     xtk_image_t *image;
     xtk_surface_t *surface;
     /* extension */

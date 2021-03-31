@@ -85,13 +85,6 @@ xtk_spirit_t *xtk_entry_create(void)
         free(entry);
         return NULL;
     }
-    /*
-    entry->selection = xtk_surface_create(8, 16);
-    if (!entry->selection) {
-        free(entry->cursor);
-        free(entry);
-        return NULL;
-    }*/
     xtk_surface_rectfill(entry->cursor, 0, 0, 1, entry->cursor->h, XTK_BLACK);
 
     xtk_spirit_t *spirit = &entry->spirit;
@@ -154,6 +147,12 @@ void xtk_entry_set_visibility(xtk_entry_t *entry,
                               bool visible)
 {
     entry->visible = visible;
+    xtk_spirit_t *spirit = &entry->spirit;
+    if (visible) {
+        spirit->invisible_char = 0;
+    } else {
+        spirit->invisible_char = entry->invisible_char;
+    }
 }
 
 bool xtk_entry_get_visibility (xtk_entry_t *entry)
@@ -165,6 +164,9 @@ void xtk_entry_set_invisible_char (xtk_entry_t *entry,
                                    char ch)
 {
     entry->invisible_char = ch;
+    if (!entry->visible) {
+        entry->spirit.invisible_char = entry->invisible_char;
+    }
 }
 
 void xtk_entry_unset_invisible_char (xtk_entry_t *entry)
