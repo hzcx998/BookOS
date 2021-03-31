@@ -202,6 +202,8 @@ void xtk_entry_set_focus(xtk_entry_t *entry, bool is_focus)
             spirit->style.border_color = entry->unfocus_color;
             xtk_spirit_show(spirit);
         }
+        /* 丢焦后需要重置选区 */
+        xtk_entry_reset_selection(entry, entry->select_start_pos);
     }
 }
 
@@ -315,7 +317,7 @@ void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify)
     xtk_spirit_t *spirit = &entry->spirit;
     
     /* TODO: 如果此时有选区，那么添加字符和删除，就是针对选区进行 */
-    //xtk_entry_select_region(entry, entry->cursor_pos, entry->cursor_pos);
+    int start_pos, end_pos;
 
     /* 获取字符串，并加入字符串 */    
     switch (keycode) {
@@ -324,17 +326,100 @@ void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify)
     case UVIEW_KEY_DOWN:
         break;
     case UVIEW_KEY_LEFT:
-        if (modify & UVIEW_KMOD_CTRL) { /* 移动到开头 */
-            xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_RIGHT_TO_LEFT, entry->cursor_pos);
+        /* ctrl & shift = slect all after cur pos */
+        if ((modify & (UVIEW_KMOD_CTRL)) && (modify & (UVIEW_KMOD_SHIFT))) { /* 选区到移动到开头 */
+            /* 先获取选区，如果获取失败，才设置位置为当前位置 */
+            if (!xtk_entry_get_selection_bounds(entry, &start_pos, &end_pos)) {
+                end_pos = entry->cursor_pos;    /* 左选区，修改start，保存end */
+            }
+            xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_RIGHT_TO_LEFT, entry->cursor_pos); 
+            /* 移动前和移动后开始位置不一样才修改选区 */
+            if (end_pos != entry->cursor_pos) {
+                xtk_entry_select_region(entry, entry->cursor_pos, end_pos);
+                xtk_spirit_show(spirit);
+            }
+            entry->start_selecting = 1;
+        } else if (xtk_entry_get_selection_bounds(entry, &start_pos, &end_pos)) {
+            if (modify & UVIEW_KMOD_SHIFT) {
+                int pos = xtk_entry_get_position(entry);
+                xtk_entry_set_position(entry, pos - 1);
+                int new_pos = xtk_entry_get_position(entry);
+                if (pos != new_pos) {
+                    /* 光标位置在结束的左边，并且是左移动，修改起始位置 */
+                    if (pos < end_pos) { 
+                        entry->select_start_pos = new_pos;
+                    /* 光标位置在起始的右边，并且是左移动，修改结束位置 */
+                    } else if (pos > start_pos){
+                        entry->select_end_pos = new_pos;
+                    }
+                    xtk_spirit_show(&entry->spirit);
+                }
+            } else {
+                /* 有选区，就移动到选区开始位置 */
+                xtk_entry_reset_selection(entry, start_pos);
+                xtk_entry_set_position(entry, start_pos);
+            }
+            xtk_spirit_show(spirit);
         } else {
-            xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_RIGHT_TO_LEFT, 1);
+            if (modify & UVIEW_KMOD_CTRL) { /* 移动到开头 */
+                xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_RIGHT_TO_LEFT, entry->cursor_pos);
+            } else if (modify & UVIEW_KMOD_SHIFT) { /* 选择选区 */
+                entry->start_selecting = 1;
+                xtk_entry_select_region(entry, entry->cursor_pos - 1, entry->cursor_pos);
+                xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_RIGHT_TO_LEFT, 1);
+                xtk_spirit_show(spirit);
+            } else {
+                xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_RIGHT_TO_LEFT, 1);
+            }
         }
         break;
     case UVIEW_KEY_RIGHT:
-        if (modify & UVIEW_KMOD_CTRL) { /* 移动到末尾 */
+        /* ctrl & shift = slect all after cur pos */
+        if ((modify & (UVIEW_KMOD_CTRL)) && (modify & (UVIEW_KMOD_SHIFT))) { /* 选区到移动到末尾 */
+            /* 先获取选区，如果获取失败，才设置位置为当前位置 */
+            if (!xtk_entry_get_selection_bounds(entry, &start_pos, &end_pos)) {
+                start_pos = entry->cursor_pos;  /* 右选区，保存start，修改end */    
+            }
             xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_LEFT_TO_RIGHT, xtk_label_length(spirit));
+            /* 移动前和移动后开始位置不一样才修改选区 */
+            if (start_pos != entry->cursor_pos) {
+                xtk_entry_select_region(entry, start_pos, entry->cursor_pos);
+                xtk_spirit_show(spirit);
+            }
+            entry->start_selecting = 1;
+        } else if (xtk_entry_get_selection_bounds(entry, &start_pos, &end_pos)) {
+            /* 有选区，就移动到选区末尾位置 */
+            if (modify & UVIEW_KMOD_SHIFT) {
+                int pos = xtk_entry_get_position(entry);
+                xtk_entry_set_position(entry, pos + 1);
+                int new_pos = xtk_entry_get_position(entry);
+                if (pos != new_pos) {   /* 有位置变化才记录位置信息，实时显示 */
+                    /* 光标位置在结束的左边，并且是左移动，修改起始位置 */
+                    if (pos < end_pos) { 
+                        entry->select_start_pos = new_pos;
+                    /* 光标位置在起始的右边，并且是左移动，修改结束位置 */
+                    } else if (pos > start_pos){
+                        entry->select_end_pos = new_pos;
+                    }
+                    xtk_spirit_show(&entry->spirit);
+                }
+            } else {
+                /* 有选区，就移动到选区开始位置 */
+                xtk_entry_reset_selection(entry, end_pos);
+                xtk_entry_set_position(entry, end_pos);
+            }
+            xtk_spirit_show(spirit);
         } else {
-            xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_LEFT_TO_RIGHT, 1);
+            if (modify & UVIEW_KMOD_CTRL) { /* 移动到末尾 */
+                xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_LEFT_TO_RIGHT, xtk_label_length(spirit));
+            } else if (modify & UVIEW_KMOD_SHIFT) { /* 选择选区 */
+                entry->start_selecting = 1;
+                xtk_entry_select_region(entry, entry->cursor_pos, entry->cursor_pos + 1);
+                xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_LEFT_TO_RIGHT, 1);
+                xtk_spirit_show(spirit);
+            } else {
+                xtk_entry_move_cursor(entry, XTK_ENTRY_CURSOR_LEFT_TO_RIGHT, 1);
+            }
         }
         break;
     case UVIEW_KEY_ENTER:   /* 完成输入 */
@@ -342,10 +427,20 @@ void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify)
         xtk_signal_emit_by_name(spirit, "activate");
         break;
     case UVIEW_KEY_BACKSPACE:
-        gtk_entry_delete_text(entry, entry->cursor_pos - 1, entry->cursor_pos);
+        if (xtk_entry_get_selection_bounds(entry, &start_pos, &end_pos)) {
+            xtk_entry_reset_selection(entry, start_pos);
+            gtk_entry_delete_text(entry, start_pos, end_pos);
+        } else {
+            gtk_entry_delete_text(entry, entry->cursor_pos - 1, entry->cursor_pos);
+        }
         break;
     default:
         {
+            /* 先删除选取内容，再插入新内容 */
+            if (xtk_entry_get_selection_bounds(entry, &start_pos, &end_pos)) {
+                xtk_entry_reset_selection(entry, start_pos);
+                gtk_entry_delete_text(entry, start_pos, end_pos);
+            }
             char s[2] = {keycode, 0};
             gtk_entry_insert_text(entry, s, 1);
         }
@@ -360,7 +455,11 @@ void xtk_entry_select_region (xtk_entry_t *entry,
     if (!entry)
         return;
     entry->select_start_pos = start_pos;
+    if (entry->select_start_pos < 0)
+        entry->select_start_pos = 0;
     entry->select_end_pos = end_pos;
+    if (entry->select_end_pos < 0)
+        entry->select_end_pos = 0;
 }
 
 bool xtk_entry_get_selection_bounds (xtk_entry_t *entry,
@@ -376,4 +475,57 @@ bool xtk_entry_get_selection_bounds (xtk_entry_t *entry,
     if (end_pos)
         *end_pos = entry->select_end_pos;
     return true;
+}
+
+void xtk_entry_reset_selection (xtk_entry_t *entry, int position)
+{
+    xtk_entry_select_region(entry, position, position);
+    entry->start_selecting = 0;
+}
+
+void xtk_entry_mouse_motion (xtk_entry_t *entry, int position)
+{
+    if (xtk_entry_get_focus(entry)) {
+        if (entry->start_selecting) {
+            int pos = xtk_entry_get_position(entry);
+            int new_pos = xtk_entry_locate_position(entry, position);
+            if (pos != new_pos) {   /* 有位置变化才记录位置信息，实时显示 */
+                entry->select_end_pos = new_pos;
+                // printf("move pos from %d to %d\n", pos, new_pos);
+                xtk_spirit_show(&entry->spirit);
+            }
+        }
+    }
+}
+
+void xtk_entry_mouse_press (xtk_entry_t *entry, int position)
+{
+    int pos = xtk_entry_locate_position(entry, position);
+    // printf("start pos at %d\n", pos);
+    if (!entry->start_selecting) { // 第一次点击,需要重置选区，就不会显示选区
+        xtk_entry_reset_selection(entry, pos);
+    } else {
+        entry->select_start_pos = pos;
+    }
+    xtk_entry_set_position(entry, pos);
+    entry->start_selecting = 1;
+}
+
+void xtk_entry_mouse_release (xtk_entry_t *entry)
+{
+    if (xtk_entry_get_focus(entry)) {
+        if (entry->start_selecting) {
+            entry->select_end_pos = xtk_entry_get_position(entry);
+            //printf("end pos at %d\n", entry->select_end_pos);
+            /* 有可能end比start小，于是调整位置 */
+            if (entry->select_end_pos < entry->select_start_pos) {
+                int tmp_pos = entry->select_end_pos;
+                entry->select_end_pos = entry->select_start_pos;
+                entry->select_start_pos = tmp_pos;
+            }
+            // printf("selection [%d, %d)\n", entry->select_start_pos, entry->select_end_pos);
+            entry->start_selecting = 0;
+            xtk_spirit_show(&entry->spirit);
+        }
+    }
 }

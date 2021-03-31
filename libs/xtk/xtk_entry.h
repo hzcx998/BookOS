@@ -41,6 +41,7 @@ typedef struct {
 
 #define XTK_ENTRY_INVISIBLE_CHAR_DEFAULT    '*'
 
+/* 用户API接口 */
 xtk_spirit_t *xtk_entry_create(void);
 
 void xtk_entry_set_max_length(xtk_entry_t *entry, 
@@ -80,13 +81,17 @@ void gtk_entry_delete_text(xtk_entry_t *entry,
 void xtk_entry_select_region (xtk_entry_t *entry,
                                  int start_pos,
                                  int end_pos);
-
 bool xtk_entry_get_selection_bounds (xtk_entry_t *entry,
                                      int *start_pos,
                                      int *end_pos);
-
+/* 内部函数接口 */
+void xtk_entry_reset_selection (xtk_entry_t *entry, int position);
 int xtk_entry_locate_position(xtk_entry_t *entry, int position);
 void xtk_entry_process_key(xtk_entry_t *entry, int keycode, int modify);
 void xtk_entry_move_cursor (xtk_entry_t *entry, xtk_entry_cursor_orientation_t orientation, int step);
+
+void xtk_entry_mouse_motion (xtk_entry_t *entry, int position);
+void xtk_entry_mouse_press (xtk_entry_t *entry, int position);
+void xtk_entry_mouse_release (xtk_entry_t *entry);
 
 #endif /* _LIB_XTK_ENTRY_H */

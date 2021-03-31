@@ -73,7 +73,7 @@ static bool add_btn_event(xtk_spirit_t *spirit, void *data)
 	xtk_progress_bar_set_fraction(pbar, new_val);
     return true;
 }
-int activity_mode = 0;
+int activity_mode = 1;
 
 void toggle_activity_mode( xtk_spirit_t *spirit, void *data) 
 {
@@ -522,3 +522,4 @@ int main(int argc, char *argv[])
     xtk_main();
     return 0;
 }
+
