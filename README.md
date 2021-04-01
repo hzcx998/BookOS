@@ -45,6 +45,18 @@ xbook2内核地址：https://github.com/hzcx998/xbook2
 3.如果需要加速，就需要打开kvm加速，不同得平台有不同得方法，可以自行查找。
 ```
 
+# Mac环境搭建
+
+```bash
+# 1.安装 i386-gcc
+> brew tap nativeos/i386-elf-toolchain
+> brew install i386-elf-binutils i386-elf-gcc
+# 2.安装 truncate nasm qemu 
+> brew install truncate nasm qemu
+> make build
+> make qemu
+```
+
 ## 编译时build后直接run即可（可加-jn参数多线程编译，n是线程数。）：
 ```bash
 > make build    # 构建环境（第一次获取源码后执行）
