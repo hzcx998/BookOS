@@ -90,12 +90,11 @@ typedef struct xtk_spirit {
     /* extension */
     xtk_container_t *container;    // 每个精灵对应一个容器
     xtk_container_t *attached_container;    // 每个精灵附加到的容器
-
-
     /* 函数调用回调 */
     void (*show_middle) (struct xtk_spirit *);
     void (*show_bottom) (struct xtk_spirit *);
 } xtk_spirit_t;
+
 
 #define XTK_IN_SPIRIT(spirit, _x, _y) \
         ((spirit)->x <= (_x) && (spirit)->y <= (_y) && \
@@ -113,7 +112,7 @@ int xtk_spirit_set_text(xtk_spirit_t *spilit, char *text);
 int xtk_spirit_set_type(xtk_spirit_t *spirit, xtk_spirit_type_t type);
 int xtk_spirit_auto_size(xtk_spirit_t *spilit);
 int xtk_spirit_set_background_image(xtk_spirit_t *spilit, char *filename);
-int xtk_spirit_to_surface(xtk_spirit_t *spilit, xtk_surface_t *surface);
+int xtk_spirit_to_surface(xtk_spirit_t *spilit);
 int xtk_spirit_set_image(xtk_spirit_t *spilit, char *filename);
 int xtk_spirit_set_image2(xtk_spirit_t *spirit, char *filename, int width, int height);
 
@@ -124,6 +123,7 @@ int xtk_spirit_reset_size(xtk_spirit_t *spirit, int width, int height);
 int xtk_spirit_set_text_max_len(xtk_spirit_t *spirit, int maxlen);
 
 int xtk_spirit_calc_aligin_pos(xtk_spirit_t *spirit, int width, int height, int *out_x, int *out_y);
+
 
 int xtk_spirit_show_all(xtk_spirit_t *spirit);
 int xtk_spirit_show(xtk_spirit_t *spirit);

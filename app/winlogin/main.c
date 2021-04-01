@@ -1,3 +1,7 @@
+/*
+TODO: 将资源配置成文件，然后读取文件，根据文件配置进行处理
+*/
+
 #include <stdio.h>
 #include <xtk.h>
 #include <assert.h>
@@ -99,7 +103,6 @@ static int winlogin_init()
     assert(xtk_window_resize_to_screen(XTK_WINDOW(spirit)) == 0);
     xtk_window_set_resizable(XTK_WINDOW(spirit), false);
     xtk_window_get_screen(XTK_WINDOW(spirit), &window_width, &window_height);
-    printf("screen size: %d*%d\n", window_width, window_height);
     winlogin_surf = xtk_window_get_surface(XTK_WINDOW(spirit));
     xtk_spirit_show(spirit);
     winlogin_win = spirit;

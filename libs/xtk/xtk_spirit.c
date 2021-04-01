@@ -390,18 +390,23 @@ int xtk_spirit_calc_aligin_pos(xtk_spirit_t *spirit, int width, int height, int 
 }
 
 /* 将精灵渲染到bmp位图中 */
-int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
+int xtk_spirit_to_surface(xtk_spirit_t *spirit)
 {
-    if (!spirit || !surface)
+    if (!spirit)
         return -1;
 
-    int start_x = spirit->x;
-    int start_y = spirit->y;
-
+    /* 初始化精灵自己的surface */
+    if (!spirit->surface) {
+        spirit->surface = xtk_surface_create(spirit->width, spirit->height);
+    } else {
+        xtk_surface_resize(spirit->surface, spirit->width, spirit->height);
+    }
+    assert(spirit->surface);
+    xtk_surface_t *mysurf = spirit->surface;
     int off_x = 0, off_y = 0;
     /* 背景 */
     if (spirit->style.background_color != XTK_NONE_COLOR) {
-        xtk_surface_rectfill(surface, start_x, start_y, spirit->width, spirit->height,
+        xtk_surface_rectfill(mysurf, 0, 0, mysurf->w, mysurf->h,
             spirit->style.background_color);
     }
     if (spirit->background_image) {
@@ -415,20 +420,10 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
             (uview_color_t *) spirit->background_image->buf);
 
         xtk_rect_t srcrect = {0, 0, src_surface.w, src_surface.h};
-        xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, surface->w, surface->h};
-        xtk_surface_blit(&src_surface, &srcrect, surface, &dstrect);
+        xtk_rect_t dstrect = {off_x, off_y, mysurf->w, mysurf->h};
+        xtk_surface_blit(&src_surface, &srcrect, mysurf, &dstrect);
     }
     
-    /* 前景 */
-    if (spirit->surface) {
-        // 根据对齐方式设置显示位置
-        xtk_aligin_calc_pos(&spirit->style, spirit->style.align, spirit->width, spirit->height, 
-            spirit->surface->w, spirit->surface->h, &off_x, &off_y);
-        
-        xtk_rect_t srcrect = {0, 0, spirit->surface->w, spirit->surface->h};
-        xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, surface->w, surface->h};
-        xtk_surface_blit(spirit->surface, &srcrect, surface, &dstrect);
-    }
     if (spirit->image) {
         // 根据对齐方式设置显示位置
         xtk_aligin_calc_pos(&spirit->style, spirit->style.align, spirit->width, spirit->height, spirit->image->w,
@@ -441,8 +436,8 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
             (uview_color_t *) spirit->image->buf);
         
         xtk_rect_t srcrect = {0, 0, src_surface.w, src_surface.h};
-        xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, surface->w, surface->h};
-        xtk_surface_blit(&src_surface, &srcrect, surface, &dstrect);
+        xtk_rect_t dstrect = {off_x, off_y, mysurf->w, mysurf->h};
+        xtk_surface_blit(&src_surface, &srcrect, mysurf, &dstrect);
     }
     
     if (spirit->show_middle)
@@ -456,20 +451,18 @@ int xtk_spirit_to_surface(xtk_spirit_t *spirit, xtk_surface_t *surface)
             dotfont_get_char_width(dotfont) * strlen(spirit->text),
             dotfont_get_char_height(dotfont), &off_x, &off_y);
         
-        uview_bitmap_t bmp;
-        uview_bitmap_init(&bmp, surface->w, surface->h, (uview_color_t *) surface->pixels);
         if (spirit->invisible_char) {
-            xtk_text_to_bitmap_ex(spirit->text, spirit->invisible_char, spirit->style.color,
-                DOTF_STANDARD_NAME, &bmp, start_x + off_x, start_y + off_y);
+            xtk_text_to_surface_ex(spirit->text, spirit->invisible_char, spirit->style.color,
+                DOTF_STANDARD_NAME, mysurf, off_x, off_y);
         } else {
-            xtk_text_to_bitmap(spirit->text, spirit->style.color, DOTF_STANDARD_NAME,
-                &bmp, start_x + off_x, start_y + off_y);
+            xtk_text_to_surface(spirit->text, spirit->style.color, DOTF_STANDARD_NAME,
+                mysurf, off_x, off_y);
         }
     }
 
     /* 边框 */
     if (spirit->style.border_color != XTK_NONE_COLOR) {
-        xtk_surface_rect(surface, start_x, start_y, spirit->width, spirit->height,
+        xtk_surface_rect(mysurf, 0, 0, mysurf->w, mysurf->h,
             spirit->style.border_color);
     }
 
@@ -515,6 +508,7 @@ int xtk_spirit_show(xtk_spirit_t *spirit)
     // 处理特殊精灵
     switch (spirit->type) {
     case XTK_SPIRIT_TYPE_WINDOW:
+        /* 窗口显示时，就执行显示，然后刷新视图 */
         uview_show(spirit->view);
         return 0;
     default:
@@ -524,18 +518,17 @@ int xtk_spirit_show(xtk_spirit_t *spirit)
     if (!spirit->attached_container)
         return -1;
     xtk_spirit_t *attached_spirit = (xtk_spirit_t *)spirit->attached_container->spirit;
-    if (!attached_spirit->surface)
-        return -1;
-    
-    xtk_spirit_to_surface(spirit, attached_spirit->surface);
+
+    /* 一般精灵就把内容拷贝到附加精灵的surf，然后直接绘制到视图中 */
+    xtk_spirit_to_surface(spirit);
     
     if (UVIEW_BAD_ID(attached_spirit->view))
         return -1;
-    
+    /* 把精灵刷新到view中 */
     uview_bitmap_t bmp;
-    uview_bitmap_init(&bmp, attached_spirit->surface->w, attached_spirit->surface->h, (uview_color_t *) attached_spirit->surface->pixels);
+    uview_bitmap_init(&bmp, spirit->surface->w, spirit->surface->h, (uview_color_t *) spirit->surface->pixels);
     if (uview_bitblt_update_ex(attached_spirit->view, attached_spirit->x + spirit->x,
-        attached_spirit->y + spirit->y, &bmp, spirit->x, spirit->y, 
+        attached_spirit->y + spirit->y, &bmp, 0, 0, 
         spirit->width, spirit->height))
         return -1;
     return 0;
@@ -595,16 +588,14 @@ int xtk_spirit_hide(xtk_spirit_t *spirit)
     xtk_spirit_t *attached_spirit = (xtk_spirit_t *)spirit->attached_container->spirit;
     if (!attached_spirit->surface)
         return -1;
-    int start_x = spirit->x;
-    int start_y = spirit->y;
-    xtk_surface_rectfill(attached_spirit->surface, start_x, start_y, spirit->width, spirit->height, 
-        attached_spirit->style.background_color);
+
     if (UVIEW_BAD_ID(attached_spirit->view))
         return -1;
+    /* 重新刷新附加到的图层的局部区域即可覆盖当前精灵 */
     uview_bitmap_t bmp;
     uview_bitmap_init(&bmp, attached_spirit->surface->w, attached_spirit->surface->h, (uview_color_t *) attached_spirit->surface->pixels);
-    uview_bitblt_update_ex(attached_spirit->view, attached_spirit->x + start_x,
-        attached_spirit->y + start_y, &bmp, start_x, start_y, 
+    uview_bitblt_update_ex(attached_spirit->view, attached_spirit->x + spirit->x,
+        attached_spirit->y + spirit->y, &bmp, spirit->x, spirit->y, 
         spirit->width, spirit->height);
     return 0;
 }

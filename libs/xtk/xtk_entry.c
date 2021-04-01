@@ -10,17 +10,10 @@ static void xtk_entry_draw_cursor(xtk_spirit_t *spirit)
     xtk_entry_t *entry = XTK_ENTRY(spirit);
     if (!entry->focus)
         return;
-    xtk_spirit_t *attached_spirit = (xtk_spirit_t *)spirit->attached_container->spirit;
-        if (!attached_spirit->surface)
-            return;
     if (!xtk_entry_get_selection_bounds(entry, NULL, NULL)) {
-        int start_x = spirit->x;
-        int start_y = spirit->y;
         int off_x = 1, off_y = 1;
         off_x += entry->cursor_pos * 8;
-        xtk_rect_t srcrect = {0, 0, entry->cursor->w, entry->cursor->h};
-        xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, entry->cursor->w, entry->cursor->h};
-        xtk_surface_blit(entry->cursor, &srcrect, attached_spirit->surface, &dstrect);
+        xtk_surface_rectfill(spirit->surface, off_x, off_y, 1, 16, XTK_BLACK);
     }
 }
 
@@ -29,9 +22,6 @@ static void xtk_entry_draw_selection(xtk_spirit_t *spirit)
     xtk_entry_t *entry = XTK_ENTRY(spirit);
     if (!entry->focus)
         return;
-    xtk_spirit_t *attached_spirit = (xtk_spirit_t *)spirit->attached_container->spirit;
-        if (!attached_spirit->surface)
-            return;
     if (xtk_entry_get_selection_bounds(entry, NULL, NULL)) {
         int chars = abs(entry->select_start_pos - entry->select_end_pos);
         if (!chars) // 没有字符就返回
@@ -41,8 +31,6 @@ static void xtk_entry_draw_selection(xtk_spirit_t *spirit)
         int w = chars * 8;
         int h = 18;
 
-        int start_x = spirit->x;
-        int start_y = spirit->y;
         int off_x = 1, off_y = 1;
         off_x += min_pos * 8;
 
@@ -58,8 +46,8 @@ static void xtk_entry_draw_selection(xtk_spirit_t *spirit)
         xtk_surface_rectfill(entry->selection, 0, 0, entry->selection->w, entry->selection->h, XTK_GREEN);
 
         xtk_rect_t srcrect = {0, 0, entry->selection->w, entry->selection->h};
-        xtk_rect_t dstrect = {start_x + off_x, start_y + off_y, entry->selection->w, entry->selection->h};
-        xtk_surface_blit(entry->selection, &srcrect, attached_spirit->surface, &dstrect);
+        xtk_rect_t dstrect = {off_x, off_y, entry->selection->w, entry->selection->h};
+        xtk_surface_blit(entry->selection, &srcrect, spirit->surface, &dstrect);
     }
 }
 
@@ -80,13 +68,6 @@ xtk_spirit_t *xtk_entry_create(void)
     entry->start_selecting = 0;
     entry->selection = NULL;
     
-    entry->cursor = xtk_surface_create(1, XTK_ENTRY_HEIGHT_DEFAULT - 2);
-    if (!entry->cursor) {
-        free(entry);
-        return NULL;
-    }
-    xtk_surface_rectfill(entry->cursor, 0, 0, 1, entry->cursor->h, XTK_BLACK);
-
     xtk_spirit_t *spirit = &entry->spirit;
     xtk_spirit_init(spirit, 0, 0, XTK_ENTRY_WIDTH_DEFAULT, XTK_ENTRY_HEIGHT_DEFAULT);
 

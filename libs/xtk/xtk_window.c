@@ -654,6 +654,7 @@ int xtk_window_spirit_setup(xtk_window_t *window, xtk_spirit_t *spirit, int x, i
     }
     xtk_spirit_set_container(spirit, container);
     
+    /* 创建窗口surf */
     xtk_surface_t *surface = xtk_surface_create(width, height);
     if (!surface) {
         xtk_spirit_set_container(spirit, NULL);
@@ -661,6 +662,7 @@ int xtk_window_spirit_setup(xtk_window_t *window, xtk_spirit_t *spirit, int x, i
     }
     xtk_surface_clear(surface);
     xtk_spirit_set_surface(spirit, surface);
+    
     return 0;
 }
 
@@ -668,7 +670,6 @@ int xtk_window_spirit_setdown(xtk_spirit_t *spirit)
 {
     if (!spirit)
         return -1;
-    xtk_spirit_set_surface(spirit, NULL);
     xtk_spirit_set_container(spirit, NULL);
     xtk_spirit_cleanup(spirit);
     return 0;
@@ -949,7 +950,6 @@ int xtk_window_set_title(xtk_window_t *window, char *title)
             window->style->background_color_inactive;
 
         // 隐藏原来的数据
-        xtk_spirit_hide(navigation->title);
         xtk_label_set_text(navigation->title, title);
     }
     // 调整位置
@@ -1305,9 +1305,6 @@ int xtk_window_maxim(xtk_window_t *window)
         return -1;
     }
 
-    // xtk_window_get_screen(window, (int *) &info_rect.w, (int *) &info_rect.h);
-    // xtk_rect_init(&info_rect, 0, 0, info_rect.w, info_rect.h);
-    
     window->winflgs |= XTK_WINDOW_MAXIM;
     if (window->winflgs & XTK_WINDOW_RESIZABLE) {
         // 小窗口是可以调整大小的，就要禁用大小调整

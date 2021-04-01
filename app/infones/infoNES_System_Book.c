@@ -19,7 +19,6 @@
 #define SOUND_DEVICE "/dev/sb16"
 #endif /* CONFIG_SOUND */
 
-
 #define _USE_XTK_MMAP
 // #define _USE_FPS_CALC
 

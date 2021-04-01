@@ -59,6 +59,7 @@ void toggle_orientation(xtk_spirit_t *spirit, void *data)
 	} 
 } 
 
+
 static bool add_btn_event(xtk_spirit_t *spirit, void *data) 
 {
     xtk_progress_bar_t *pbar = XTK_PROGRESS_BAR(data);
@@ -73,6 +74,7 @@ static bool add_btn_event(xtk_spirit_t *spirit, void *data)
 	xtk_progress_bar_set_fraction(pbar, new_val);
     return true;
 }
+
 int activity_mode = 1;
 
 void toggle_activity_mode( xtk_spirit_t *spirit, void *data) 
@@ -112,7 +114,7 @@ bool progress_timeout(xtk_spirit_t *spirit, uint32_t id, void *data )
 static bool text_input_done_event(xtk_spirit_t *spirit, void *data) 
 {
     xtk_entry_t *entry = XTK_ENTRY(spirit);
-    char *t = xtk_entry_get_text(entry);
+    const char *t = xtk_entry_get_text(entry);
     printf("input text:%s\n", t);
     return true;
 }
@@ -532,3 +534,4 @@ int main(int argc, char *argv[])
     xtk_main();
     return 0;
 }
+

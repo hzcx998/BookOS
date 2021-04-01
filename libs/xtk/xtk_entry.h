@@ -26,9 +26,7 @@ typedef struct {
     char invisible_char;
     bool focus; /* 聚焦到当前控件 */
     
-    xtk_surface_t *cursor;  /* 输入光标 */
     xtk_surface_t *selection;  /* 选择区域 */
-
     int cursor_pos;    /* 光标位置 */
     xtk_color_t focus_color;
     xtk_color_t unfocus_color;

@@ -2,35 +2,36 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static void __xtk_progress_bar_update(xtk_progress_bar_t *pbar)
+static void __xtk_progress_bar_update(xtk_spirit_t *spirit)
 {
+    xtk_progress_bar_t *pbar = XTK_PROGRESS_BAR(spirit);
     if (pbar->fraction > 1.0f)
         pbar->fraction = 1.0f;
     if (pbar->fraction < 0)
         pbar->fraction = 0;
 
-    int w = pbar->spirit.surface->w;
-    int h = pbar->spirit.surface->h;
+    int w = spirit->surface->w;
+    int h = spirit->surface->h;
     uint32_t len;
     uint32_t color = pbar->front_color;
     
-    xtk_surface_rectfill(pbar->spirit.surface, 0, 0, w, h, pbar->spirit.style.background_color);
+    xtk_surface_rectfill(spirit->surface, 0, 0, w, h, spirit->style.background_color);
     switch (pbar->orientation) {
     case XTK_PROGRESS_LEFT_TO_RIGHT:
         len = (uint32_t) (pbar->fraction * w);
-        xtk_surface_rectfill(pbar->spirit.surface, 0, 0,  len, h, color);
+        xtk_surface_rectfill(spirit->surface, 0, 0,  len, h, color);
         break;
     case XTK_PROGRESS_RIGHT_TO_LEFT:
         len = (uint32_t) (pbar->fraction * w);
-        xtk_surface_rectfill(pbar->spirit.surface, w - len, 0, len, h, color);
+        xtk_surface_rectfill(spirit->surface, w - len, 0, len, h, color);
         break;
     case XTK_PROGRESS_BOTTOM_TO_TOP:
         len = (uint32_t) (pbar->fraction * h);
-        xtk_surface_rectfill(pbar->spirit.surface, 0, h - len, w, len, color);
+        xtk_surface_rectfill(spirit->surface, 0, h - len, w, len, color);
         break;
     case XTK_PROGRESS_TOP_TO_BOTTOM:
         len = (uint32_t) (pbar->fraction * h);
-        xtk_surface_rectfill(pbar->spirit.surface, 0, 0, w, len, color);
+        xtk_surface_rectfill(spirit->surface, 0, 0, w, len, color);
         break;
     default:
         break;
@@ -57,8 +58,11 @@ xtk_spirit_t *xtk_progress_bar_create(void)
     spirit->style.color = XTK_WHITE;
     spirit->style.border_color = XTK_BLACK;
     
+    spirit->show_middle = __xtk_progress_bar_update;
+
     xtk_spirit_set_surface(spirit, xtk_surface_create(spirit->width, spirit->height));
-    __xtk_progress_bar_update(pbar);
+    __xtk_progress_bar_update(spirit);
+
     return spirit;
 }
 
@@ -67,7 +71,6 @@ void xtk_progress_bar_set_fraction(xtk_progress_bar_t *pbar,
 {
     if (pbar) {
         pbar->fraction = fraction;
-        __xtk_progress_bar_update(pbar);
         xtk_spirit_show(&pbar->spirit);
     }
 }
@@ -82,7 +85,6 @@ void xtk_progress_bar_set_orientation(xtk_progress_bar_t *pbar,
 {
     if (pbar) {
         pbar->orientation = orientation;
-        __xtk_progress_bar_update(pbar);
         xtk_spirit_show(&pbar->spirit);
     }
 }
@@ -96,7 +98,6 @@ void xtk_progress_bar_pulse(xtk_progress_bar_t *pbar)
 {
     if (pbar) {
         pbar->fraction += pbar->step;
-        __xtk_progress_bar_update(pbar);
         xtk_spirit_show(&pbar->spirit);
     }
 }
@@ -118,7 +119,6 @@ void xtk_progress_bar_set_text(xtk_progress_bar_t *pbar,
 {
     if (pbar != NULL) {
         xtk_spirit_set_text(&pbar->spirit, (char *)text);
-        __xtk_progress_bar_update(pbar);
         xtk_spirit_show(&pbar->spirit);
     }
 }
