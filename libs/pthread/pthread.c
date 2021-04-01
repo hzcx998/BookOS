@@ -87,7 +87,7 @@ struct pthread *pthread_find(pthread_t tid)
 
 void pthread_exit(void *retval)
 {
-    __pthread_deallocate_tsd();
+    // __pthread_deallocate_tsd();
     pid_t tid = pthread_self();
     struct pthread *pthread = pthread_find(tid);
     if (pthread) {

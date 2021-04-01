@@ -94,7 +94,7 @@ typedef unsigned long uintptr_t;
 
 #include <stdarg.h>
 
-#define HAVE_GCC_ATOMICS    1
+// #define HAVE_GCC_ATOMICS    1
 #define HAVE_CTYPE_H    1
 #define HAVE_LIMITS_H   1
 #define HAVE_MATH_H 1
