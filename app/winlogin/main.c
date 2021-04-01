@@ -229,6 +229,7 @@ static void winlogin_widget()
     xtk_surface_blit(winlogin_block, NULL, winlogin_surf, &dstrect);
 
     winlogin_load_icon(ICON_NAME, block_x + WINLOGIN_BLOCK_W / 2 - WINLOGIN_ICON_W / 2, block_y + 20);
+    xtk_window_flip(XTK_WINDOW(winlogin_win));
 
     xtk_spirit_show(acct_label);
     xtk_spirit_show(pwd_label);
@@ -237,5 +238,4 @@ static void winlogin_widget()
     xtk_spirit_show(login_btn);
     xtk_spirit_show(login_state);
 
-    xtk_window_flip(XTK_WINDOW(winlogin_win));
 }
