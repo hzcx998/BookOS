@@ -1,3 +1,4 @@
+#if 0
 #include <pthread.h>
 #include <pthread_internal.h>
 #include <errno.h>
@@ -262,3 +263,4 @@ void __pthread_deallocate_tsd(void)
       THREAD_SETMEM (self, specific_used, false);
     }
 }
+#endif

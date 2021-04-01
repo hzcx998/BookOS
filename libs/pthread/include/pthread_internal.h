@@ -107,7 +107,7 @@ struct pthread *pthread_struct_ptr();
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
 
-void __pthread_deallocate_tsd(void);
+// void __pthread_deallocate_tsd(void);
 
 
 #ifdef __cplusplus
