@@ -72,7 +72,7 @@ develop/bochs/
 libs/fixdep
 sbin/fixdep
 bin/fixdep
-src/fixdep
+app/fixdep
 
 # linux tools 
 tools/fatfs/fatfs
