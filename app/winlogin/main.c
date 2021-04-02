@@ -6,6 +6,7 @@ TODO: 将资源配置成文件，然后读取文件，根据文件配置进行�
 #include <xtk.h>
 #include <assert.h>
 #include <unistd.h>
+#include <sys/sys.h>
 
 #define MOUSE_CURSOR_DIR            "/system/cursors"
 #define BACKGROUND_IMAGE_NAME       "/system/background/login.jpg"
@@ -69,8 +70,13 @@ const char *root_pwd = "1234";
 bool login_btn_event(xtk_spirit_t *spirit, void *arg)
 {
     /* 获取账号和密码，检测是否正确 */
-    if (!strcmp(root_name, xtk_entry_get_text(XTK_ENTRY(acct_entry))) &&
-        !strcmp(root_pwd, xtk_entry_get_text(XTK_ENTRY(pwd_entry)))) {
+    const char *name = xtk_entry_get_text(XTK_ENTRY(acct_entry));
+    const char *password = xtk_entry_get_text(XTK_ENTRY(pwd_entry));
+    
+    if (strlen(name) < 1)
+        return true;
+    
+    if (!login(name, password)) {
         xtk_label_set_text(login_state, "Login success!");
 
         /* 成功后就不能再点击了 */
