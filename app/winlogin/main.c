@@ -63,10 +63,6 @@ void winlogin_launch(const char *pathname, char *arg)
     }
 }
 
-
-const char *root_name = "root";
-const char *root_pwd = "1234";
-
 bool login_btn_event(xtk_spirit_t *spirit, void *arg)
 {
     /* 获取账号和密码，检测是否正确 */
