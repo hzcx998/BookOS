@@ -771,7 +771,7 @@
 // #define HAVE_MKDTEMP 1
 
 /* Define if you have the mkfifo function.  */
-#define HAVE_MKFIFO 1
+/* #define HAVE_MKFIFO 1 */
 
 /* Define if you have the mkstemp function.  */
 // #define HAVE_MKSTEMP 1
@@ -1239,6 +1239,10 @@
 #define _POSIX_VERSION
 
 /* End additions for lib/intl */
+
+/* use fixed prompt by xbook */
+#define FIXED_PROMPT_VARIABLE 1
+#define PROMPT_STRING_VARIABLE "[\\u@\\h \\W]\\$ "
 
 #include "config-bot.h"
 

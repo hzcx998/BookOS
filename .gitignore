@@ -115,6 +115,9 @@ bin/touch/touch
 bin/hello/hello
 bin/lua/lua
 bin/bash/bash
+user/bin/mp3player/mp3player
+user/bin/wavplayer/wavplayer
+user/bin/grep/grep
 
 # /app
 

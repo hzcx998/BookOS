@@ -173,7 +173,7 @@ QEMU_ARGUMENT = -m 1024M $(QEMU_KVM) \
 		-rtc base=localtime \
 		-boot a \
 		-serial stdio \
-
+		
 #		-fda $(FLOPPYA_IMG) -hda $(HDA_IMG) -hdb $(HDB_IMG) -boot a \
 #		-net nic,model=rtl8139 -net tap,ifname=tap0,script=no,downscript=no 
 

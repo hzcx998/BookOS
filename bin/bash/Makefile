@@ -1,4 +1,4 @@
-X_LIBS		+= libxlibc.a
+X_LIBS		+= libxlibc.a libsconf.a
 
 X_INCDIRS	+= bash/ bash/include bash/lib
 
@@ -86,3 +86,4 @@ echo [APP] $@; \
 $(LD) $(X_LDFLAGS) $(X_OBJS) -o $@ $(patsubst %, -L%, $(X_LIBDIRS)) --start-group $(patsubst %, -l:%, $(X_LIBS)) --end-group; \
 cp $@ $(srctree)/../develop/rom/bin
 endef
+
