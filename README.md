@@ -12,6 +12,7 @@ xbook2内核地址：https://github.com/hzcx998/xbook2
 | tools         | 内核开发需要用到的工具                         |
 | bin           | 命令行可执行程序  |
 | sbin          | 系统使用的程序  |
+| libs          | 用户态库  |
 | app           | 普通应用程序  |
 
 开发环境准备（Windows/Linux）：  
