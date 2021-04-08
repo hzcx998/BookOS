@@ -60,12 +60,12 @@ int main(int argc, char *argv[])
         argc = -1;
         argc = cmd_parse(cmdstr, cmd_argv, ' ');
         if(argc == -1){
-            printf("sh: num of arguments exceed %d\n",MAX_ARG_NR);
+            fprintf(stderr,"sh: num of arguments exceed %d\n",MAX_ARG_NR);
             return -1;
         }
         /* 管道执行 */
         if (execute_cmd(argc, cmd_argv)) {
-            printf("sh: execute cmd %s falied!\n", cmd_argv[0]);
+            fprintf(stderr,"sh: execute cmd %s falied!\n", cmd_argv[0]);
         }
         return -1;
     }
@@ -73,11 +73,9 @@ int main(int argc, char *argv[])
 
     /* 启动自行服务 */
     #if 0
-    char *args[10] = {"tcc", "-m32", "-nostdlib","-Wl,-Ttext=0x1000","-I/usr/local/include", 
-        "-L/usr/local/lib", "-lxlibc", "hello.c", NULL};
-    pid = create_process(args, environ, 0);
+    if (!fork())
+        execl("/bin/uview", "/bin/uview", NULL);
     #endif
-    
     /* 备份标准输入 */
 	while(1){ 
         /* 显示提示符 */
@@ -96,12 +94,12 @@ int main(int argc, char *argv[])
         argc = -1;
         argc = cmd_parse(cmd_line, cmd_argv, ' ');
         if(argc == -1){
-            printf("sh: num of arguments exceed %d\n",MAX_ARG_NR);
+            fprintf(stderr,"sh: num of arguments exceed %d\n",MAX_ARG_NR);
             continue;
         }
         /* 管道执行 */
         if (execute_cmd(argc, cmd_argv)) {
-            printf("sh: execute cmd %s falied!\n", cmd_argv[0]);
+            fprintf(stderr,"sh: execute cmd %s falied!\n", cmd_argv[0]);
         }
     }
 	return 0;
