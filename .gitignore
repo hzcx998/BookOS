@@ -136,9 +136,11 @@ app/infones/infones
 app/invader/invader
 app/gato/gato
 app/xtk/xtk
+app/sdl2/sdl2
 app/showimage/showimage
 app/showimage/showfont
 app/freeterm/freeterm
+app/winlogin/winlogin
 
 develop/rom/system/programs/desktop
 develop/rom/system/programs/taskbar
