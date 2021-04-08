@@ -64,7 +64,6 @@ develop/local/
 
 develop/rom/bin/
 develop/rom/sbin/
-develop/rom/app/
 develop/rom/acct/
 develop/bochs/
 
@@ -83,14 +82,10 @@ recycle
 # need commit to git
 !scripts/fixdep.exe
 
-# system app
+# system bin
 sbin/init/init
-sbin/init/initg
 sbin/login/login
-sbin/userctl/userctl
-sbin/service/service
 sbin/netserv/netserv
-sbin/testserv/testserv
 
 # /bin
 bin/cat/cat
@@ -110,14 +105,26 @@ bin/rm/rm
 bin/rmdir/rmdir
 bin/sh/sh
 bin/sys/sys
-bin/test/test
+bin/tests/tests
 bin/touch/touch
-bin/hello/hello
-bin/lua/lua
 bin/bash/bash
-user/bin/mp3player/mp3player
-user/bin/wavplayer/wavplayer
-user/bin/grep/grep
+bin/hello/hello
+bin/uview/uview
+bin/mp3player/mp3player
+bin/wavplayer/wavplayer
+bin/grep/grep
+bin/cat2/cat2
+
+# ====xbook2 kernel ignore end====
+# ====BookOS ignore start====
+
+develop/rom/app/
+
+sbin/userctl/userctl
+sbin/service/service
+sbin/testserv/testserv
+
+bin/cat2/cat2
 
 # /app
 
@@ -144,3 +151,5 @@ develop/rom/usr/local/xtk
 develop/rom/usr/local/showimage
 develop/rom/usr/local/showfont
 develop/rom/usr/local/freeterm/freeterm
+
+# ====BookOS ignore end====
