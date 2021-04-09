@@ -46,7 +46,7 @@ xbook2内核地址：https://github.com/hzcx998/xbook2
 3.如果需要加速，就需要打开kvm加速，不同得平台有不同得方法，可以自行查找。
 ```
 
-# Mac环境搭建
+## Mac环境搭建
 
 ```bash
 # 1.安装 i386-gcc
