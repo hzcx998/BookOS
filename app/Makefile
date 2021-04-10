@@ -2,9 +2,9 @@ sinclude ../scripts/env.mk
 
 LIBS_DIR	:= ../libs
 
-X_ASFLAGS	+= -f elf -I $(DIR_XLIBC)/indlude 
-X_CFLAGS    += -fno-builtin -Wall -Wunused -fno-PIE -m32 -fno-stack-protector -std=gnu99 -O3 -D__BOOKOS__
-X_INCDIRS	+= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/netsocket/include \
+X_ASFLAGS	:= -f elf -I $(DIR_XLIBC)/indlude 
+X_CFLAGS    := -march=i386 -fno-builtin -Wall -Wunused -fno-PIE -m32 -fno-stack-protector -std=gnu99 -O3 -D__BOOKOS__
+X_INCDIRS	:= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/netsocket/include \
 				$(LIBS_DIR)/xlibcpp/include \
 				$(LIBS_DIR)/zlib \
 				$(LIBS_DIR)/libpng \
@@ -49,7 +49,7 @@ X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/iniparser \
 				$(LIBS_DIR)/cjson \
 				
-X_LDFLAGS	+= -no-pie -m elf_i386 -e _start -Ttext 0x00001000
+X_LDFLAGS	:= -no-pie -m elf_i386 -e _start -Ttext 0x00001000
 
 ifeq ($(shell uname),Darwin)
 	LD			:=  i386-elf-ld -m elf_i386
