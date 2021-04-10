@@ -27,6 +27,7 @@ export AS LD
 # bin
 MODULE      +=  echo
 MODULE      +=  cat
+MODULE      +=  cat2
 MODULE      +=  cal
 MODULE      +=  cpuinfo
 MODULE      +=  ls

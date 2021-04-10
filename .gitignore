@@ -125,6 +125,7 @@ sbin/service/service
 sbin/testserv/testserv
 
 bin/cat2/cat2
+bin/lua/lua
 
 # /app
 
@@ -153,6 +154,7 @@ develop/rom/usr/local/gato/gato
 develop/rom/usr/local/xtk
 develop/rom/usr/local/showimage
 develop/rom/usr/local/showfont
+develop/rom/usr/local/sdl2
 develop/rom/usr/local/freeterm/freeterm
 develop/rom/usr/local/sdl2
 
