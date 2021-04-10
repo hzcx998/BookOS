@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <pty.h>
+#include <stdlib.h>
 
 #if 0
 typedef int bool;

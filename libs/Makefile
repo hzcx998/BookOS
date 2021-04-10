@@ -1,15 +1,12 @@
 sinclude ../scripts/env.mk
+sinclude ../env.mk
 
-X_ASFLAGS	:= -f elf -I $(DIR_XLIBC)/indlude 
-X_CFLAGS	:= -march=i386 -fno-builtin -Wall -Wunused -fno-PIE -m32 -fno-stack-protector -std=gnu99 -O3
+X_ASFLAGS	:= $(ENV_AFLAGS)
+X_CFLAGS	:= $(ENV_CFLAGS)
 
-ifeq ($(shell uname),Darwin)
-	LD			:=  i386-elf-ld -m elf_i386
-else
-	LD			:=  ld -m elf_i386
-endif
+LD			:=  $(ENV_LD)
+AS			:= $(ENV_AS)
 
-AS			:= nasm
 export AS LD
 
 MODULE		:= xlibc
