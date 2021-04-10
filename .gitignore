@@ -144,6 +144,7 @@ app/winlogin/winlogin
 
 develop/rom/system/programs/desktop
 develop/rom/system/programs/taskbar
+develop/rom/system/programs/winlogin
 develop/rom/usr/local/lite/lite
 develop/rom/usr/local/terminal/terminal
 develop/rom/usr/local/infones/infones
@@ -153,5 +154,6 @@ develop/rom/usr/local/xtk
 develop/rom/usr/local/showimage
 develop/rom/usr/local/showfont
 develop/rom/usr/local/freeterm/freeterm
+develop/rom/usr/local/sdl2
 
 # ====BookOS ignore end====
