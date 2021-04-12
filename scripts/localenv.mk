@@ -3,7 +3,7 @@ ENV_CFLAGS	:= -march=i386 -fno-builtin -Wall -Wunused -fno-PIE -m32 -std=gnu99 -
 ENV_AFLAGS	:= -f elf 
 ENV_LDFLAGS	:= -no-pie 
 
-ENV_USER_LD_SCRIPT	:= ../libs/xlibc/arch/x86/user.ld
+ENV_USER_LD_SCRIPT	:= -T ../libs/xlibc/arch/x86/user.ld
 
 # MacOS special
 ifeq ($(shell uname),Darwin)
