@@ -12,6 +12,7 @@ AS			:= $(ENV_AS)
 export AS LD
 
 MODULE		:= xlibc
+MODULE		+= xcrt
 MODULE		+= xlibcpp
 MODULE		+= sconf
 MODULE		+= pthread

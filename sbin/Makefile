@@ -11,7 +11,10 @@ X_INCDIRS	:= 	$(LIBS_DIR)/xlibc/include $(LIBS_DIR)/jpeg $(LIBS_DIR)/libpng $(LI
 
 X_LDFLAGS	:=  $(ENV_LDFLAGS) $(ENV_USER_LD_SCRIPT)
 X_LIBDIRS	:= 	$(LIBS_DIR)/xlibc $(LIBS_DIR)/jpeg $(LIBS_DIR)/libpng $(LIBS_DIR)/pthread $(LIBS_DIR)/zlib \
-				$(LIBS_DIR)/iniparser $(LIBS_DIR)/netsocket
+				$(LIBS_DIR)/iniparser $(LIBS_DIR)/netsocket \
+				$(LIBS_DIR)/xcrt \
+
+X_LIBS		:= libxcrt.a
 
 LD			:=  $(ENV_LD)
 AS			:=	$(ENV_AS)

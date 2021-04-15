@@ -50,6 +50,9 @@ X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/SDL2_ttf \
 				$(LIBS_DIR)/iniparser \
 				$(LIBS_DIR)/cjson \
+				$(LIBS_DIR)/xcrt \
+
+X_LIBS		:= libxcrt.a
 				
 X_LDFLAGS	:= $(ENV_LDFLAGS) $(ENV_USER_LD_SCRIPT)
 
