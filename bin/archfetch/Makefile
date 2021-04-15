@@ -1,9 +1,7 @@
-X_LIBS		+= libxlibc.a libpthread.a libnetsocket.a
+X_LIBS		+= libxlibc.a
 
-X_CFLAGS	+= -O0
-
-NAME		:= tests
-SRC			+= *.c
+NAME		:= archfetch
+SRC			+= main.c
 
 define CUSTOM_TARGET_CMD
 echo [APP] $@; \

@@ -48,3 +48,4 @@ MODULE      +=  bash
 MODULE      +=  grep
 MODULE      +=  wavplayer
 MODULE      +=  mp3player
+MODULE      +=  archfetch
