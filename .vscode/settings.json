@@ -68,7 +68,8 @@
         "sdl_bookosevents.h": "c",
         "sdl_mouse_c.h": "c",
         "sdl_mouse.h": "c",
-        "sdl_sysvideo.h": "c"
+        "sdl_sysvideo.h": "c",
+        "SDL_bookos.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

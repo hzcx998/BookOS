@@ -23,7 +23,7 @@
 #ifndef SDL_bookosevents_h_
 #define SDL_bookosevents_h_
 
-#include "sdl_bookos.h"
+#include "SDL_bookos.h"
 
 void BOOKOS_PumpEvents(_THIS);
 

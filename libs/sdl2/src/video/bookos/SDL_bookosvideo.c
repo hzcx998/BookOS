@@ -22,7 +22,7 @@
 #include "SDL_assert.h"
 #include "../SDL_sysvideo.h"
 #include "../SDL_sysvideo.h"
-#include "sdl_bookos.h"
+#include "SDL_bookos.h"
 #include "SDL_bookosevents.h"
 #include "SDL_bookosmouse.h"
 
