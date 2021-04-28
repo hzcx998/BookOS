@@ -24,6 +24,7 @@
 #include "../SDL_sysvideo.h"
 #include "sdl_bookos.h"
 #include "SDL_bookosevents.h"
+#include "SDL_bookosmouse.h"
 
 #include <stdio.h>
 
@@ -68,6 +69,7 @@ BOOKOS_VideoInit(_THIS)
     if (SDL_AddVideoDisplay(&display) < 0) {
         return -1;
     }
+    BOOKOS_InitMouse();
 
     _this->num_displays = 1;
     return 0;
@@ -76,6 +78,8 @@ BOOKOS_VideoInit(_THIS)
 static void
 BOOKOS_VideoQuit(_THIS)
 {
+    BOOKOS_FiniMouse ();
+
     xtk_exit();
 }
 
@@ -104,7 +108,7 @@ BOOKOS_CreateWindow(_THIS, SDL_Window *window)
     if (!data->window) {
         goto fail;
     }
-    data->deviceData = (SDL_VideoDeviceData *)_this->driverdata;   /* 指向设备数据 */
+    data->deviceData = (SDL_VideoData *)_this->driverdata;   /* 指向设备数据 */
 
     xtk_window_t *pwin = XTK_WINDOW(data->window);
     if (xtk_window_set_default_size(pwin, window->w, window->h) < 0) {
@@ -354,7 +358,7 @@ static int BOOKOS_SetDisplayMode(_THIS, SDL_VideoDisplay *display, SDL_DisplayMo
 static void
 BOOKOS_StartTextInput(_THIS)
 {
-    SDL_VideoDeviceData *data = (SDL_VideoDeviceData *) _this->driverdata;
+    SDL_VideoData *data = (SDL_VideoData *) _this->driverdata;
     data->startTextInput = 1;
 }
 
@@ -364,7 +368,7 @@ BOOKOS_StartTextInput(_THIS)
 static void
 BOOKOS_StopTextInput(_THIS)
 {
-    SDL_VideoDeviceData *data = (SDL_VideoDeviceData *) _this->driverdata;
+    SDL_VideoData *data = (SDL_VideoData *) _this->driverdata;
     data->startTextInput = 0;
 #ifdef SDL_USE_IME
     SDL_IME_Reset();
@@ -408,8 +412,8 @@ BOOKOS_CreateDevice(int devindex)
         return NULL;
     }
 
-    SDL_VideoDeviceData *data;
-    data = (SDL_VideoDeviceData *)SDL_calloc(1, sizeof(SDL_VideoDeviceData));
+    SDL_VideoData *data;
+    data = (SDL_VideoData *)SDL_calloc(1, sizeof(SDL_VideoData));
     if (data == NULL) {
         SDL_free(device);
         return NULL;

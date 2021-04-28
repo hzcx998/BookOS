@@ -64,7 +64,11 @@
         "xtk_entry.h": "c",
         "xtk_label.h": "c",
         "xtk_text.h": "c",
-        "bashtypes.h": "c"
+        "bashtypes.h": "c",
+        "sdl_bookosevents.h": "c",
+        "sdl_mouse_c.h": "c",
+        "sdl_mouse.h": "c",
+        "sdl_sysvideo.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

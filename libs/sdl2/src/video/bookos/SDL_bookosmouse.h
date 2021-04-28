@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 2017 BlackBerry Limited
+  Copyright (C) 1997-2020 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,19 +19,14 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef __SDL_BOOKOS_H__
-#define __SDL_BOOKOS_H__
+#include "../../SDL_internal.h"
+#include "SDL_mouse.h"
+#include "SDL_bookos.h"
 
-#include "../SDL_sysvideo.h"
-#include <xtk.h>
+#if SDL_VIDEO_DRIVER_BOOKOS
 
-typedef struct {
-    int startTextInput;
-} SDL_VideoData;
+extern void BOOKOS_InitMouse(void);
+extern void BOOKOS_FiniMouse(void);
 
-typedef struct {
-    xtk_spirit_t *window;
-    SDL_VideoData *deviceData;
-} SDL_WindowData;
 
 #endif
