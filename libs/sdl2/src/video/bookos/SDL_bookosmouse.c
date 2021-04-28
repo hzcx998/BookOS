@@ -48,7 +48,6 @@ BOOKOS_CreateCursor(SDL_Surface *surface, int hot_x, int hot_y)
 
     cursor = calloc(1, sizeof (*cursor));
     if (cursor) {
-        SDL_VideoDevice *vd = SDL_GetVideoDevice ();
         BOOKOS_CursorData *data = calloc (1, sizeof (BOOKOS_CursorData));
         if (!data) {
             SDL_OutOfMemory();
@@ -217,10 +216,10 @@ static int
 BOOKOS_ShowCursor(SDL_Cursor *cursor)
 {
     SDL_VideoDevice *vd = SDL_GetVideoDevice();
-    SDL_VideoData *d = vd->driverdata;
-    BOOKOS_CursorData *data = cursor->driverdata;
+    // SDL_VideoData *d = vd->driverdata;
     if (cursor)
     {
+        BOOKOS_CursorData *data = cursor->driverdata;
         /* 将数据中的内容写入到光标中 */
         if (uview_set_mouse_state_info_noview(&data->info) < 0)
             printf("show cursor:%d failed because set info error!\n", data->info.state);
@@ -230,9 +229,9 @@ BOOKOS_ShowCursor(SDL_Cursor *cursor)
     }
     else
     {
-        printf("hide cursor:%d\n", data->info.state);
-        /* 清空光标内容 */
-        // uview_set_mouse_state_info_noview(data->info.state, &data->info);
+        /* 改变光标状态 */
+        if (uview_set_mouse_state_noview(UVIEW_MOUSE_INVISIBLE) < 0)
+            printf("hide cursor:%d failed because change state error!!\n", UVIEW_MOUSE_INVISIBLE);
     }
     
     return 0;
@@ -253,8 +252,8 @@ BOOKOS_WarpMouseGlobal(int x, int y)
 static int
 BOOKOS_SetRelativeMouseMode(SDL_bool enabled)
 {
-    SDL_VideoDevice *vd = SDL_GetVideoDevice();
-    SDL_VideoData *data = (SDL_VideoData *) vd->driverdata;
+    //SDL_VideoDevice *vd = SDL_GetVideoDevice();
+    //SDL_VideoData *data = (SDL_VideoData *) vd->driverdata;
     /* enabled：true表示锁住鼠标移动，false：表示解锁鼠标移动 */
     if (enabled)
         return SDL_Unsupported();

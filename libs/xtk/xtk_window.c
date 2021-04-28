@@ -660,7 +660,7 @@ int xtk_window_spirit_setup(xtk_window_t *window, xtk_spirit_t *spirit, int x, i
     xtk_spirit_set_type(spirit, XTK_SPIRIT_TYPE_WINDOW);
     spirit->style.align = XTK_ALIGN_CENTER;
     spirit->style.background_color = window->style->background_color_inactive;
-    
+    spirit->style.cursor = UVIEW_MOUSE_NORMAL;
     xtk_container_t *container = xtk_container_create(spirit);
     if (!container) {
         return -1;

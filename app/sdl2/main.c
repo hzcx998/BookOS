@@ -46,10 +46,12 @@ int main( int argc, char* args[] )
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     printf("SDL button left down\n");
+                    SDL_ShowCursor(false);
                 } else if (event.button.button == SDL_BUTTON_MIDDLE) {
                     printf("SDL button middle down\n");
                 } else if (event.button.button == SDL_BUTTON_RIGHT) {
                     printf("SDL button right down\n");
+                    SDL_ShowCursor(true);
                 }
                 break;
             case SDL_MOUSEBUTTONUP:

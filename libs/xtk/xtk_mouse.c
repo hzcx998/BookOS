@@ -24,7 +24,7 @@ int xtk_mouse_motion(xtk_spirit_t *spirit, int x, int y)
                 if (button->disabled)
                     break;
                 if (XTK_IN_SPIRIT(tmp, x, y)) {
-                    uview_set_mouse_state(spirit->view, tmp->style.cursor);                        
+                    uview_set_mouse_state(spirit->view, tmp->style.cursor);                     
                     if (button->state == XTK_BUTTON_IDLE) {
                         xtk_signal_emit_by_name(tmp, "enter_notify");
                         xtk_button_change_state(button, XTK_BUTTON_TOUCH);
@@ -166,12 +166,16 @@ int xtk_mouse_btn_up(xtk_spirit_t *spirit, int btn, int x, int y)
 int xtk_mouse_load_cursor(int view, char *path, uview_mouse_state_t state, int offx, int offy)
 {
     xtk_image_t *img = xtk_image_load2(path, 32, 32);
-    if (!img)
-        return -1;
     uview_bitmap_t bmp;
-    uview_bitmap_init(&bmp, img->w, img->h, (uview_color_t *) img->buf);
     uview_mouse_state_info_t info;
-    info.bmp = &bmp;
+    if (!img) { // 打开图片失败，就创建空数据
+        info.bmp = uview_bitmap_create(32, 32);
+        if (!info.bmp)
+            return -1;
+    } else {
+        uview_bitmap_init(&bmp, img->w, img->h, (uview_color_t *) img->buf);
+        info.bmp = &bmp;
+    }
     info.off_x = offx;
     info.off_y = offy;
     info.state = state;
@@ -179,7 +183,12 @@ int xtk_mouse_load_cursor(int view, char *path, uview_mouse_state_t state, int o
         free(img);
         return -1;
     }
-    free(img);
+    if (!img) { // 释放位图
+        if (info.bmp)
+            uview_bitmap_destroy(info.bmp);
+    } else {
+        free(img);
+    }
     return 0;
 }
 
@@ -205,6 +214,7 @@ static xtk_cursor_info_t cursor_info[] = {
     {"dresize2", -14, -14},
     {"resizeall", -14, -14},
     {"hand", -11, -8},
+    {"invisiable", 0, 0},
 };
 
 void xtk_mouse_load_cursors(int view, char *pathname)

@@ -33,6 +33,7 @@ typedef enum {
     XTK_CURSOR_DRESIZE2,          /* 对角线调整大小2(斜下) */
     XTK_CURSOR_RESIZEALL,         /* 移动 */
     XTK_CURSOR_HAND,              /* 手 */
+    XTK_CURSOR_INVISIBLE,         /* 不可见 */
     XTK_CURSOR_STATE_NR,
 } xtk_cursor_state_t;
 
