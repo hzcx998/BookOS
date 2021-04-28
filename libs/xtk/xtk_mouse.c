@@ -206,7 +206,7 @@ static xtk_cursor_info_t cursor_info[] = {
     {"pen", -14, -14},
     {"busy", -7, -7},
     {"accurate", -14, -14},
-    {"text", 0, 0},
+    {"text", -2, -11},
     {"unusable", -14, -14},
     {"vresize", -14, -14},
     {"hresize", -14, -14},
@@ -214,7 +214,7 @@ static xtk_cursor_info_t cursor_info[] = {
     {"dresize2", -14, -14},
     {"resizeall", -14, -14},
     {"hand", -11, -8},
-    {"invisiable", 0, 0},
+    {"invisible", 0, 0},
 };
 
 void xtk_mouse_load_cursors(int view, char *pathname)
