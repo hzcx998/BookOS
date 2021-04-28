@@ -32,7 +32,7 @@
 
 #include "SDL_mouse.h"
 #include "../../events/SDL_mouse_c.h"
-#include "SDL_bookos.h"
+#include "SDL_bookosdata.h"
 #include "SDL_bookosevents.h"
 
 #include "SDL_assert.h"
@@ -215,7 +215,7 @@ BOOKOS_FreeCursor(SDL_Cursor *cursor)
 static int
 BOOKOS_ShowCursor(SDL_Cursor *cursor)
 {
-    SDL_VideoDevice *vd = SDL_GetVideoDevice();
+    //SDL_VideoDevice *vd = SDL_GetVideoDevice();
     // SDL_VideoData *d = vd->driverdata;
     if (cursor)
     {

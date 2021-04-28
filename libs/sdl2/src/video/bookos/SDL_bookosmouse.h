@@ -21,7 +21,7 @@
 
 #include "../../SDL_internal.h"
 #include "SDL_mouse.h"
-#include "SDL_bookos.h"
+#include "SDL_bookosdata.h"
 
 #if SDL_VIDEO_DRIVER_BOOKOS
 
