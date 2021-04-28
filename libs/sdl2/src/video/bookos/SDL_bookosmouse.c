@@ -81,8 +81,6 @@ BOOKOS_CreateCursor(SDL_Surface *surface, int hot_x, int hot_y)
     } else {
         SDL_OutOfMemory();
     }
-    
-    printf("BOOKOS_CreateCursor:%x\n", cursor);
     return cursor;
 }
 
@@ -110,7 +108,7 @@ CreateCursorFromWlCursor(SDL_VideoData *d, uview_mouse_state_t state)
             free(cursor);
             return NULL;
         }
-        #if 1
+        #if 0
         uview_get_mouse_state_info_noview(&info);
         #else
         if (uview_get_mouse_state_info_noview(&info) < 0)  {
@@ -128,7 +126,6 @@ CreateCursorFromWlCursor(SDL_VideoData *d, uview_mouse_state_t state)
     } else {
         SDL_OutOfMemory ();
     }
-    printf("CreateCursorFromWlCursor:%x\n", cursor);
     return cursor;
 }
 
@@ -224,16 +221,12 @@ BOOKOS_ShowCursor(SDL_Cursor *cursor)
     BOOKOS_CursorData *data = cursor->driverdata;
     if (cursor)
     {
-        
-        printf("show cursor:%d\n", data->info.state);
-        #if 0
         /* 将数据中的内容写入到光标中 */
         if (uview_set_mouse_state_info_noview(&data->info) < 0)
-            printf("show cursor:%d failed!\n", data->info.state);
-        #else
+            printf("show cursor:%d failed because set info error!\n", data->info.state);
+        /* 改变光标状态 */
         if (uview_set_mouse_state_noview(data->info.state) < 0)
-            printf("show cursor:%d failed!\n", data->info.state);
-        #endif
+            printf("show cursor:%d failed because change state error!!\n", data->info.state);
     }
     else
     {
