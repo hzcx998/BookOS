@@ -81,6 +81,10 @@ recycle
 
 # need commit to git
 !scripts/fixdep.exe
+!kernel/x86/XBook.iso
+!kernel/x86/boot/boot.bin
+!kernel/x86/boot/loader.bin
+!kernel/x86/boot/setup.bin
 
 # system bin
 sbin/init/init
@@ -115,6 +119,12 @@ bin/wavplayer/wavplayer
 bin/grep/grep
 bin/cat2/cat2
 bin/archfetch/archfetch
+bin/mount/mount
+bin/unmount/unmount
+bin/mkfs/mkfs
+bin/losetup/losetup
+bin/poweroff/poweroff
+bin/reboot/reboot
 
 # ====xbook2 kernel ignore end====
 # ====BookOS ignore start====

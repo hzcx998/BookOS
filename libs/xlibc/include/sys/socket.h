@@ -13,6 +13,14 @@ extern "C" {
 
 typedef uint32_t socklen_t;
 
+/*
+ * Basic system type definitions, taken from the BSD file sys/types.h.
+ */
+typedef unsigned char   u_char;
+typedef unsigned short  u_short;
+typedef unsigned int    u_int;
+typedef unsigned long   u_long;
+
 /* members are in network byte order */
 struct sockaddr_in {
   u8_t sin_len;
@@ -247,6 +255,7 @@ typedef struct ip_mreq {
   #define SHUT_RDWR 2
 #endif
 
+#if 0
 /* FD_SET used for lwip_select */
 #ifndef FD_SET
   #undef  FD_SETSIZE
@@ -262,6 +271,7 @@ typedef struct ip_mreq {
         } fd_set;
 
 #endif /* FD_SET */
+#endif
 
 /* 套接字参数传递 */
 struct _sockarg {
@@ -273,31 +283,35 @@ struct _sockarg {
     socklen_t *fromlen;               /* 来源套接字结构长度 */
 };
 
+#if 0
 struct _sockfd_set {
     fd_set *readfds;
     fd_set *writefds;
     fd_set *errorfds;
 };
-/*
+#endif
+
 int socket(int domain, int type, int protocol);
-int bind(int sock, struct sockaddr *my_addr, int addrlen);
-int connect(int sock, struct sockaddr *serv_addr, int addrlen);
-int listen(int sock, int backlog);
-int accept(int sock, struct sockaddr *addr, socklen_t *addrlen);
-int send(int sock, const void *buf, int len, int flags);
-int recv(int sock, void *buf, int len, int flags);
-int sendto(int sock, const void *buf, int len, unsigned int flags,
+int bind(int sockfd, struct sockaddr *my_addr, int addrlen);
+int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
+int listen(int sockfd, int backlog);
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+int send(int sockfd, const void *buf, int len, int flags);
+int recv(int sockfd, void *buf, int len, int flags);
+int sendto(int sockfd, const void *buf, int len, unsigned int flags,
     const struct sockaddr *to, socklen_t tolen);
-int recvfrom(int sock, void *buf, int len, unsigned int flags,
+int recvfrom(int sockfd, void *buf, int len, unsigned int flags,
     struct sockaddr *from, socklen_t *fromlen);
-int close(int sock);
-int ioctl(int sock, int request, void *arg);
-int shutdown(int sock, int how);
-int getpeername(int sock, struct sockaddr *serv_addr, socklen_t *addrlen);
-int getsockname(int sock, struct sockaddr *my_addr, socklen_t *addrlen);
-int getsockopt(int sock, int level, int optname, void *optval, socklen_t *optlen);
-int setsockopt(int sock, int level, int optname, const void *optval, socklen_t optlen);
+int shutdown(int sockfd, int how);
+int getpeername(int sockfd, struct sockaddr *serv_addr, socklen_t *addrlen);
+int getsockname(int sockfd, struct sockaddr *my_addr, socklen_t *addrlen);
+int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen);
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
+
+/*
+TODO: socketpir, sendmsg, recvmsg
 */
+
 #ifdef __cplusplus
 }
 #endif

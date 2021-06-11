@@ -6,7 +6,7 @@ pid_t child_pid;
 
 int port_comm_test(int argc, char *argv[])
 {
-    bind_port(0);
+    bind_port(0, 0);
     
     pid_t pid = fork();
     if (pid < 0) {
@@ -37,7 +37,7 @@ int port_comm_test(int argc, char *argv[])
         printf("server: exit!\n");
     } else {
 
-        bind_port(1);
+        bind_port(1, 0);
         while (count > 0)
         {
             port_msg_reset(&msg);

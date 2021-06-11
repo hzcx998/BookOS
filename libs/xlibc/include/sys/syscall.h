@@ -29,7 +29,7 @@ enum syscall_num {
     SYS_HEAP,
     SYS_MUNMAP,
     SYS_VMM_RESERVED = 40,              /* 预留10个接口给内存管理 */
-    SYS_SCANDEV, 
+    SYS_SCANDEV,
     SYS_RES_RESERVED = 50,              /* 预留10个接口给资源管理 */
     SYS_ALARM,
     SYS_WALLTIME,
@@ -114,6 +114,10 @@ enum syscall_num {
     SYS_GETPGID,
     SYS_SETPGID,
     SYS_MKFIFO,
+    SYS_SOCKCALL,
+    SYS_REBOOT,
+    SYS_SHUTDOWN,
+    SYS_SELECT,
     SYSCALL_NR,
 };
 
@@ -125,6 +129,9 @@ extern unsigned long __syscall3(unsigned long num, unsigned long arg0,
         unsigned long arg1, unsigned long arg2);
 extern unsigned long __syscall4(unsigned long num, unsigned long arg0,
         unsigned long arg1, unsigned long arg2, unsigned long arg3);
+extern unsigned long __syscall5(unsigned long num, unsigned long arg0,
+        unsigned long arg1, unsigned long arg2, unsigned long arg3,
+        unsigned long arg4);
 
 /* 进行宏定义 */
 #define syscall0(type, num) \
@@ -144,6 +151,11 @@ extern unsigned long __syscall4(unsigned long num, unsigned long arg0,
 #define syscall4(type, num, arg0, arg1, arg2, arg3) \
         (type) __syscall4((unsigned long ) num, (unsigned long ) arg0,\
         (unsigned long ) arg1, (unsigned long ) arg2, (unsigned long ) arg3)
+
+#define syscall5(type, num, arg0, arg1, arg2, arg3, arg4) \
+        (type) __syscall5((unsigned long ) num, (unsigned long ) arg0,\
+        (unsigned long ) arg1, (unsigned long ) arg2, (unsigned long ) arg3, \
+        (unsigned long ) arg4)
 
 #ifdef __cplusplus
 }
