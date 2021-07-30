@@ -2,14 +2,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
+#include <sys/proc.h>
 #include "desktop.h"
 #include "icon.h"
+#include "taskbar.h"
 
 bde_desktop_t desktop;
+
+#define CONFIG_PROC_EXEC
 
 void desktop_launch(const char *pathname, char *arg)
 {
     char *argv[3] = {(char *)pathname, arg, NULL};
+#ifdef CONFIG_PROC_EXEC
+    create_process(argv, environ, 0);
+#else
     if (!fork()) {
         /* 如果是绝对路径，那么就 */
         char *p = (char *)pathname;
@@ -23,6 +30,7 @@ void desktop_launch(const char *pathname, char *arg)
         }
         exit(execv(pathname, argv));
     }
+#endif
 }
 
 int desktop_load_background(const char *pathname)
@@ -49,10 +57,15 @@ static void desktop_setup()
     xtk_window_load_mouse_cursors(XTK_WINDOW(desktop.window), MOUSE_CURSOR_DIR);
     // 加载背景图
     desktop_load_background(BACKGROUND_IMAGE_NAME);
-    // 启动任务栏
-    desktop_launch(PRGRAMS_DIR "taskbar", NULL);
     
     icon_init();
+
+#if HAS_TASKBAR == 0
+    // 启动任务栏
+    desktop_launch(PRGRAMS_DIR "taskbar", NULL);
+#else
+    taskbar_init();
+#endif
 }
 
 int desktop_init()
@@ -73,8 +86,8 @@ int desktop_init()
     
     desktop.window = spirit;
     list_init(&desktop.icon_list);
-    desktop.icon_start_x = 0;
-    desktop.icon_start_y = 0;
+    desktop.icon_start_x = 24;
+    desktop.icon_start_y = 24;
 
     desktop_setup(spirit);
     return 0;
@@ -87,5 +100,8 @@ void desktop_main()
 
 void desktop_exit()
 {
-    
+#if HAS_TASKBAR == 1
+    taskbar_exit();
+#endif
+    xtk_exit();
 }

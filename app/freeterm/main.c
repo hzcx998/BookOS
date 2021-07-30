@@ -8,6 +8,8 @@
 #include <sys/ioctl.h>
 #include <ft_pty.h>
 
+#define SHELL_NAME "/bin/sh"
+
 static void exit_freeterm()
 {
     exit_cmd_man();
@@ -42,7 +44,7 @@ int main(int argc, char *argv[])
         printf("freeterm: do fork failed!\n");
         return -1;
     } else if (!pid) { // 子进程
-        ft_pty_launch(&ft_pty, "/bin/bash");
+        ft_pty_launch(&ft_pty, SHELL_NAME);
     } else { // 父进程
         ft_pty_setup(pid);
     }

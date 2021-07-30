@@ -6,6 +6,7 @@ all:
 MAKE		= make
 TOOL_DIR	= tools
 FATFS_DIR	= $(TOOL_DIR)/fatfs
+GRUB_DIR	= $(TOOL_DIR)/grub-2.04
 BIOS_FW_DIR	= $(TOOL_DIR)/bios_fw
 
 # System environment variable.
@@ -57,22 +58,20 @@ SETUP_CNTS 	= 90
 KERNEL_OFF 	= 100
 KERNEL_CNTS	= 1024		# assume 512kb 
 
-# arch dir
-
+# kernel dir
 KERNSRC		= kernel
-ARCH		= $(KERNSRC)/x86
 
 # OS Name
 OS_NAME = XBook
 
 # kernel boot binary
-BOOT_BIN 	= $(ARCH)/boot/boot.bin
-LOADER_BIN 	= $(ARCH)/boot/loader.bin
-SETUP_BIN 	= $(ARCH)/boot/setup.bin
+BOOT_BIN 	= $(KERNSRC)/boot/boot.bin
+LOADER_BIN 	= $(KERNSRC)/boot/loader.bin
+SETUP_BIN 	= $(KERNSRC)/boot/setup.bin
 # kernel file
-KERNEL_ELF 	= $(ARCH)/kernel.elf
+KERNEL_ELF 	= $(KERNSRC)/kernel.elf
 # kernel file
-KERNEL_ISO 	= $(ARCH)/$(OS_NAME).iso
+KERNEL_ISO 	= $(KERNSRC)/$(OS_NAME).iso
 
 REMOTE_KERNEL_DIR 	= ../xbook2/src
 
@@ -95,6 +94,8 @@ EFI_BOOT_MODE ?= n
 # is qemu fat fs? (y/n)
 QEMU_FAT_FS ?= n
 
+# is livecd mode? (y/n)
+KERN_LIVECD_MODE ?= n
 
 # 参数
 .PHONY: all clean wrdisk build debuild sync
@@ -117,6 +118,10 @@ ifeq ($(BOOT_MODE),$(BOOT_LEGACY_MODE))
 	$(DD) if=$(LOADER_BIN) of=$(BOOT_DISK) bs=512 seek=$(LOADER_OFF) count=$(LOADER_CNTS) conv=notrunc
 	$(DD) if=$(SETUP_BIN) of=$(BOOT_DISK) bs=512 seek=$(SETUP_OFF) count=$(SETUP_CNTS) conv=notrunc
 	$(DD) if=$(KERNEL_ELF) of=$(BOOT_DISK) bs=512 seek=$(KERNEL_OFF) count=$(KERNEL_CNTS) conv=notrunc
+else
+ifeq ($(BOOT_MODE),$(BOOT_GRUB2_MODE))
+	@$(MAKE) -s -C $(GRUB_DIR) KERNEL=$(subst $(KERNSRC)/,,$(KERNEL_ELF)) OS_NAME=$(OS_NAME)
+endif
 endif
 ifeq ($(QEMU_FAT_FS),n)
 	$(FATFS_BIN) $(FS_DISK) $(ROM_DIR) 0
@@ -201,14 +206,17 @@ endif
 
 QEMU_ARGUMENT := -m 1024M $(QEMU_KVM) \
 		-name "BookOS Development Platform for x86" \
-		-drive id=disk0,file=$(HDA_IMG),format=raw,if=none \
-		-drive id=disk1,file=$(HDB_IMG),format=raw,if=none \
-		-device ahci,id=ahci \
-		-device ide-hd,drive=disk0,bus=ahci.0 \
-		-device ide-hd,drive=disk1,bus=ahci.1 \
 		-rtc base=localtime \
 		-boot a \
 		-serial stdio \
+
+ifeq ($(KERN_LIVECD_MODE),n)
+QEMU_ARGUMENT += -drive id=disk0,file=$(HDA_IMG),format=raw,if=none \
+		-drive id=disk1,file=$(HDB_IMG),format=raw,if=none \
+		-device ahci,id=ahci \
+		-device ide-hd,drive=disk0,bus=ahci.0 \
+		-device ide-hd,drive=disk1,bus=ahci.1
+endif
 
 ifeq ($(BOOT_MODE),$(BOOT_LEGACY_MODE))
 QEMU_ARGUMENT += -drive file=$(FLOPPYA_IMG),format=raw,index=0,if=floppy
@@ -238,5 +246,6 @@ ifeq ($(BOOT_MODE),$(BOOT_LEGACY_MODE))
 	$(CP) $(REMOTE_LOADER_BIN) $(LOADER_BIN)
 	$(CP) $(REMOTE_SETUP_BIN) $(SETUP_BIN)
 else
+	$(CP) $(REMOTE_KERNEL_ELF) $(KERNEL_ELF)
 	$(CP) $(REMOTE_KERNEL_ISO) $(KERNEL_ISO)
 endif

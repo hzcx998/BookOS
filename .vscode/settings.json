@@ -69,7 +69,9 @@
         "sdl_mouse_c.h": "c",
         "sdl_mouse.h": "c",
         "sdl_sysvideo.h": "c",
-        "SDL_bookosdata.h": "c"
+        "SDL_bookosdata.h": "c",
+        "xtk_image.h": "c",
+        "icon.h": "c"
     },
     "Lua.diagnostics.disable": [
         "undefined-field"

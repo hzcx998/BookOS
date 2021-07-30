@@ -46,6 +46,22 @@ static bool icon_button_press_event(xtk_spirit_t *button, void *arg)
     return true;
 }
 
+static bool icon_button_enter_event(xtk_spirit_t *button, void *arg)
+{
+    icon_t *icon = (icon_t *) arg;
+    icon->label->style.color = XTK_WHITE;
+    xtk_spirit_show(icon->label);
+    return true;
+}
+
+static bool icon_button_leave_event(xtk_spirit_t *button, void *arg)
+{
+    icon_t *icon = (icon_t *) arg;
+    icon->label->style.color = XTK_BLACK;
+    xtk_spirit_show(icon->label);
+    return true;
+}
+
 static int icon_create_spirit(icon_t *icon, char *name, char *icon_file)
 {
     icon->button = xtk_button_create();
@@ -53,10 +69,12 @@ static int icon_create_spirit(icon_t *icon, char *name, char *icon_file)
         return -1;    
     }
     xtk_spirit_set_size(icon->button, ICON_BUTTON_SIZE, ICON_BUTTON_SIZE);
-    icon->button->style.border_color = icon->button->style.background_color;
+    icon->button->style.border_color = XTK_NONE_COLOR;
     icon->button->style.background_color = XTK_NONE_COLOR;
     xtk_signal_connect(icon->button, "button_press", icon_button_press_event, icon);
-
+    xtk_signal_connect(icon->button, "enter_notify", icon_button_enter_event, icon);
+    xtk_signal_connect(icon->button, "leave_notify", icon_button_leave_event, icon);
+    
     icon->label = xtk_label_create(name);
     if (!icon->label) {
         xtk_spirit_destroy(icon->button);

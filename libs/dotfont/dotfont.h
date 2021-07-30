@@ -88,7 +88,10 @@ static inline dotfont_t *dotfont_get_current(dotfont_library_t *dotflib)
     return dotflib->current;
 }
 
-#include "dotfont_standard.h"
+// #include "dotfont_standard.h"
+#include "dotfont_light.h"
+
+#define DOTF_STANDARD_NAME DOTF_LIGHT_NAME
 
 static inline int dotfont_init(dotfont_library_t *dotflib) 
 {
@@ -98,8 +101,11 @@ static inline int dotfont_init(dotfont_library_t *dotflib)
     for (i = 0; i < DOTF_MAX_NR; i++) {
         memset((void *)&dotflib->fonts[i], 0, sizeof(dotfont_t));
     }
-    dotfont_install(dotflib, DOTF_TYPE_STATIC, DOTF_STANDARD_NAME,
-        dotfont_data_standard, DOTF_STANDARD_W, DOTF_STANDARD_H);
+    // dotfont_install(dotflib, DOTF_TYPE_STATIC, DOTF_STANDARD_NAME,
+    //     dotfont_data_standard, DOTF_STANDARD_W, DOTF_STANDARD_H);
+    dotfont_install(dotflib, DOTF_TYPE_STATIC, DOTF_LIGHT_NAME,
+        dotfont_data_light, DOTF_LIGHT_W, DOTF_LIGHT_H);
+
     dotfont_set_default(dotflib, DOTF_STANDARD_NAME);
     return 0;
 }

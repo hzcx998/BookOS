@@ -3,8 +3,8 @@
 
 #include <xtk.h>
 
-#define SH_WIN_WIDTH    480
-#define SH_WIN_HEIGHT   360
+#define SH_WIN_WIDTH    720
+#define SH_WIN_HEIGHT   560
 
 typedef struct {
     xtk_spirit_t *win;

@@ -28,7 +28,7 @@ Categories = GNOME;Application;Network;   # 注明在菜单栏中显示的类别
 #define ICON_TYPE_APP       1
 #define ICON_TYPE_LINK      2
 
-#define ICON_CLICK_DISTANCE_MS      750
+#define ICON_CLICK_DISTANCE_MS      500
 
 #define DESKTOP_DIR            "/system/desktop"
 

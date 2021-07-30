@@ -7,6 +7,8 @@
 #define BACKGROUND_IMAGE_NAME       "/system/background/picture.jpg"
 #define PRGRAMS_DIR                 "/system/programs/"
 
+#define HAS_TASKBAR 1
+
 typedef struct {
     xtk_spirit_t *window;
     list_t icon_list;
