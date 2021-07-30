@@ -9,7 +9,7 @@
 
 bde_desktop_t desktop;
 
-#define CONFIG_PROC_EXEC
+// #define CONFIG_PROC_EXEC
 
 void desktop_launch(const char *pathname, char *arg)
 {

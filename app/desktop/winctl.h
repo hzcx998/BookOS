@@ -9,8 +9,8 @@
 #define WINCTL_ICON_SIZE        36
 #define WINCTL_SIZE_DEFAULT    (WINCTL_ICON_SIZE + 4)
 
-#define WINCTL_BACK_COLOR       XTK_RGB(164, 164, 164)
-#define WINCTL_ACTIVE_COLOR     XTK_RGB(192, 192, 192)
+#define WINCTL_BACK_COLOR       XTK_RGB(40, 40, 40)
+#define WINCTL_ACTIVE_COLOR     XTK_RGB(80, 80, 80)
 
 typedef struct {
     bool ishidden;          /* 窗口隐藏 */

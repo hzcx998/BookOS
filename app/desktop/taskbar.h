@@ -12,7 +12,7 @@
 #include "winctl.h"
 
 #define TASKBAR_HEIGHT_DEFAULT  48
-#define TASKBAR_COLOR_DEFAULT   XTK_RGB(128, 128, 128)
+#define TASKBAR_COLOR_DEFAULT   XTK_BLACK
 
 typedef struct {
     xtk_spirit_t *spirit;

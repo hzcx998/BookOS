@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     }
     #endif
     
-    #ifdef _HAS_GRAPH
+#ifdef _HAS_GRAPH
     pid_t g_pid =  fork();
     if (g_pid < 0) {
         printf("initd: fork graph process error! stop service.\n");
@@ -66,8 +66,7 @@ int main(int argc, char *argv[])
         // 执行图形
         exit(execv("/system/programs/desktop", NULL));
     } // 父进程执行shell
-    #endif
-
+#else
     setpgrp();
     tcsetpgrp(STDIN_FILENO, getpgrp());
     #ifdef _HAS_LOGIN
@@ -75,6 +74,8 @@ int main(int argc, char *argv[])
     exit(execv("/sbin/login", _argv));
     #else
     exit(execv("/bin/sh", NULL));
-    #endif
+    #endif    
+#endif
+
     return 0;
 }
