@@ -1,9 +1,9 @@
-# 外国人能搞，我们中国人就不能搞？--钱学森
-
 # BookOS操作系统
 BookOS操作系统是一个基于xbook2内核的操作系统，可运行在qemu，bochs，virtual box，vmware等虚拟机中。也可以在物理机上面运行（需要有系统支持的驱动才行）
 
-xbook2内核地址：https://github.com/hzcx998/xbook2  
+xbook2内核地址：
+https://github.com/hzcx998/xbook2  
+https://gitee.com/hzc1998/xbook2  
 
 | 目录            | 描述                                      |
 | ------------- | --------------------------------------- |
