@@ -13,7 +13,7 @@
 #include <InfoNES_System.h>
 #include <InfoNES_pAPU.h>
 
-#define CONFIG_SOUND
+// #define CONFIG_SOUND
 
 #ifdef CONFIG_SOUND
 #define SOUND_DEVICE "/dev/sb16"
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
   /* If a rom name specified, start it */
   if ( argc >= 2 )
   {
-    printf("infones: arg %s\n", argv[ 1 ]);
+    //printf("infones: arg %s\n", argv[ 1 ]);
     start_application( argv[ 1 ] );
   } else {
     /* 打开图形管理界面 */

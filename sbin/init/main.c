@@ -55,17 +55,8 @@ int main(int argc, char *argv[])
     #endif
     
 #ifdef _HAS_GRAPH
-    pid_t g_pid =  fork();
-    if (g_pid < 0) {
-        printf("initd: fork graph process error! stop service.\n");
-        close(tty2);
-        close(tty1);
-        close(tty0);
-        return -1;
-    } else if (!g_pid) { // 子进程执行应用程序
-        // 执行图形
-        exit(execv("/system/programs/desktop", NULL));
-    } // 父进程执行shell
+    // 执行图形
+    exit(execv("/system/programs/desktop", NULL));
 #else
     setpgrp();
     tcsetpgrp(STDIN_FILENO, getpgrp());
