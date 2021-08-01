@@ -9,6 +9,8 @@ X_CFLAGS	:= $(ENV_CFLAGS)
 X_INCDIRS	:= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/netsocket/include \
 				$(LIBS_DIR)/lua \
 				$(LIBS_DIR)/sconf \
+				$(LIBS_DIR)/tinyxml2 \
+				$(LIBS_DIR)/giflib
 				
 X_LDFLAGS	:= $(ENV_LDFLAGS) $(ENV_USER_LD_SCRIPT)
 
@@ -17,6 +19,8 @@ X_LIBDIRS	:= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/lua \
 				$(LIBS_DIR)/sconf \
 				$(LIBS_DIR)/xcrt \
+				$(LIBS_DIR)/tinyxml2 \
+				$(LIBS_DIR)/giflib
 
 X_LIBS		:= libxcrt.a
 
@@ -58,3 +62,8 @@ MODULE      +=  unmount
 MODULE      +=  losetup
 MODULE      +=  reboot
 MODULE      +=  poweroff
+MODULE      +=  tcc/ar
+MODULE      +=  tcc/tcc
+MODULE      +=  dosfstools/fatlabel
+MODULE      +=  dosfstools/fsck.fat
+MODULE      +=  dosfstools/mkfs.fat

@@ -29,6 +29,8 @@ X_INCDIRS	:= $(LIBS_DIR)/xlibc/include $(LIBS_DIR)/pthread/include $(LIBS_DIR)/n
 				$(LIBS_DIR)/SDL2_ttf \
 				$(LIBS_DIR)/iniparser \
 				$(LIBS_DIR)/cjson \
+				$(LIBS_DIR)/tinyxml2 \
+				$(LIBS_DIR)/giflib
 					
 X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/netsocket \
@@ -51,6 +53,7 @@ X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/iniparser \
 				$(LIBS_DIR)/cjson \
 				$(LIBS_DIR)/xcrt \
+				$(LIBS_DIR)/tinyxml2
 
 X_LIBS		:= libxcrt.a
 				

@@ -36,3 +36,5 @@ MODULE		+= SDL2_image
 MODULE		+= SDL2_ttf
 MODULE		+= iniparser
 MODULE		+= cjson
+MODULE		+= tinyxml2
+MODULE		+= giflib
