@@ -76,6 +76,16 @@ app/fixdep
 # linux tools 
 tools/fatfs/fatfs
 
+# grub2 modules, img
+!tools/grub-2.04/boot/grub/i386-efi/*.mod
+!tools/grub-2.04/boot/grub/i386-efi/*.img
+!tools/grub-2.04/boot/grub/i386-pc/*.mod
+!tools/grub-2.04/boot/grub/i386-pc/*.img
+!tools/grub-2.04/boot/grub/x86_64-efi/*.mod
+!tools/grub-2.04/boot/grub/x86_64-efi/*.img
+tools/grub-2.04/efi/boot/bootia32.efi
+tools/grub-2.04/efi/boot/bootx64.efi
+
 # dir
 recycle
 
