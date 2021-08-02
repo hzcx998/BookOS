@@ -29,7 +29,7 @@
 #include "unwind-cxx.h"
 // #include "bits/gthr.h"
 
-extern "C" void *malloc (std::size_t);
+extern "C" void *malloc (size_t);
 extern "C" void free(void *);
 
 using namespace __cxxabiv1;
