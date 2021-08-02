@@ -125,6 +125,11 @@ bin/mkfs/mkfs
 bin/losetup/losetup
 bin/poweroff/poweroff
 bin/reboot/reboot
+bin/dosfstools/fatlabel
+bin/dosfstools/fsck.fat
+bin/dosfstools/mkfs.fat
+bin/tcc/ar/ar
+bin/tcc/tcc
 
 # ====xbook2 kernel ignore end====
 # ====BookOS ignore start====
