@@ -230,8 +230,9 @@ BOOKOS_ShowCursor(SDL_Cursor *cursor)
     else
     {
         /* 改变光标状态 */
-        if (uview_set_mouse_state_noview(UVIEW_MOUSE_INVISIBLE) < 0)
+        /*if (uview_set_mouse_state_noview(UVIEW_MOUSE_INVISIBLE) < 0)
             printf("hide cursor:%d failed because change state error!!\n", UVIEW_MOUSE_INVISIBLE);
+        */
     }
     
     return 0;
