@@ -95,20 +95,14 @@ void xtk_button_change_state(xtk_button_t *button, xtk_button_state_t state)
     case XTK_BUTTON_IDLE:    
         if (spirit->style.background_color != XTK_NONE_COLOR)
             spirit->style.background_color = button->color_idle;
-        if (spirit->style.border_color != XTK_NONE_COLOR)
-            spirit->style.border_color = button->color_idle;
         break;
     case XTK_BUTTON_TOUCH:    
         if (spirit->style.background_color != XTK_NONE_COLOR)
             spirit->style.background_color = button->color_touch;
-        if (spirit->style.border_color != XTK_NONE_COLOR)
-            spirit->style.border_color = button->color_touch;
         break;
     case XTK_BUTTON_CLICK:    
         if (spirit->style.background_color != XTK_NONE_COLOR)
             spirit->style.background_color = button->color_click;
-        if (spirit->style.border_color != XTK_NONE_COLOR)
-            spirit->style.border_color = button->color_click;
         break;
     default:
         break;

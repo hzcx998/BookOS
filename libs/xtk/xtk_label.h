@@ -46,6 +46,24 @@ static inline int xtk_label_set_text(xtk_spirit_t *label, char *text)
     return 0;
 }
 
+static inline int xtk_label_set_background_color(xtk_spirit_t *label, xtk_color_t background_color)
+{
+    if (!label)
+        return -1;
+    label->style.background_color = background_color;
+    xtk_spirit_show(label);
+    return 0;
+}
+
+static inline int xtk_label_set_color(xtk_spirit_t *label, xtk_color_t color)
+{
+    if (!label)
+        return -1;
+    label->style.color = color;
+    xtk_spirit_show(label);
+    return 0;
+}
+
 static inline char *xtk_label_get_text(xtk_spirit_t *label)
 {
     if (!label)
