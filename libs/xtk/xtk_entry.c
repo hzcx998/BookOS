@@ -13,7 +13,7 @@ static void xtk_entry_draw_cursor(xtk_spirit_t *spirit)
     if (!xtk_entry_get_selection_bounds(entry, NULL, NULL)) {
         int off_x = 1, off_y = 1;
         off_x += entry->cursor_pos * 8;
-        xtk_surface_rectfill(spirit->surface, off_x, off_y, 1, 16, XTK_BLACK);
+        xtk_surface_rectfill(spirit->surface, off_x, off_y, 1, spirit->height - 2, XTK_BLACK);
     }
 }
 
@@ -29,7 +29,7 @@ static void xtk_entry_draw_selection(xtk_spirit_t *spirit)
         int min_pos = min(entry->select_start_pos, entry->select_end_pos);
 
         int w = chars * 8;
-        int h = 18;
+        int h = spirit->height;
 
         int off_x = 1, off_y = 1;
         off_x += min_pos * 8;

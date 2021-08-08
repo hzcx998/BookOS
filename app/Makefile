@@ -53,7 +53,8 @@ X_LIBDIRS	+= $(LIBS_DIR)/xlibc $(LIBS_DIR)/pthread \
 				$(LIBS_DIR)/iniparser \
 				$(LIBS_DIR)/cjson \
 				$(LIBS_DIR)/xcrt \
-				$(LIBS_DIR)/tinyxml2
+				$(LIBS_DIR)/tinyxml2 \
+				$(LIBS_DIR)/giflib
 
 X_LIBS		:= libxcrt.a
 				

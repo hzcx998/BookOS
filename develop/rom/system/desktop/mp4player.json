@@ -1,0 +1,8 @@
+{
+    "Version":1.0,
+    "Name":"mp4player",
+    "Exec":"/usr/local/mp4player/mp4player",
+    "Icon":"/usr/local/mp4player/mp4player.png",
+    "Terminal":"false",
+    "Type":"Application"
+}
