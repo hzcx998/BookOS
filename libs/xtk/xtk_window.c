@@ -8,6 +8,8 @@
 static xtk_timer_t *xtk_window_find_timer(xtk_window_t *window, uint32_t timer_id);
 static int xtk_window_destroy_timer_all(xtk_window_t *window);
 
+#define XTK_WINDOW_BTN_SIZE 24
+
 static xtk_window_style_t __xtk_window_style_defult = {
     1, 
     24,
@@ -473,6 +475,8 @@ int xtk_window_draw_border(xtk_window_t *window,
             btn->color_touch = XTK_RGB_SUB(back, 0x40, 0x40, 0x40);
             btn->color_click = XTK_RGB_SUB(back, 0x20, 0x20, 0x20);
             navigation_spirit->style.background_color = btn->color_idle;
+            /* update color */
+            navigation_spirit->style.color = text_c;
         } else if (navigation_spirit->type == XTK_SPIRIT_TYPE_LABEL) {
             navigation_spirit->style.background_color = back;
         }
@@ -543,18 +547,104 @@ static bool xtk_window_maxim_button_event(xtk_spirit_t *spirit, void *data)
     return true;
 }
 
+void xtk_window_close_show(xtk_spirit_t *spirit)
+{
+    /* left, top -> right, bottom */
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4,
+                    spirit->height / 2 - spirit->height / 4, 
+                    spirit->width / 2 + spirit->width / 4,
+                    spirit->height / 2 + spirit->height / 4,
+                    spirit->style.color);
+
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4 + 1,
+                    spirit->height / 2 - spirit->height / 4, 
+                    spirit->width / 2 + spirit->width / 4 + 1,
+                    spirit->height / 2 + spirit->height / 4,
+                    spirit->style.color);
+
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4,
+                    spirit->height / 2 - spirit->height / 4 + 1, 
+                    spirit->width / 2 + spirit->width / 4,
+                    spirit->height / 2 + spirit->height / 4 + 1,
+                    spirit->style.color);
+
+    /* left, bottom -> right, top */
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4,
+                    spirit->height / 2 + spirit->height / 4, 
+                    spirit->width / 2 + spirit->width / 4,
+                    spirit->height / 2 - spirit->height / 4,
+                    spirit->style.color);
+
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4 + 1,
+                    spirit->height / 2 + spirit->height / 4, 
+                    spirit->width / 2 + spirit->width / 4 + 1,
+                    spirit->height / 2 - spirit->height / 4,
+                    spirit->style.color);
+    
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4,
+                    spirit->height / 2 + spirit->height / 4 - 1, 
+                    spirit->width / 2 + spirit->width / 4,
+                    spirit->height / 2 - spirit->height / 4 - 1,
+                    spirit->style.color);
+}
+
+void xtk_window_minim_show(xtk_spirit_t *spirit)
+{
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4,
+                    spirit->height / 2, 
+                    spirit->width / 2 + spirit->width / 4,
+                    spirit->surface->h / 2,
+                    spirit->style.color);
+
+    xtk_surface_line(spirit->surface,
+                    spirit->width / 2 - spirit->width / 4,
+                    spirit->height / 2 + 1, 
+                    spirit->width / 2 + spirit->width / 4,
+                    spirit->surface->h / 2 + 1,
+                    spirit->style.color);
+}
+
+void xtk_window_maxim_show(xtk_spirit_t *spirit)
+{
+    xtk_surface_rect(spirit->surface, 
+                    spirit->width / 2 - spirit->width / 4,
+                    spirit->height / 2 - spirit->height / 4, 
+                    spirit->width / 2,
+                    spirit->height / 2,
+                    spirit->style.color);
+
+    xtk_surface_rect(spirit->surface, 
+                    spirit->width / 2 - spirit->width / 4 + 1,
+                    spirit->height / 2 - spirit->height / 4 - 1, 
+                    spirit->width / 2,
+                    spirit->height / 2,
+                    spirit->style.color);
+}
+
 static int xtk_window_create_navigation(xtk_window_t *window)
 {
     xtk_window_navigation_t *navigation = &window->navigation;
     navigation->title = NULL;
     xtk_spirit_t *window_spirit = &window->window_spirit;
 
-    xtk_spirit_t *spirit_minim = xtk_button_create_with_label("-");
+    xtk_spirit_t *spirit_minim = xtk_button_create();
     assert(spirit_minim);
-    xtk_spirit_t *spirit_maxim = xtk_button_create_with_label("[]");
+    xtk_spirit_t *spirit_maxim = xtk_button_create();
     assert(spirit_maxim);
-    xtk_spirit_t *spirit_close = xtk_button_create_with_label("X");
+    xtk_spirit_t *spirit_close = xtk_button_create();
     assert(spirit_close);
+
+    /* modify width */
+    spirit_minim->width = XTK_WINDOW_BTN_SIZE;
+    spirit_maxim->width = XTK_WINDOW_BTN_SIZE;
+    spirit_close->width = XTK_WINDOW_BTN_SIZE;
 
     navigation->maxim = spirit_maxim;
 
@@ -567,10 +657,15 @@ static int xtk_window_create_navigation(xtk_window_t *window)
     
     x += spirit_minim->width;
     xtk_spirit_set_pos(spirit_maxim, x, y - spirit_maxim->height / 2);
-    
+
     spirit_close->style.border_color = XTK_NONE_COLOR;
     spirit_minim->style.border_color = XTK_NONE_COLOR;
     spirit_maxim->style.border_color = XTK_NONE_COLOR;
+    
+    /* draw bottom with callback */
+    spirit_close->show_bottom = xtk_window_close_show;
+    spirit_minim->show_bottom = xtk_window_minim_show;
+    spirit_maxim->show_bottom = xtk_window_maxim_show;
 
     xtk_container_add(XTK_CONTAINER(window_spirit), spirit_close);
     xtk_container_add(XTK_CONTAINER(window_spirit), spirit_minim);
@@ -1080,8 +1175,8 @@ int xtk_window_refresh(xtk_window_t *window, int x, int y, int w, int h)
     int left = spirit->x + x;
     int top = spirit->y + y;
     int right = left + w;
-    int buttom = top + h;
-    return uview_update(spirit->view, left, top, right, buttom);
+    int bottom = top + h;
+    return uview_update(spirit->view, left, top, right, bottom);
 }
 
 int xtk_window_set_position(xtk_window_t *window, xtk_window_position_t pos)
