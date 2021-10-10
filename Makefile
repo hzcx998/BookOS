@@ -9,19 +9,14 @@ FATFS_DIR	= $(TOOL_DIR)/fatfs
 GRUB_DIR	= $(TOOL_DIR)/grub-2.04
 BIOS_FW_DIR	= $(TOOL_DIR)/bios_fw
 
-# System environment variable.
-ifeq ($(OS),Windows_NT)
-	FATFS_BIN		:= fatfs
-else
-	FATFS_BIN		:= $(FATFS_DIR)/fatfs
-endif
-
 TRUNC		= truncate
 RM			= rm
 DD			= dd
 MKDIR		= mkdir
 OBJDUMP		= objdump
 CP			= cp
+MKFS		= mkfs.msdos
+MCOPY		= mtools -c mcopy
 
 # virtual machine
 QEMU 		= qemu-system-i386
@@ -124,7 +119,8 @@ ifeq ($(BOOT_MODE),$(BOOT_GRUB2_MODE))
 endif
 endif
 ifeq ($(QEMU_FAT_FS),n)
-	$(FATFS_BIN) $(FS_DISK) $(ROM_DIR) 0
+	$(MKFS) -F 32 $(FS_DISK)
+	$(MCOPY) -i $(FS_DISK) -/ $(ROM_DIR)/* ::./
 endif
 
 # 构建环境。镜像>工具>环境>rom
@@ -146,7 +142,8 @@ endif
 	$(MAKE) -s -C  $(BIN_DIR)
 	$(MAKE) -s -C  $(APP_DIR)
 ifeq ($(QEMU_FAT_FS),n)
-	$(FATFS_BIN) $(FS_DISK) $(ROM_DIR) 0
+	$(MKFS) -F 32 $(FS_DISK)
+	$(MCOPY) -i $(FS_DISK) -/ $(ROM_DIR)/* ::./
 endif
 
 # 清理环境。

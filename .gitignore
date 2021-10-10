@@ -102,6 +102,7 @@ recycle
 sbin/init/init
 sbin/login/login
 sbin/netserv/netserv
+sbin/grootfs/grootfs
 
 # /bin
 bin/cat/cat

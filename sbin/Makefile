@@ -27,3 +27,4 @@ MODULE      +=  userctl
 MODULE      +=  service
 MODULE      +=  testserv
 MODULE      +=  netserv
+MODULE      +=  grootfs
