@@ -347,6 +347,12 @@ int xtk_window_main(xtk_spirit_t *spirit, uview_msg_t *msg)
     // 每个窗口精灵都需要进行这些消息检测
     int x = uview_msg_get_mouse_x(msg) - spirit->x;
     int y = uview_msg_get_mouse_y(msg) - spirit->y;
+    /* 对于内容精灵来说，spirit->y是24，
+    当鼠标在导航栏上面时，y就是负数，所以说明是在导航栏, 需要设置鼠标为NORMAL状态 */
+    if (y < 0) {
+        uview_set_mouse_state(spirit->view, UVIEW_MOUSE_NORMAL);
+    }
+    
     switch (uview_msg_get_id(msg)) {
     case UVIEW_MSG_LEAVE:
     case UVIEW_MSG_ENTER:
