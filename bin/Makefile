@@ -67,3 +67,4 @@ MODULE      +=  tcc/tcc
 MODULE      +=  dosfstools/fatlabel
 MODULE      +=  dosfstools/fsck.fat
 MODULE      +=  dosfstools/mkfs.fat
+MODULE      +=  kill
