@@ -23,6 +23,7 @@ xtk_spirit_t *xtk_button_create()
     button->color_click = XTK_RGB_SUB(button->color_idle, 0x20, 0x20, 0x20);
     button->color_disabled = XTK_RGB(0x80, 0x80, 0x80);
     button->disabled = 0;
+    button->flags = 0;
 
     xtk_spirit_t *spirit = &button->spirit;
     xtk_spirit_init(spirit, 0, 0, XTK_BUTTON_WIDTH_DEFAULT, XTK_BUTTON_HEIGHT_DEFAULT);

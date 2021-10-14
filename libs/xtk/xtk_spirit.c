@@ -29,7 +29,8 @@ void xtk_spirit_init(xtk_spirit_t *spirit, int x, int y, int width, int height)
     spirit->text = NULL;
     spirit->image = NULL;
     spirit->surface = NULL;
-
+    spirit->local = NULL;
+    
     spirit->style.background_color = XTK_NONE_COLOR;
     spirit->style.background_align = XTK_ALIGN_LEFT;
     spirit->background_image = NULL;

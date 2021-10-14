@@ -5,6 +5,8 @@
 #include <sys/vmm.h>
 #include <sys/ipc.h>
 
+#include "xtk_form_style.h"
+
 static xtk_timer_t *xtk_window_find_timer(xtk_window_t *window, uint32_t timer_id);
 static int xtk_window_destroy_timer_all(xtk_window_t *window);
 
@@ -19,7 +21,7 @@ static xtk_window_style_t __xtk_window_style_defult = {
     XTK_RGB(200, 200, 200),
     XTK_RGB(200, 200, 200), // border
     XTK_RGB(180, 180, 180),
-    XTK_RGB(25, 25, 25),      // text
+    XTK_RGB(58, 58, 58),      // text
     XTK_RGB(118, 118, 118),
 };
 
@@ -477,10 +479,18 @@ int xtk_window_draw_border(xtk_window_t *window,
     list_for_each_owner (navigation_spirit, &container->children_list, list) {
         if (navigation_spirit->type == XTK_SPIRIT_TYPE_BUTTON) {
             btn = XTK_BUTTON(navigation_spirit);
+            
             btn->color_idle = back;
-            btn->color_touch = XTK_RGB_SUB(back, 0x40, 0x40, 0x40);
-            btn->color_click = XTK_RGB_SUB(back, 0x20, 0x20, 0x20);
+            if (!(btn->flags & XTK_BUTTON_COLOR_TOUCH_FIXED))
+            {
+                btn->color_touch = XTK_RGB_SUB(back, 0x40, 0x40, 0x40);
+            }
+            if (!(btn->flags & XTK_BUTTON_COLOR_CLICK_FIXED))
+            {
+                btn->color_click = XTK_RGB_SUB(back, 0x20, 0x20, 0x20);
+            }
             navigation_spirit->style.background_color = btn->color_idle;
+            
             /* update color */
             navigation_spirit->style.color = text_c;
         } else if (navigation_spirit->type == XTK_SPIRIT_TYPE_LABEL) {
@@ -553,85 +563,47 @@ static bool xtk_window_maxim_button_event(xtk_spirit_t *spirit, void *data)
     return true;
 }
 
+static void draw_icon(xtk_spirit_t *spirit, int *bits, uint32_t color)
+{
+    int i, j;
+    for (j = 0; j < 14; j++)
+    {
+        for (i = 0; i < 14; i++)
+        {
+            if (bits[j] & (1 << i))
+            {
+                xtk_surface_putpixel(spirit->surface,
+                    spirit->width / 2 - 14 / 2 + 14 - 1 - i,
+                    spirit->height / 2 - 14 / 2 + j,
+                    color);
+            }
+        }
+    }
+} 
+
 void xtk_window_close_show(xtk_spirit_t *spirit)
 {
-    /* left, top -> right, bottom */
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4,
-                    spirit->height / 2 - spirit->height / 4, 
-                    spirit->width / 2 + spirit->width / 4,
-                    spirit->height / 2 + spirit->height / 4,
-                    spirit->style.color);
-
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4 + 1,
-                    spirit->height / 2 - spirit->height / 4, 
-                    spirit->width / 2 + spirit->width / 4 + 1,
-                    spirit->height / 2 + spirit->height / 4,
-                    spirit->style.color);
-
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4,
-                    spirit->height / 2 - spirit->height / 4 + 1, 
-                    spirit->width / 2 + spirit->width / 4,
-                    spirit->height / 2 + spirit->height / 4 + 1,
-                    spirit->style.color);
-
-    /* left, bottom -> right, top */
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4,
-                    spirit->height / 2 + spirit->height / 4, 
-                    spirit->width / 2 + spirit->width / 4,
-                    spirit->height / 2 - spirit->height / 4,
-                    spirit->style.color);
-
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4 + 1,
-                    spirit->height / 2 + spirit->height / 4, 
-                    spirit->width / 2 + spirit->width / 4 + 1,
-                    spirit->height / 2 - spirit->height / 4,
-                    spirit->style.color);
-    
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4,
-                    spirit->height / 2 + spirit->height / 4 - 1, 
-                    spirit->width / 2 + spirit->width / 4,
-                    spirit->height / 2 - spirit->height / 4 - 1,
-                    spirit->style.color);
+    draw_icon(spirit, Exit, spirit->style.color);
 }
 
 void xtk_window_minim_show(xtk_spirit_t *spirit)
 {
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4,
-                    spirit->height / 2, 
-                    spirit->width / 2 + spirit->width / 4,
-                    spirit->surface->h / 2,
-                    spirit->style.color);
-
-    xtk_surface_line(spirit->surface,
-                    spirit->width / 2 - spirit->width / 4,
-                    spirit->height / 2 + 1, 
-                    spirit->width / 2 + spirit->width / 4,
-                    spirit->surface->h / 2 + 1,
-                    spirit->style.color);
+    draw_icon(spirit, Min, spirit->style.color);
 }
 
 void xtk_window_maxim_show(xtk_spirit_t *spirit)
 {
-    xtk_surface_rect(spirit->surface, 
-                    spirit->width / 2 - spirit->width / 4,
-                    spirit->height / 2 - spirit->height / 4, 
-                    spirit->width / 2,
-                    spirit->height / 2,
-                    spirit->style.color);
-
-    xtk_surface_rect(spirit->surface, 
-                    spirit->width / 2 - spirit->width / 4 + 1,
-                    spirit->height / 2 - spirit->height / 4 - 1, 
-                    spirit->width / 2,
-                    spirit->height / 2,
-                    spirit->style.color);
+    xtk_window_t *win = (xtk_window_t *) spirit->local;
+    if (win->winflgs & XTK_WINDOW_MAXIM)
+    {
+        draw_icon(spirit, NormalBack, XTK_RGB(217, 217, 217));
+        draw_icon(spirit, Normal, spirit->style.color);
+    }
+    else
+    {
+        draw_icon(spirit, MaxBack, XTK_RGB(217, 217, 217));
+        draw_icon(spirit, Max, spirit->style.color);
+    }
 }
 
 static int xtk_window_create_navigation(xtk_window_t *window)
@@ -667,11 +639,18 @@ static int xtk_window_create_navigation(xtk_window_t *window)
     spirit_close->style.border_color = XTK_NONE_COLOR;
     spirit_minim->style.border_color = XTK_NONE_COLOR;
     spirit_maxim->style.border_color = XTK_NONE_COLOR;
-    
+
+    /* close touch red color */
+    xtk_button_t *close_btn = XTK_BUTTON(spirit_close);
+    close_btn->color_touch = XTK_RGB(226, 17, 35);
+    close_btn->color_click = XTK_RGB(136, 57, 104);
+    close_btn->flags = XTK_BUTTON_COLOR_TOUCH_FIXED | XTK_BUTTON_COLOR_CLICK_FIXED;
+
     /* draw bottom with callback */
     spirit_close->show_bottom = xtk_window_close_show;
     spirit_minim->show_bottom = xtk_window_minim_show;
     spirit_maxim->show_bottom = xtk_window_maxim_show;
+    spirit_maxim->local = window;
 
     xtk_container_add(XTK_CONTAINER(window_spirit), spirit_close);
     xtk_container_add(XTK_CONTAINER(window_spirit), spirit_minim);

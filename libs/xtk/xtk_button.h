@@ -4,6 +4,10 @@
 #include <stddef.h>
 #include "xtk_spirit.h"
 
+#define XTK_BUTTON_COLOR_IDLE_FIXED 0X01
+#define XTK_BUTTON_COLOR_TOUCH_FIXED 0X02
+#define XTK_BUTTON_COLOR_CLICK_FIXED 0X04
+
 typedef enum {
     XTK_BUTTON_IDLE = 0,
     XTK_BUTTON_TOUCH,
@@ -18,6 +22,7 @@ typedef struct {
     xtk_color_t color_click;
     xtk_color_t color_disabled;
     int disabled;
+    int flags;
 } xtk_button_t;
 
 #define XTK_BUTTON(spirit)  ((xtk_button_t *)(spirit))
