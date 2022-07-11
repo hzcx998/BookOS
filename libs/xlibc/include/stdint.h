@@ -44,9 +44,24 @@ typedef WORD			WCHAR;	/* UTF-16 character type */
 typedef long long          intmax_t;
 typedef unsigned long long uintmax_t;
 
+typedef int8_t		int_least8_t;
+typedef int16_t		int_least16_t;
+typedef int32_t		int_least32_t;
+typedef int64_t		int_least64_t;
+typedef uint8_t		uint_least8_t;
+typedef uint16_t	uint_least16_t;
+typedef uint32_t	uint_least32_t;
+typedef uint64_t	uint_least64_t;
 
- 
- 
+typedef int32_t int_fast8_t;
+typedef int32_t int_fast16_t;
+typedef int32_t int_fast32_t;
+typedef int32_t int_fast64_t;
+typedef uint32_t uint_fast8_t;
+typedef uint32_t uint_fast16_t;
+typedef uint32_t uint_fast32_t;
+typedef uint64_t uint_fast64_t;
+
 /* Types for `void *' pointers. */
 #if __WORDSIZE == 64
 # ifndef __intptr_t_defined
@@ -61,7 +76,6 @@ typedef int         intptr_t;
 # endif
 typedef unsigned int        uintptr_t;
 #endif
- 
  
 /* Largest integral types. */
 #if __WORDSIZE == 64
