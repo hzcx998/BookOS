@@ -1,17 +1,17 @@
 # MIT License
 # Copyright (c) 2020 Jason Hu, Zhu Yu
-# support bochs and vbox
 
+# 支持Bochs和vbox
 FATFS_DIR	= tools/fatfs
 
-# System environment variable.
+# 系统环境变量
 ifeq ($(OS),Windows_NT)
 	FATFS_BIN		:= fatfs
 else
 	FATFS_BIN		:= $(FATFS_DIR)/fatfs
 endif
 
-# images and rom
+# 镜像和只读存储器
 IMAGE_DIR	= develop/image
 HDA_VHD		= $(IMAGE_DIR)/c.vhd
 HDB_VHD		= $(IMAGE_DIR)/d.vhd
@@ -21,23 +21,24 @@ HDB_VMDK	= $(IMAGE_DIR)/d-flat.vmdk
 
 ROM_DIR		= develop/rom
 
-# virtual machine
+# 虚拟机
 BOCHS 		= bochs
 BOCHSDBG 	= bochsdbg
 VBOX_MANAGE = VBoxManage
 
-# scripts dir
+# 脚本文件夹
 SCRIPTS_DIR	= scripts
 
-# bochs development dir
+# Bochs开发环境文件夹
 BOCHS_DIR       = $(SCRIPTS_DIR)/bochs/
-BXRC_WIN 		= $(BOCHS_DIR)bochsrc.win   # bochsrc for windows
-BXRC_LINUX 		= $(BOCHS_DIR)bochsrc.linux # bochsrc for linux
+BXRC_WIN 		= $(BOCHS_DIR)bochsrc.win   # bochsrc 对于 windows
+BXRC_LINUX 		= $(BOCHS_DIR)bochsrc.linux # bochsrc 对于 linux
 VBOX_NAME	    = "BookOS"                   # virtual box 虚拟机名称
 
 # 参数
 .PHONY: all bochs bochsdbg vbox vmware
 
+# bochs
 bochs:
 ifeq ($(OS),Windows_NT)
 	$(BOCHS) -q -f $(BXRC_WIN)
@@ -45,6 +46,7 @@ else
 	$(BOCHS) -q -f $(BXRC_LINUX)
 endif
 
+# bochsdbg
 bochsdbg:
 ifeq ($(OS),Windows_NT)
 	$(BOCHSDBG) -q -f $(BXRC_WIN)
