@@ -1,7 +1,7 @@
-# tools
+# 工具
 RM			= rm
 
-# System environment variable.
+# 系统环境变量
 ifeq ($(OS),Windows_NT)
 	# !!! if you wanto complie this tools in windows, you need use gcc for windows
 	# and config your own path. Below is my path.
@@ -36,10 +36,10 @@ else
 	endif
 endif
 
-# flags	
+# 标志
 CFLAGS   = $(INCS) -g3
 
-# objects		
+# 对象		
 OBJS = 	main.o \
 		driver.o \
         diskio.o \
@@ -49,7 +49,7 @@ OBJS = 	main.o \
 
 .PHONY: all clean
 
-# all need to do
+# 所有
 all: $(BIN) 
 
 $(BIN): $(OBJS)
@@ -59,7 +59,7 @@ $(BIN): $(OBJS)
 	@echo [CC] $@ $<
 	@$(CC) -c $(CFLAGS) -o $@ $<
 
-# clean .o .a files
+# 清理文件
 clean: 
 	-$(RM) $(BIN)
 	-$(RM) $(OBJS)
